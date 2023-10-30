@@ -1,4 +1,4 @@
-![Tests](https://github.com/samule-i/gneiss-totesys/actions/workflows/test.yml/badge.svg)
+[![data-ingestion test & deploy](https://github.com/samule-i/gneiss-totesys/actions/workflows/test_deploy.yml/badge.svg)](https://github.com/samule-i/gneiss-totesys/actions/workflows/test_deploy.yml)
 
 ## setup
 This creates a venv dir, installs dev dependencies and production dependencies
