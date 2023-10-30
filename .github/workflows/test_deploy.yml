@@ -16,5 +16,5 @@ jobs:
               working-directory: ./data_ingestion
               run: make init
             - name: standard-check
-              run: make standard-checks
+              run: make standards
               working-directory: ./data_ingestion
