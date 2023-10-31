@@ -18,3 +18,18 @@ jobs:
             - name: standard-check
               run: make standards
               working-directory: ./data_ingestion
+    unit-tests:
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout
+              uses: actions/checkout@v4
+            - name: Set up Python 3.11
+              uses: actions/setup-python@v4
+              with:
+                python-version: "3.11"
+            - name: init
+              working-directory: ./data_ingestion
+              run: make init
+            - name: unit-tests
+              run: make unit-tests
+              working-directory: ./data_ingestion
