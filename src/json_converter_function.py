@@ -7,7 +7,6 @@ def convert_psql_table_to_json(host, database, user, password, table_name):
         conn = pg8000.connect(user=user, password=password,
                               host=host, database=database)
         cursor = conn.cursor()
-        valid_tables = []
         query = f"SELECT * FROM {table_name}"
         cursor.execute(query)
         rows = cursor.fetchall()
