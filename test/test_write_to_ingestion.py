@@ -20,7 +20,7 @@ def s3_boto():
 
 
 @mock_s3
-def test_the_file_has_been_uploaded_to_S3_using_ls(s3_boto):
+def test_the_data_has_been_uploaded_to_S3_using_ls(s3_boto):
     bucket = 'test-bucket-geni'
     key = "test"
     
