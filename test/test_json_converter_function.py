@@ -1,4 +1,4 @@
-from src.function import convert_psql_table_to_json
+from src.json_converter_function import convert_psql_table_to_json
 import unittest
 import os
 
