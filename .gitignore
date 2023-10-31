@@ -51,6 +51,9 @@ coverage.xml
 .pytest_cache/
 cover/
 
+# Terraform data
+**/.terraform*
+
 # Translations
 *.mo
 *.pot
@@ -154,6 +157,8 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+test/
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
