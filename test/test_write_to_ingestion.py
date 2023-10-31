@@ -1,4 +1,4 @@
-from ingestion_function.write_JSON import write_to_ingestion
+from src.ingestion_function.write_JSON import write_to_ingestion
 import boto3
 from moto import mock_s3
 import pytest
@@ -23,12 +23,12 @@ def s3_boto():
 def test_the_file_has_been_uploaded_to_S3_using_ls(s3_boto):
     bucket = 'test-bucket-geni'
     key = "test"
-    body = "test"
-    data = 'data_for_tests/test.json'
+    
+    data = '[{"name":"John", "age":30, "car":3}]'
 
     location = {'LocationConstraint': 'eu-west-2'}
     s3_boto.create_bucket(Bucket=bucket, CreateBucketConfiguration=location)
-    s3_boto.put_object(Bucket=bucket, Key=key, Body=body)
+    s3_boto.put_object(Bucket=bucket, Key=key, Body=data)
     write_to_ingestion(data, bucket, key)
     response = s3_boto.list_objects_v2(Bucket=bucket)
     assert response['Contents'][0]['Key'] == 'test'
@@ -38,7 +38,7 @@ def test_the_file_has_been_uploaded_to_S3_using_ls(s3_boto):
 def test_function_handles_runtime_error(s3_boto):
     bucket = 'test-bucket-geni'
     key = 'test'
-    data = 'data/test.txt'
+    data = []
     location = {'LocationConstraint': 'eu-west-2'}
     s3_boto.create_bucket(Bucket=bucket, CreateBucketConfiguration=location)
     with pytest.raises(RuntimeError):
@@ -48,7 +48,7 @@ def test_function_handles_runtime_error(s3_boto):
 def test_function_handles_when_there_is_no_existing_bucket():
     bucket = 'test-bucket-eni'
     key = 'test'
-    data = 'data_for_tests/test.json'
+    data = '[{"name":"John", "age":30, "car":3}]'
     try:
         write_to_ingestion(data, bucket, key)
     except ClientError as c:
