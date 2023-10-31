@@ -13,11 +13,11 @@ There are two main parts, GitHub and Terraform:
 
 ```json
 {
-    "hostname" : "nc-data-eng-totesys-production.chpsczt8h1nu.eu-west-2.rds.amazonaws.com",
+    "hostname" : "host.eu-west-2.rds.amazonaws.com",
     "port" : 5432,
-    "database" : "totesys",
-    "username" : "project_user_2",
-    "password" : "gu5WBDQXu8bECfyq"
+    "database" : "db_name",
+    "username" : "user_name",
+    "password" : "password"
 }
 ```
 
@@ -30,7 +30,7 @@ base64 local_oltp.json > oltp.base64
 - Example output:
 
 ```
-ewogICAgImhvc3RuYW1lIjogIm5jLWRhdGEtZW5nLXRvdGVzeXMtcHJvZHVjdGlvbi5jaHBzY3p0OGgxbnUuZXUtd2VzdC0yLnJkcy5hbWF6b25hd3MuY29tIiwKICAgICJwb3J0IjogNTQzMiwKICAgICJkYXRhYmFzZSI6ICJ0b3Rlc3lzIiwKICAgICJ1c2VybmFtZSI6ICJwcm9qZWN0X3VzZXJfMiIsCiAgICAicGFzc3dvcmQiOiAiZ3U1V0JEUVh1OGJFQ2Z5cSIKfQ==
+ewogICAgImhvc3RuYW1lIiA6ICJob3N0LmV1LXdlc3QtMi5yZHMuYW1hem9uYXdzLmNvbSIsCiAgICAicG9ydCIgOiA1NDMyLAogICAgImRhdGFiYXNlIiA6ICJkYl9uYW1lIiwKICAgICJ1c2VybmFtZSIgOiAidXNlcl9uYW1lIiwKICAgICJwYXNzd29yZCIgOiAicGFzc3dvcmQiCn0=
 ```
 
 - When storing this in GitHub secrets, it is critical that no linebreaks are inserted by mistake.
