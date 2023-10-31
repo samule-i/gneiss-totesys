@@ -1,6 +1,8 @@
 asn1crypto==1.5.1
 autopep8==2.0.4
 bandit==1.7.5
+boto3>=1.26.59
+botocore>=1.29.59
 certifi==2023.7.22
 charset-normalizer==3.3.1
 click==8.1.7
@@ -11,6 +13,7 @@ idna==3.4
 iniconfig==2.0.0
 markdown-it-py==3.0.0
 mdurl==0.1.2
+moto>=4.1.1
 packaging==21.3
 pbr==5.11.1
 pg8000==1.30.2
