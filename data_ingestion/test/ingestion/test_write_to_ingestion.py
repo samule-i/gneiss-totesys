@@ -1,4 +1,4 @@
-from src.ingestion_function.write_JSON import write_to_ingestion
+from ingestion.write_JSON import write_to_ingestion
 import boto3
 from moto import mock_s3
 import pytest
@@ -23,7 +23,7 @@ def s3_boto():
 def test_the_data_has_been_uploaded_to_S3_using_ls(s3_boto):
     bucket = 'test-bucket-geni'
     key = "test"
-    
+
     data = '[{"name":"John", "age":30, "car":3}]'
 
     location = {'LocationConstraint': 'eu-west-2'}
@@ -45,6 +45,7 @@ def test_function_handles_runtime_error(s3_boto):
         write_to_ingestion(data, bucket, key)
 
 
+@mock_s3
 def test_function_handles_when_there_is_no_existing_bucket():
     bucket = 'test-bucket-eni'
     key = 'test'
