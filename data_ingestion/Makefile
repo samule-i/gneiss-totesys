@@ -5,7 +5,7 @@ PROJECT_NAME = data_ingestion
 SHELL := /bin/bash
 PROFILE = default
 PIP:=pip
-MINUMUM_COVERAGE = 80
+MINUMUM_COVERAGE = 90
 
 ## Create python interpreter environment.
 create-environment:
