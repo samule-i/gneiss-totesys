@@ -23,8 +23,11 @@ def main():
     Connects to database and selects 10 most recent rows
     from sales_order table
 
+    Returns:
+        Column names as list
+        Database rows as list of lists 
     Raises:
-        InterfaceError or DatabaseError if error occurs
+        DatabaseError if error occurs
         during connection
     """
     try:
