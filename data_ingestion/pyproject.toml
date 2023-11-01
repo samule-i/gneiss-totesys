@@ -1,0 +1,27 @@
+[project]
+authors = [
+    { name = "Ethel" },
+    { name = "James Bennett" },
+    { name = "Mohammad" },
+    { name = "Nafisa Satti" },
+    { name = "Ronan Tiller-Cordy" },
+    { name = "Samuel Massey", email = "s.massey@protonmail.com" },
+]
+name = "totesys_data_ingestion"
+version = "0.1"
+description = "Retrieves data from Postgres RDBMS to store in S3 Buckets"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["autopep8", "bandit", "flake8", "safety", "pytest", "pytest-cov"]
+
+[build-system]
+requires = ["setuptools>=65.0"]
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+password_manager = "data_ingestion:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
