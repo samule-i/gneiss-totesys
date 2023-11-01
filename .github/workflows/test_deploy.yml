@@ -52,9 +52,11 @@ jobs:
             aws-region: eu-west-2
             
         - name: Set db variables
-          run: echo ${{ secrets.DB_CREDENTIALS_OLTP }} | base64 -d > secret_oltp.json
+          run: |
+           echo ${{ secrets.DB_CREDENTIALS_OLTP }} | base64 -d > secret_oltp.json
         - name: Set db variables
-          run: echo ${{ secrets.DB_CREDENTIALS_OLAP }} | base64 -d > secret_olap.json
+          run: |
+           echo ${{ secrets.DB_CREDENTIALS_OLAP }} | base64 -d > secret_olap.json
         
         - name: Setup terraform
           uses: hashicorp/setup-terraform@v2
