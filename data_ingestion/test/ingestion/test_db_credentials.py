@@ -57,3 +57,9 @@ def test_get_credentials_raises_error_if_required_fields_missing(dummy_log):
 
     with pytest.raises(CredentialsException):
         get_credentials("test_credentials", dummy_log)
+
+
+@mock_secretsmanager
+def test_get_credentials_raises_runtime_error_for_anything_else(dummy_log):
+    with pytest.raises(RuntimeError):
+        get_credentials(1, dummy_log)
