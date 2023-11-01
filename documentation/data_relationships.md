@@ -30,6 +30,8 @@ To support the OLAP db, the data stored as parquet files should be transformed i
 
 Because of this, files should be organised as such e.g. fact_purchase_order.parquet, fact_sales_order.parquet, dim_location.parquet etc.
 
+Because some transformations require multiple tables, some care may be needed to transform these properly, e.g. when triggered by an update to the counterparty table, address table data will also be needed either from the filestore or live connection.
+
 ## Other considerations
 
 Each fact table in the OLAP database has its own primary key independent of the key of the original OLTP database. This facilitates change capture.
