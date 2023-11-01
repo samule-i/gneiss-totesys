@@ -45,6 +45,7 @@ def test_function_handles_runtime_error(s3_boto):
         write_to_ingestion(data, bucket, key)
 
 
+@mock_s3
 def test_function_handles_when_there_is_no_existing_bucket():
     bucket = 'test-bucket-eni'
     key = 'test'
