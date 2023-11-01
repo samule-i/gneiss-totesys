@@ -53,10 +53,10 @@ jobs:
             
         - name: Set db variables
           run: |
-           echo ${{ secrets.DB_CREDENTIALS_OLTP }} | base64 -d > secret_oltp.json
+           echo '${{ secrets.DB_CREDENTIALS_OLTP }}' | base64 -d > secret_oltp.json
         - name: Set db variables
           run: |
-           echo ${{ secrets.DB_CREDENTIALS_OLAP }} | base64 -d > secret_olap.json
+           echo '${{ secrets.DB_CREDENTIALS_OLAP }}' | base64 -d > secret_olap.json
         
         - name: Setup terraform
           uses: hashicorp/setup-terraform@v2
