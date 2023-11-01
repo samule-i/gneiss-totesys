@@ -5,6 +5,7 @@ PROJECT_NAME = data_ingestion
 SHELL := /bin/bash
 PROFILE = default
 PIP:=pip
+MINUMUM_COVERAGE = 90
 
 ## Create python interpreter environment.
 create-environment:
@@ -47,7 +48,7 @@ bandit:
 flake:
 	$(call execute_in_env, flake8  ./src/*/*.py ./test/*/*.py)
 coverage:
-	$(call execute_in_env, coverage run --omit 'venv/*' -m pytest && coverage report -m)
+	$(call execute_in_env, coverage run --omit 'venv/*' -m pytest && coverage report -m --fail-under=${MINUMUM_COVERAGE})
 
 ## Run all checks
 standards: safety bandit flake coverage
