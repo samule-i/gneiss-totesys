@@ -1,12 +1,13 @@
 import json
 import boto3
+import logging
 
 
 class CredentialsException(Exception):
     pass
 
 
-def get_credentials(credentials_name, logger):
+def get_credentials(credentials_name):
     """Retrieves named database credentials from AWS secretsmanager.
 
     Args:
@@ -23,6 +24,9 @@ def get_credentials(credentials_name, logger):
         "hostname", "port", "database", "username", "password"
     """
     try:
+        logger = logging.getLogger("ingestion_log")
+        logger.setLevel(logging.DEBUG)
+
         sm_client = get_secretsmanager_client()
 
         response = sm_client.get_secret_value(SecretId=credentials_name)
