@@ -1,13 +1,13 @@
 import unittest
-from ingestion.rows_to_json import rows_to_json
+from data_ingestion.src.ingestion.rows_to_json import rows_to_json
 import os
 import json
-from unittest.mock import patch, Mock
+from unittest.mock import patch
 import pg8000
 
 
 class TestRowsToJsonFunction(unittest.TestCase):
-    @patch('src.rows_to_json.get_conn')
+    @patch('data_ingestion.src.ingestion.rows_to_json.get_conn')
     def test_rows_to_json(self, mock_get_conn):
 
         host = 'localhost'
@@ -68,7 +68,7 @@ class TestRowsToJsonFunction(unittest.TestCase):
         actual_result = json.loads(actual_json)
         assert actual_result == expected_result
 
-    @patch('src.rows_to_json.get_conn')
+    @patch('data_ingestion.src.ingestion.rows_to_json.get_conn')
     def test_invalid_datetime_format(self, mock_get_conn):
         host = 'localhost'
         database = 'test_database'
@@ -95,7 +95,7 @@ class TestRowsToJsonFunction(unittest.TestCase):
         self.assertTrue("error" in actual_result)
         self.assertIn("should be in the format", actual_result["error"])
 
-    @patch('src.rows_to_json.get_conn')
+    @patch('data_ingestion.src.ingestion.rows_to_json.get_conn')
     def test_invalid_table_name(self, mock_get_conn):
         host = 'localhost'
         database = 'test_database'
