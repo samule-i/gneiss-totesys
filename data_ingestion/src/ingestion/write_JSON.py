@@ -26,6 +26,3 @@ def write_to_ingestion(data, bucket, key):
     except Exception as e:
         logger.error(e)
         raise RuntimeError
-
-
-
