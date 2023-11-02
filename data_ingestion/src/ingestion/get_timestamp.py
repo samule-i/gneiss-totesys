@@ -2,8 +2,6 @@ import boto3
 import logging
 import os
 
-INGESTION_BUCKET_NAME = os.environ["S3_DATA"]
-
 
 def get_latest_timestamp(table_name):
     """Return the timestamp from the most recent JSON file for the given
@@ -19,10 +17,10 @@ def get_latest_timestamp(table_name):
     logger.info(f"get_latest_timestamp: {table_name}")
 
     s3_resource = boto3.resource("s3")
-
     previous_timestamp = "2000-01-01 00:00:00.000"
+    bucket_name = os.environ["S3_DATA_ID"]
 
-    for file in s3_resource.Bucket(INGESTION_BUCKET_NAME).objects.filter(
+    for file in s3_resource.Bucket(bucket_name).objects.filter(
         Prefix=table_name
     ):
         file_timestamp = file.key[len(table_name) + 1:]
