@@ -12,7 +12,6 @@ def get_credentials(credentials_name):
 
     Args:
         credentials_name (str): name of the db credentials
-        logger (Logger): logger object
 
     Raises:
         CredentialsException: if credentials are not stored, wrong
