@@ -1,5 +1,5 @@
 import unittest
-from src.rows_to_json import rows_to_json
+from ingestion.rows_to_json import rows_to_json
 import os
 import json
 from unittest.mock import patch, Mock
