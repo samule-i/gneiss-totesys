@@ -1,0 +1,74 @@
+name: data-ingestion test & deploy
+on:
+    - push
+
+jobs:
+    standard_tests:
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout
+              uses: actions/checkout@v4
+            - name: Set up Python 3.11
+              uses: actions/setup-python@v4
+              with:
+                python-version: "3.11"
+            - name: init
+              working-directory: ./data_ingestion
+              run: make init
+            - name: standard-check
+              run: make standards
+              working-directory: ./data_ingestion
+
+    unit_tests:
+        runs-on: ubuntu-latest
+        needs: standard_tests
+        steps:
+            - name: checkout
+              uses: actions/checkout@v4
+            - name: Set up Python 3.11
+              uses: actions/setup-python@v4
+              with:
+                python-version: "3.11"
+            - name: init
+              working-directory: ./data_ingestion
+              run: make init
+            - name: unit-tests
+              run: make unit-tests
+              working-directory: ./data_ingestion
+
+    deploy:
+      runs-on: ubuntu-latest
+      needs: unit_tests
+      if: github.ref == 'refs/heads/main'
+      steps:
+        - name: Checkout Repo
+          uses: actions/checkout@v4
+        
+        - name: Configure AWS CLI
+          uses: aws-actions/configure-aws-credentials@v4
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: eu-west-2
+            
+        - name: Set db variables
+          run: |
+           echo "${{ secrets.DB_CREDENTIALS_OLTP }}" | base64 -d > secret_oltp.json
+        - name: Set db variables
+          run: |
+           echo "${{ secrets.DB_CREDENTIALS_OLAP }}" | base64 -d > secret_olap.json
+        
+        - name: Setup terraform
+          uses: hashicorp/setup-terraform@v2
+  
+        - name: Terraform init
+          working-directory: terraform
+          run: terraform init
+  
+        - name: Terraform plan
+          working-directory: terraform
+          run: terraform plan
+  
+        # - name: Terraform apply
+        #   working-directory: terraform
+        #   run: terraform apply -auto-approve
