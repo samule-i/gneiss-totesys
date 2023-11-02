@@ -4,6 +4,8 @@ import logging
 import pg8000
 from decimal import Decimal
 import datetime
+from src.ingestion import get_conn
+
 
 class CustomEncoder(json.JSONEncoder):
     """Custom JSON encoder for handling special data types.
@@ -11,6 +13,7 @@ class CustomEncoder(json.JSONEncoder):
     This encoder is used to serialize special data types such as
     datetime, date, and Decimal to their string representations in JSON.
     """
+
     def default(self, obj):
         if isinstance(obj, datetime.datetime):
             return obj.isoformat()
@@ -19,6 +22,7 @@ class CustomEncoder(json.JSONEncoder):
         elif isinstance(obj, Decimal):
             return float(obj)
         return super().default(obj)
+
 
 totesys_tables = [
     "address",
@@ -34,6 +38,7 @@ totesys_tables = [
     "transaction",
 ]
 
+
 def validate_datetime_format(datetime_str):
     """Validate the format of a datetime string.
 
@@ -45,6 +50,7 @@ def validate_datetime_format(datetime_str):
     """
     datetime_pattern = r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}"
     return re.match(datetime_pattern, datetime_str) is not None
+
 
 def rows_to_json(host, database, user, password, table_name, last_timestamp):
     """Convert rows from a PostgreSQL table to JSON.
@@ -62,12 +68,14 @@ def rows_to_json(host, database, user, password, table_name, last_timestamp):
     """
     try:
         if not validate_datetime_format(last_timestamp):
-            raise ValueError("last_updated should be in the format 'YYYY-MM-DD HH:MM:SS.SSS'")
+            raise ValueError(
+                "last_updated should be in the format 'YYYY-MM-DD HH:MM:SS.SSS'")
 
         elif table_name not in totesys_tables:
-            raise ValueError(f"Table '{table_name}' is not a valid totesys table.")
+            raise ValueError(
+                f"Table '{table_name}' is not a valid totesys table.")
         else:
-            conn = pg8000.connect(user=user, password=password, host=host, database=database)
+            conn = get_conn()
             cursor = conn.cursor()
 
             query = f"SELECT * FROM {table_name} WHERE CAST(last_updated AS TIMESTAMP) > CAST('{last_timestamp}' AS TIMESTAMP)"
@@ -96,6 +104,3 @@ def rows_to_json(host, database, user, password, table_name, last_timestamp):
     except Exception as e:
         logging.error(f"Error: {str(e)}")
         return json.dumps({"error": f"Error: {str(e)}"}, indent=4)
-
-
-
