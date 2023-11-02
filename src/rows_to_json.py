@@ -1,21 +1,25 @@
 import json
-import pg8000
-import datetime
-from decimal import Decimal
-import logging
 import re
-from src.pg8000_conn import get_conn
+import logging
+import pg8000
+from decimal import Decimal
+import datetime
 
 class CustomEncoder(json.JSONEncoder):
+    """Custom JSON encoder for handling special data types.
+
+    This encoder is used to serialize special data types such as
+    datetime, date, and Decimal to their string representations in JSON.
+    """
     def default(self, obj):
         if isinstance(obj, datetime.datetime):
             return obj.isoformat()
         elif isinstance(obj, datetime.date):
             return obj.isoformat()
         elif isinstance(obj, Decimal):
-            return float(obj) 
+            return float(obj)
         return super().default(obj)
-    
+
 totesys_tables = [
     "address",
     "counterparty",
@@ -31,20 +35,40 @@ totesys_tables = [
 ]
 
 def validate_datetime_format(datetime_str):
+    """Validate the format of a datetime string.
+
+    Args:
+        datetime_str (str): The datetime string to be validated.
+
+    Returns:
+        bool: True if the string matches the expected format, False otherwise.
+    """
     datetime_pattern = r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}"
     return re.match(datetime_pattern, datetime_str) is not None
 
 def rows_to_json(host, database, user, password, table_name, last_timestamp):
+    """Convert rows from a PostgreSQL table to JSON.
+
+    Args:
+        host (str): The PostgreSQL server host.
+        database (str): The name of the PostgreSQL database.
+        user (str): The PostgreSQL username.
+        password (str): The PostgreSQL password.
+        table_name (str): The name of the table to extract data from.
+        last_timestamp (str): The timestamp indicating the last update.
+
+    Returns:
+        str: JSON representation of the extracted data.
+    """
     try:
         if not validate_datetime_format(last_timestamp):
             raise ValueError("last_updated should be in the format 'YYYY-MM-DD HH:MM:SS.SSS'")
-    
+
         elif table_name not in totesys_tables:
             raise ValueError(f"Table '{table_name}' is not a valid totesys table.")
         else:
- 
-            cursor = get_conn()
-            
+            conn = pg8000.connect(user=user, password=password, host=host, database=database)
+            cursor = conn.cursor()
 
             query = f"SELECT * FROM {table_name} WHERE CAST(last_updated AS TIMESTAMP) > CAST('{last_timestamp}' AS TIMESTAMP)"
             cursor.execute(query)
@@ -65,7 +89,7 @@ def rows_to_json(host, database, user, password, table_name, last_timestamp):
 
             json_data = json.dumps(result, indent=4, cls=CustomEncoder)
             return json_data
-        
+
     except pg8000.Error as e:
         logging.error(f"Database Error: {str(e)}")
         raise
@@ -73,7 +97,5 @@ def rows_to_json(host, database, user, password, table_name, last_timestamp):
         logging.error(f"Error: {str(e)}")
         return json.dumps({"error": f"Error: {str(e)}"}, indent=4)
 
-        
 
-# conn = pg8000.connect(user=user, password=password, host=host, database=database)
-#             cursor = conn.cursor()
+

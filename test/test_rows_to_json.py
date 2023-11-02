@@ -2,13 +2,9 @@ import unittest
 from src.rows_to_json import rows_to_json
 import os
 import json
-from unittest.mock import patch
-import pg8000
 
-@patch('src.rows_to_json.rows.json.get_conn')
 class TestRowsToJsonFunction(unittest.TestCase):
-    @patch('src.rows_to_json.rows.json.get_conn')
-    def test_rows_to_json(self, mock_get_conn):
+    def test_rows_to_json(self):
 
         host = 'localhost'
         database = 'test_database'
@@ -16,9 +12,7 @@ class TestRowsToJsonFunction(unittest.TestCase):
         password = os.environ.get("DB_PASSWORD")
         table_name = 'sales_order'
         last_timestamp= '2023-11-01 14:20:00.000'
-        conn = pg8000.connect(user=user, password=password, host=host, database=database)
-        cursor = conn.cursor()
-        mock_get_conn.return_value = cursor
+        print(user)
 
         expected_result = {
             "table_name": "sales_order",
