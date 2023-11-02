@@ -17,16 +17,9 @@ resource "aws_s3_object" "pg8000_layer" {
   bucket = aws_s3_bucket.code_bucket.id
 }
 
-# resource "aws_s3_object" "temp_botolayer" {
-#   key    = "pg8000_layer.zip"
-#   source = "${path.module}/../aws_assets/pg8000_layer.zip"
-#   bucket = aws_s3_bucket.code_bucket.id
-# }
 
 resource "aws_lambda_layer_version" "pg8000_layer" {
   filename   = "${path.module}/../aws_assets/pg8000_layer.zip"
-  #s3_key = "pg8000_layer.zip"
-  #s3_bucket = aws_s3_bucket.code_bucket.id
   layer_name = "pg8000_layer"
 
   compatible_runtimes = ["python3.11"]
@@ -34,8 +27,6 @@ resource "aws_lambda_layer_version" "pg8000_layer" {
 
 resource "aws_lambda_layer_version" "temp_boto_layer" {
   filename   = "${path.module}/../aws_assets/boto3_layer.zip"
-  #s3_key = "pg8000_layer.zip"
-  #s3_bucket = aws_s3_bucket.code_bucket.id
   layer_name = "boto3_layer"
 
   compatible_runtimes = ["python3.11"]
