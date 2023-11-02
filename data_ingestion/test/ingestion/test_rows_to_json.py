@@ -93,7 +93,7 @@ class TestRowsToJsonFunction(unittest.TestCase):
         actual_result = json.loads(actual_json)
 
         self.assertTrue("error" in actual_result)
-        self.assertIn("should be in the format", actual_result["error"])
+        self.assertIn("invalid last_timestamp format", actual_result["error"])
 
     @patch('data_ingestion.src.ingestion.rows_to_json.get_conn')
     def test_invalid_table_name(self, mock_get_conn):

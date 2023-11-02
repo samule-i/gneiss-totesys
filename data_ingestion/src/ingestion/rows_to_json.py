@@ -69,7 +69,7 @@ def rows_to_json(host, database, user, password, table_name, last_timestamp):
     try:
         if not validate_datetime_format(last_timestamp):
             raise ValueError(
-                "last_updated should be in the format 'YYYY-MM-DD HH:MM:SS.SSS'")
+                "invalid last_timestamp format")
 
         elif table_name not in totesys_tables:
             raise ValueError(
@@ -78,8 +78,12 @@ def rows_to_json(host, database, user, password, table_name, last_timestamp):
             conn = get_conn()
             cursor = conn.cursor()
 
-            query = f"SELECT * FROM {table_name} WHERE CAST(last_updated AS TIMESTAMP) > CAST('{last_timestamp}' AS TIMESTAMP)"
-            cursor.execute(query)
+            q1 = f"SELECT * FROM {table_name} WHERE "
+            q2 = "CAST(last_updated AS TIMESTAMP) > "
+            q3 = f"CAST('{last_timestamp}' AS TIMESTAMP)"
+            full_query = q1+q2+q3
+
+            cursor.execute(full_query)
 
             rows = cursor.fetchall()
             column_names = [desc[0] for desc in cursor.description]
