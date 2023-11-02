@@ -5,6 +5,11 @@ resource "aws_lambda_function" "totesys_ingestion" {
   s3_key        = aws_s3_object.lambda_code.key
   handler       = "ingestion.lambda_handler"
   runtime       = "python3.11"
+  environment {
+    variables = {
+      "S3_DATA" = aws_s3_bucket.data_bucket.arn
+    }
+  }
   layers        = ["arn:aws:lambda:eu-west-2:133256977650:layer:AWS-Parameters-and-Secrets-Lambda-Extension:11",aws_lambda_layer_version.pg8000_layer.arn,aws_lambda_layer_version.temp_boto_layer.arn]
 }
 
