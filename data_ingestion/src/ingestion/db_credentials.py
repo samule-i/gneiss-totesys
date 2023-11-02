@@ -33,6 +33,7 @@ def get_credentials(credentials_name):
 
         credentials = json.loads(response["SecretString"])
         if credentials_are_valid(credentials):
+            logger.info(f"credentials retrieved: '{credentials_name}'")
             return credentials
     except sm_client.exceptions.ResourceNotFoundException as e:
         logger.error(e)
