@@ -163,4 +163,5 @@ cython_debug/
 #.idea/
 .config*
 secret*
-terraform.tfstate
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
