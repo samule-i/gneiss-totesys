@@ -1,4 +1,4 @@
-from pg8000.native import Connection, DatabaseError
+from pg8000 import connect, DatabaseError
 import boto3
 import json
 import logging
@@ -26,9 +26,10 @@ def ingestion_handler(event, context):
     """
     try:
         conn = get_conn()
+        cursor = conn.cursor()
         query = ('SELECT * FROM sales_order \
                  ORDER BY sales_order_id DESC LIMIT 10;')
-        rows = conn.run(query)
+        rows = cursor.execute(query)
         column_names = [column['name'] for column in conn.columns]
         return column_names, rows
     except (DatabaseError) as pe:
@@ -36,6 +37,7 @@ def ingestion_handler(event, context):
     except Exception as e:
         print(f'Unexpected error: {e}')
     finally:
+        cursor.close()
         conn.close()
 
 
@@ -47,8 +49,9 @@ def get_conn():
     DB_USER = credentials['username']
     DB_PASSWORD = credentials['password']
 
-    return (Connection(user=DB_USER, host=DB_HOST,
-                       database=DB_DB, password=DB_PASSWORD))
+    conn = (connect(user=DB_USER, host=DB_HOST,
+                    database=DB_DB, password=DB_PASSWORD))
+    return conn
 
 
 def get_credentials(credentials_name, logger):
