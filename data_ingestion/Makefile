@@ -40,7 +40,7 @@ unit-tests: coverage pytest
 
 
 postgres-install:
-	apt-get install -y postgresql postgresql-contrib
+	sudo apt-get install -y postgresql postgresql-contrib
 	service postgresql start
 	sudo -u postgres createuser --superuser test_user
 	sudo -u postgres createdb test_user
