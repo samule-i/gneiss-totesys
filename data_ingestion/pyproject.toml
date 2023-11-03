@@ -14,7 +14,7 @@ requires-python = ">=3.10"
 dependencies = ["boto3", "botocore"]
 
 [project.optional-dependencies]
-dev = ["autopep8", "bandit", "flake8", "moto", "safety", "pytest", "pytest-cov"]
+dev = ["autopep8", "bandit", "flake8", "moto", "safety", "pg8000", "pytest", "pytest-cov"]
 
 [build-system]
 requires = ["setuptools>=65.0"]
