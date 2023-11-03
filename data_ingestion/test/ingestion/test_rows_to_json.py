@@ -1,8 +1,9 @@
 import unittest
-from ingestion.rows_to_json import rows_to_json
+from ingestion.rows_to_json import rows_to_json, CustomEncoder
 import json
 import datetime
 from unittest.mock import patch, MagicMock
+from decimal import Decimal
 
 
 class TestRowsToJsonFunction(unittest.TestCase):
@@ -187,3 +188,26 @@ class TestRowsToJsonFunction(unittest.TestCase):
 
         self.assertTrue("error" in actual_result)
         self.assertEqual(actual_result["error"], expected_error)
+
+
+class TestCustomEncoder(unittest.TestCase):
+    def setUp(self):
+        self.encoder = CustomEncoder()
+
+    def test_datetime_serialization(self):
+        now = datetime.datetime.now()
+        serialized = self.encoder.default(now)
+        expected = now.isoformat()
+        self.assertEqual(serialized, expected)
+
+    def test_date_serialization(self):
+        today = datetime.date.today()
+        serialized = self.encoder.default(today)
+        expected = today.isoformat()
+        self.assertEqual(serialized, expected)
+
+    def test_decimal_serialization(self):
+        decimal_val = Decimal('123.456')
+        serialized = self.encoder.default(decimal_val)
+        expected = float(decimal_val)
+        self.assertEqual(serialized, expected)
