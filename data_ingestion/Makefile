@@ -35,7 +35,9 @@ dev-setup:
 	$(call execute_in_env, $(PIP) install -e .)
 
 # Build / Run
-unit-tests:
+unit-tests: coverage pytest
+
+pytest:
 	$(call execute_in_env, pytest -v)
 
 init: create-environment dev-setup
@@ -51,4 +53,4 @@ coverage:
 	$(call execute_in_env, coverage run --omit 'venv/*' -m pytest && coverage report -m --fail-under=${MINUMUM_COVERAGE})
 
 ## Run all checks
-standards: safety bandit flake coverage
+standards: safety bandit flake
