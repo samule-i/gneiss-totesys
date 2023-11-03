@@ -31,7 +31,6 @@ endef
 ################################################################################################################
 # Set Up Dev
 dev-setup:
-	sudo apt-get update
 	$(call execute_in_env, $(PIP) install .[dev])
 	$(call execute_in_env, $(PIP) install -e .)
 
@@ -40,8 +39,9 @@ unit-tests: coverage pytest
 
 
 postgres-install:
+	sudo apt-get update
 	sudo apt-get install -y postgresql postgresql-contrib
-	service postgresql start
+	sudo service postgresql start
 	sudo -u postgres createuser --superuser test_user
 	sudo -u postgres createdb test_user
 	sudo -u postgres psql -c "ALTER USER test_user PASSWORD 'test_pw';"
