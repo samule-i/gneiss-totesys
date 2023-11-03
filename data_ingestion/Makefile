@@ -31,7 +31,7 @@ endef
 ################################################################################################################
 # Set Up Dev
 dev-setup:
-	apt update
+	sudo apt-get update
 	$(call execute_in_env, $(PIP) install .[dev])
 	$(call execute_in_env, $(PIP) install -e .)
 
@@ -40,7 +40,7 @@ unit-tests: coverage pytest
 
 
 postgres-install:
-	apt install -y postgresql postgresql-contrib
+	apt-get install -y postgresql postgresql-contrib
 	service postgresql start
 	sudo -u postgres createuser --superuser test_user
 	sudo -u postgres createdb test_user
