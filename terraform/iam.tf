@@ -17,7 +17,21 @@ resource "aws_iam_role" "lambda_role" {
             }
         ]
       })
+       inline_policy {
+    name = "sns_publish_policy"
+    policy = jsonencode({
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": "sns:Publish",
+          "Resource": aws_sns_topic.user_updates.arn
+        }
+      ]
+    })
+  }
 }
+
 
 
 data "aws_iam_policy_document" "s3_document" {
