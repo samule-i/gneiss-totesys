@@ -31,11 +31,26 @@ endef
 ################################################################################################################
 # Set Up Dev
 dev-setup:
+	apt update
 	$(call execute_in_env, $(PIP) install .[dev])
 	$(call execute_in_env, $(PIP) install -e .)
 
 # Build / Run
 unit-tests: coverage pytest
+
+
+postgres-install:
+	apt install -y postgresql postgresql-contrib
+	service postgresql start
+	sudo -u postgres createuser --superuser test_user
+	sudo -u postgres createdb test_user
+	sudo -u postgres psql -c "ALTER USER test_user PASSWORD 'test_pw';"
+
+postgres-database:
+	PGPASSWORD=test_pw psql -U test_user -f ./test/sql/totesys.sql -h localhost
+
+postgres-all: postgres-install postgres-database
+
 
 pytest:
 	$(call execute_in_env, pytest -v)
