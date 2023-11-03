@@ -1,17 +1,17 @@
 import json
 import boto3
+import logging
 
 
 class CredentialsException(Exception):
     pass
 
 
-def get_credentials(credentials_name, logger):
+def get_credentials(credentials_name):
     """Retrieves named database credentials from AWS secretsmanager.
 
     Args:
         credentials_name (str): name of the db credentials
-        logger (Logger): logger object
 
     Raises:
         CredentialsException: if credentials are not stored, wrong
@@ -23,12 +23,16 @@ def get_credentials(credentials_name, logger):
         "hostname", "port", "database", "username", "password"
     """
     try:
+        logger = logging.getLogger("ingestion_log")
+        logger.setLevel(logging.DEBUG)
+
         sm_client = get_secretsmanager_client()
 
         response = sm_client.get_secret_value(SecretId=credentials_name)
 
         credentials = json.loads(response["SecretString"])
         if credentials_are_valid(credentials):
+            logger.info(f"credentials retrieved: '{credentials_name}'")
             return credentials
     except sm_client.exceptions.ResourceNotFoundException as e:
         logger.error(e)
