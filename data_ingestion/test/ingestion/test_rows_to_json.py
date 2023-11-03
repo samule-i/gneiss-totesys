@@ -1,5 +1,5 @@
 import unittest
-from data_ingestion.src.ingestion.rows_to_json import rows_to_json
+from ingestion.rows_to_json import rows_to_json
 import os
 import json
 from unittest.mock import patch
@@ -7,7 +7,7 @@ import pg8000
 
 
 class TestRowsToJsonFunction(unittest.TestCase):
-    @patch('data_ingestion.src.ingestion.rows_to_json.get_conn')
+    @patch('ingestion.rows_to_json.get_conn')
     def test_rows_to_json(self, mock_get_conn):
 
         host = 'localhost'
@@ -58,17 +58,11 @@ class TestRowsToJsonFunction(unittest.TestCase):
             ]
         }
 
-        actual_json = rows_to_json(
-            host,
-            database,
-            user,
-            password,
-            table_name,
-            last_timestamp)
+        actual_json = rows_to_json(table_name, last_timestamp)
         actual_result = json.loads(actual_json)
         assert actual_result == expected_result
 
-    @patch('data_ingestion.src.ingestion.rows_to_json.get_conn')
+    @patch('ingestion.rows_to_json.get_conn')
     def test_invalid_datetime_format(self, mock_get_conn):
         host = 'localhost'
         database = 'test_database'
@@ -83,19 +77,13 @@ class TestRowsToJsonFunction(unittest.TestCase):
             database=database)
         mock_get_conn.return_value = conn
 
-        actual_json = rows_to_json(
-            host,
-            database,
-            user,
-            password,
-            table_name,
-            last_timestamp)
+        actual_json = rows_to_json(table_name, last_timestamp)
         actual_result = json.loads(actual_json)
 
         self.assertTrue("error" in actual_result)
         self.assertIn("invalid last_timestamp format", actual_result["error"])
 
-    @patch('data_ingestion.src.ingestion.rows_to_json.get_conn')
+    @patch('ingestion.rows_to_json.get_conn')
     def test_invalid_table_name(self, mock_get_conn):
         host = 'localhost'
         database = 'test_database'
@@ -110,13 +98,7 @@ class TestRowsToJsonFunction(unittest.TestCase):
             database=database)
         mock_get_conn.return_value = conn
 
-        actual_json = rows_to_json(
-            host,
-            database,
-            user,
-            password,
-            table_name,
-            last_timestamp)
+        actual_json = rows_to_json(table_name, last_timestamp)
         actual_result = json.loads(actual_json)
 
         self.assertTrue("error" in actual_result)

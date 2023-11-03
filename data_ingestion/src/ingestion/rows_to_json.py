@@ -4,7 +4,7 @@ import logging
 import pg8000
 from decimal import Decimal
 import datetime
-from src.ingestion import get_conn
+from ingestion.ingestion import get_conn
 
 
 class CustomEncoder(json.JSONEncoder):
@@ -52,7 +52,7 @@ def validate_datetime_format(datetime_str):
     return re.match(datetime_pattern, datetime_str) is not None
 
 
-def rows_to_json(host, database, user, password, table_name, last_timestamp):
+def rows_to_json(table_name, last_timestamp):
     """Convert rows from a PostgreSQL table to JSON.
 
     Args:
