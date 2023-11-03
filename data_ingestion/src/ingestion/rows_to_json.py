@@ -1,7 +1,6 @@
 import json
 import re
 import logging
-import pg8000
 from decimal import Decimal
 import datetime
 from ingestion.ingestion import get_conn
@@ -77,13 +76,11 @@ def rows_to_json(table_name, last_timestamp):
         else:
             conn = get_conn()
             cursor = conn.cursor()
+            query = f"""SELECT * FROM {table_name} WHERE
+             CAST(last_updated AS TIMESTAMP) >
+             CAST('{last_timestamp}' AS TIMESTAMP)"""
 
-            q1 = f"SELECT * FROM {table_name} WHERE "
-            q2 = "CAST(last_updated AS TIMESTAMP) > "
-            q3 = f"CAST('{last_timestamp}' AS TIMESTAMP)"
-            full_query = q1+q2+q3
-
-            cursor.execute(full_query)
+            cursor.execute(query)
 
             rows = cursor.fetchall()
             column_names = [desc[0] for desc in cursor.description]
@@ -101,10 +98,6 @@ def rows_to_json(table_name, last_timestamp):
 
             json_data = json.dumps(result, indent=4, cls=CustomEncoder)
             return json_data
-
-    except pg8000.Error as e:
-        logging.error(f"Database Error: {str(e)}")
-        raise
     except Exception as e:
         logging.error(f"Error: {str(e)}")
         return json.dumps({"error": f"Error: {str(e)}"}, indent=4)
