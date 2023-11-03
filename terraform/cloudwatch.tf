@@ -30,10 +30,10 @@ resource "aws_iam_role_policy_attachment" "lambda_execution_policy_attachment" {
 
 
 
-
 resource "aws_lambda_permission" "allow_cloudwatch" {
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.totesys_ingestion.function_name
   principal     = "events.amazonaws.com"
+
 }
