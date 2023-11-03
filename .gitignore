@@ -170,3 +170,5 @@ cython_debug/
 secret*
 terraform/terraform.tfstate
 terraform/terraform.tfstate.backup
+secret_olap.json
+secret_oltp.json

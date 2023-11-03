@@ -1,5 +1,6 @@
 import unittest
-from ingestion.rows_to_json import rows_to_json, CustomEncoder
+from ingestion.rows_to_json import rows_to_json, CustomEncoder, \
+      validate_datetime_format
 import json
 import datetime
 from unittest.mock import patch, MagicMock
@@ -211,3 +212,20 @@ class TestCustomEncoder(unittest.TestCase):
         serialized = self.encoder.default(decimal_val)
         expected = float(decimal_val)
         self.assertEqual(serialized, expected)
+
+
+class TestValidateDatetimeFormat(unittest.TestCase):
+    def test_valid_datetime_format(self):
+        self.assertTrue(validate_datetime_format("2023-11-03 12:34:56.789"))
+
+    def test_invalid_datetime_format_missing_milliseconds(self):
+        self.assertFalse(validate_datetime_format("2023-11-03 12:34:56"))
+
+    def test_invalid_datetime_format_wrong_order(self):
+        self.assertFalse(validate_datetime_format("03-11-2023 12:34:56.789"))
+
+    def test_invalid_datetime_format_short_year(self):
+        self.assertFalse(validate_datetime_format("23-11-03 12:34:56.789"))
+
+    def test_invalid_datetime_format_long_year(self):
+        self.assertFalse(validate_datetime_format("20230-11-03 12:34:56.789"))

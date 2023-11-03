@@ -35,7 +35,24 @@ dev-setup:
 	$(call execute_in_env, $(PIP) install -e .)
 
 # Build / Run
-unit-tests:
+unit-tests: coverage pytest
+
+
+postgres-install:
+	sudo apt-get update
+	sudo apt-get install -y postgresql postgresql-contrib
+	sudo service postgresql start
+	sudo -u postgres createuser --superuser test_user
+	sudo -u postgres createdb test_user
+	sudo -u postgres psql -c "ALTER USER test_user PASSWORD 'test_pw';"
+
+postgres-database:
+	PGPASSWORD=test_pw psql -U test_user -f ./test/sql/totesys.sql -h localhost
+
+postgres-all: postgres-install postgres-database
+
+
+pytest:
 	$(call execute_in_env, pytest -v)
 
 init: create-environment dev-setup
@@ -51,4 +68,4 @@ coverage:
 	$(call execute_in_env, coverage run --omit 'venv/*' -m pytest && coverage report -m --fail-under=${MINUMUM_COVERAGE})
 
 ## Run all checks
-standards: safety bandit flake coverage
+standards: safety bandit flake
