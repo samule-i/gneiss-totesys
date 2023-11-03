@@ -1,5 +1,12 @@
 [![data-ingestion test & deploy](https://github.com/samule-i/gneiss-totesys/actions/workflows/test_deploy.yml/badge.svg)](https://github.com/samule-i/gneiss-totesys/actions/workflows/test_deploy.yml)
 
+## testing database credentials
+```
+username: test_user
+password: test_pw
+database: test_database
+host: localhost
+```
 ## setup
 This creates a venv dir, installs dev dependencies and production dependencies
 ```
