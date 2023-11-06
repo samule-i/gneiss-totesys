@@ -1,3 +1,4 @@
+import json
 from ingestion.write_JSON import write_to_ingestion
 import boto3
 from moto import mock_s3
@@ -22,35 +23,64 @@ def s3_boto():
 @mock_s3
 def test_the_data_has_been_uploaded_to_S3_using_ls(s3_boto):
     bucket = 'test-bucket-geni'
-    key = "test"
-
-    data = '[{"name":"John", "age":30, "car":3}]'
-
+    data = {
+        "table_name": "sales_order",
+        "column_names": [
+            "sales_order_id",
+            "created_at",
+            "last_updated",
+            "design_id",
+            "staff_id",
+            "counterparty_id",
+            "units_sold",
+            "unit_price",
+            "currency_id",
+            "agreed_delivery_date",
+            "agreed_payment_date",
+            "agreed_delivery_location_id"
+        ],
+        "record_count": 1,
+        "data": [
+                [
+                    5030,
+                    "2023-11-01T14:22:10.329000",
+                    "2023-11-01T14:22:10.329000",
+                    186,
+                    11,
+                    17,
+                    51651,
+                    3.25,
+                    2,
+                    "2023-11-06",
+                    "2023-11-05",
+                    27
+                ]
+        ]
+    }
+    json_data = json.dumps(data)
     location = {'LocationConstraint': 'eu-west-2'}
     s3_boto.create_bucket(Bucket=bucket, CreateBucketConfiguration=location)
-    s3_boto.put_object(Bucket=bucket, Key=key, Body=data)
-    write_to_ingestion(data, bucket, key)
+    write_to_ingestion(json_data, bucket)
     response = s3_boto.list_objects_v2(Bucket=bucket)
-    assert response['Contents'][0]['Key'] == 'test'
+    assert ("sales_order/2023-11-06" in response['Contents'][0]['Key'])
 
 
 @mock_s3
 def test_function_handles_runtime_error(s3_boto):
     bucket = 'test-bucket-geni'
-    key = 'test'
     data = []
     location = {'LocationConstraint': 'eu-west-2'}
     s3_boto.create_bucket(Bucket=bucket, CreateBucketConfiguration=location)
     with pytest.raises(RuntimeError):
-        write_to_ingestion(data, bucket, key)
+        write_to_ingestion(data, bucket)
 
 
 @mock_s3
 def test_function_handles_when_there_is_no_existing_bucket():
     bucket = 'test-bucket-eni'
-    key = 'test'
-    data = '[{"name":"John", "age":30, "car":3}]'
+    data = {"name": "John", "age": 30, "car": 3}
+    json_data = json.dumps(data)
     try:
-        write_to_ingestion(data, bucket, key)
+        write_to_ingestion(json_data, bucket)
     except ClientError as c:
         assert c.response['Error']['Code'] == 'NoSuchBucket'
