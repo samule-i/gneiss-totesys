@@ -14,3 +14,8 @@ variable "db_credentials_olap" {
   sensitive = true
   nullable=false
 }
+
+variable "sns_emails" {
+  type = list
+  nullable=false
+}

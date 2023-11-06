@@ -75,11 +75,13 @@ jobs:
           run: |
             terraform plan \
             -var="db_credentials_olap=${{secrets.DB_CREDENTIALS_OLAP}}" \
-            -var="db_credentials_oltp=${{secrets.DB_CREDENTIALS_OLTP}}"
+            -var="db_credentials_oltp=${{secrets.DB_CREDENTIALS_OLTP}}" \
+            -var="sns_emails=${{secrets.SNS_EMAILS}}"
   
         - name: Terraform apply
           working-directory: terraform
           run: |
             terraform apply -auto-approve \
             -var="db_credentials_olap=${{secrets.DB_CREDENTIALS_OLAP}}" \
-            -var="db_credentials_oltp=${{secrets.DB_CREDENTIALS_OLTP}}"
+            -var="db_credentials_oltp=${{secrets.DB_CREDENTIALS_OLTP}}" \
+            -var="sns_emails=${{secrets.SNS_EMAILS}}"
