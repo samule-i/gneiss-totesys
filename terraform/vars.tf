@@ -16,6 +16,6 @@ variable "db_credentials_olap" {
 }
 
 variable "sns_emails" {
-  type = list
+  type = string
   nullable=false
 }

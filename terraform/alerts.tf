@@ -20,7 +20,7 @@ resource "aws_sns_topic" "user_updates" {
 }
 
 resource "aws_sns_topic_subscription" "user_updates_sqs_target" {
-  for_each = toset(var.sns_emails)
+  for_each = toset(split(", ", var.sns_emails))
   topic_arn = aws_sns_topic.user_updates.arn
   protocol  = "email"
   endpoint  = each.value

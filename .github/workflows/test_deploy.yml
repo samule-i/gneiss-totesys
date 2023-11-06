@@ -55,33 +55,25 @@ jobs:
             aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             aws-region: eu-west-2
-            
-        - name: Set db variables
-          run: |
-           echo "${{ secrets.DB_CREDENTIALS_OLTP }}" | base64 -d > secret_oltp.json
-        - name: Set db variables
-          run: |
-           echo "${{ secrets.DB_CREDENTIALS_OLAP }}" | base64 -d > secret_olap.json
-        
+
         - name: Setup terraform
           uses: hashicorp/setup-terraform@v2
   
         - name: Terraform init
-          working-directory: terraform
-          run: terraform init
+          run: >
+            terraform -chdir=./terraform init
   
         - name: Terraform plan
-          working-directory: terraform
-          run: |
-            terraform plan \
-            -var="db_credentials_olap=${{secrets.DB_CREDENTIALS_OLAP}}" \
-            -var="db_credentials_oltp=${{secrets.DB_CREDENTIALS_OLTP}}" \
+          run: >
+            terraform -chdir=./terraform plan
+            -var="db_credentials_olap=${{secrets.DB_CREDENTIALS_OLAP}}"
+            -var="db_credentials_oltp=${{secrets.DB_CREDENTIALS_OLTP}}"
             -var="sns_emails=${{secrets.SNS_EMAILS}}"
   
         - name: Terraform apply
-          working-directory: terraform
-          run: |
-            terraform apply -auto-approve \
-            -var="db_credentials_olap=${{secrets.DB_CREDENTIALS_OLAP}}" \
-            -var="db_credentials_oltp=${{secrets.DB_CREDENTIALS_OLTP}}" \
+          run: >
+            terraform -chdir=./terraform apply
+            -auto-approve
+            -var="db_credentials_olap=${{secrets.DB_CREDENTIALS_OLAP}}"
+            -var="db_credentials_oltp=${{secrets.DB_CREDENTIALS_OLTP}}"
             -var="sns_emails=${{secrets.SNS_EMAILS}}"

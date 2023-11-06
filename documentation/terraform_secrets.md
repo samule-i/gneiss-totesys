@@ -14,5 +14,5 @@ db_credentials_olap = "{ 'hostname': 'example-host', 'port': 5432, 'database': '
 db_credentials_oltp = "{ 'hostname': 'example-host', 'port': 5432, 'database': 'totesys', 'username': 'example_user', 'password': 'example-pass' }"
 
 
-sns_emails = ["user1@email.com", "user2@email.com", "user3@email.com"]
+sns_emails = "user1@email.com, user2@email.com, user3@email.com"
 ```
