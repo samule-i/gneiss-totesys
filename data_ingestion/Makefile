@@ -69,3 +69,7 @@ coverage:
 
 ## Run all checks
 standards: safety bandit flake
+
+reset_terraform: 
+	terraform -chdir=../terraform destroy -auto-approve -var-file=vars.tfvars
+	terraform -chdir=../terraform apply -auto-approve -var-file=vars.tfvars
