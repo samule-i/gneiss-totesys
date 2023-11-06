@@ -2,12 +2,14 @@
 import logging
 from botocore.exceptions import ClientError
 import boto3
+from datetime import date, datetime
+import json
 
 logger = logging.getLogger('MyLogger')
 logger.setLevel(logging.ERROR)
 
 
-def write_to_ingestion(data, bucket, key):
+def write_to_ingestion(data, bucket):
     """moves a JSON to a S3 Bucket.
 
     Keyword arguments:
@@ -17,7 +19,15 @@ def write_to_ingestion(data, bucket, key):
     """
     try:
         s3 = boto3.client('s3', region_name='eu-west-2')
-        s3.put_object(Bucket=bucket, Key=key, Body=data)
+        dict = json.loads(data)
+        table_name = dict.get('table_name')
+        date_today = date.today()
+        now = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        s3.put_object(
+            Bucket=bucket,
+            Key=f"{table_name}/{date_today}/{current_time}",
+            Body=data)
     except ClientError as c:
         if c.response['Error']['Code'] == 'NoSuchBucket':
             logger.error(f'No such bucket - {bucket}')
