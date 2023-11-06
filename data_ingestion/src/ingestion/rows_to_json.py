@@ -3,6 +3,7 @@ import re
 import logging
 from decimal import Decimal
 import datetime
+from pg8000.native import identifier
 
 
 class CustomEncoder(json.JSONEncoder):
@@ -51,47 +52,32 @@ def validate_datetime_format(datetime_str):
 
 
 def rows_to_json(table_name, last_timestamp, conn):
-    """Convert rows from a PostgreSQL table to JSON.
+    if not validate_datetime_format(last_timestamp):
+        raise ValueError(
+            "invalid last_timestamp format")
 
-    Args:
-        host (str): The PostgreSQL server host.
-        database (str): The name of the PostgreSQL database.
-        user (str): The PostgreSQL username.
-        password (str): The PostgreSQL password.
-        table_name (str): The name of the table to extract data from.
-        last_timestamp (str): The timestamp indicating the last update.
+    if table_name not in totesys_tables:
+        raise ValueError(
+            f"Table '{table_name}' is not a valid totesys table.")
 
-    Returns:
-        str: JSON representation of the extracted data.
-    """
     try:
-        if not validate_datetime_format(last_timestamp):
-            raise ValueError(
-                "invalid last_timestamp format")
+        query = f"""SELECT * FROM {identifier(table_name)} WHERE
+            CAST(last_updated AS TIMESTAMP) >
+            CAST(':last_timestamp' AS TIMESTAMP)"""
 
-        elif table_name not in totesys_tables:
-            raise ValueError(
-                f"Table '{table_name}' is not a valid totesys table.")
-        else:
-    
-            query = f"""SELECT * FROM {table_name} WHERE
-             CAST(last_updated AS TIMESTAMP) >
-             CAST('{last_timestamp}' AS TIMESTAMP)"""
+        rows = conn.run(query, last_timestamp=last_timestamp)
+        column_names = [item["name"] for item in conn.columns]
+        record_count = conn.row_count
 
-            rows = conn.run(query)
-            column_names = [item["name"] for item in conn.columns]
-            record_count: conn.row_count
+        result = {
+            "table_name": table_name,
+            "column_names": column_names,
+            "record_count": record_count,
+            "data": rows
+        }
 
-            result = {
-                "table_name": table_name,
-                "column_names": column_names,
-                "record_count": record_count,
-                "data": rows
-            }
-
-
-            json_data = json.dumps(result, indent=4, cls=CustomEncoder)
-            return json_data
+        json_data = json.dumps(result, indent=4, cls=CustomEncoder)
+        return json_data
     except Exception as e:
         logging.error(f"Error: {str(e)}")
         return json.dumps({"error": f"Error: {str(e)}"}, indent=4)

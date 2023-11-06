@@ -10,7 +10,7 @@ def get_conn(credentials):
         DB_PASSWORD = credentials['password']
 
         return (Connection(user=DB_USER, host=DB_HOST,
-                        database=DB_DB, password=DB_PASSWORD))
+                           database=DB_DB, password=DB_PASSWORD))
     except DatabaseError as e:
         print('Error connecting to DB')
         raise e
