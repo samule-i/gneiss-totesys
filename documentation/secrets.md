@@ -21,31 +21,41 @@ There are two main parts, GitHub and Terraform:
 }
 ```
 
-- To convert to base64:
-
-```
-base64 local_oltp.json > oltp.base64
-```
-
-- Example output:
-
-```
-ewogICAgImhvc3RuYW1lIiA6ICJob3N0LmV1LXdlc3QtMi5yZHMuYW1hem9uYXdzLmNvbSIsCiAgICAicG9ydCIgOiA1NDMyLAogICAgImRhdGFiYXNlIiA6ICJkYl9uYW1lIiwKICAgICJ1c2VybmFtZSIgOiAidXNlcl9uYW1lIiwKICAgICJwYXNzd29yZCIgOiAicGFzc3dvcmQiCn0=
-```
-
-- When storing this in GitHub secrets, it is critical that no linebreaks are inserted by mistake.
-- The GitHub actions script must have a step to extract the secret value, decode it from base64 and store it as a local file. This must be before terraform. e.g. :
-
-```
-- name: Set db variables
-  run: |
- echo ${{ secrets.DB_CREDENTIALS_OLTP }} | base64 -d > secret_oltp.json
-- name: Set db variables
-  run: |
- echo ${{ secrets.DB_CREDENTIALS_OLAP }} | base64 -d > secret_olap.json
-```
-
 ### Terraform
+
+When running terraform locally, you will be required to pass in information that is not kept on the git repository.
+
+This information can be stored in `/terraform/vars.tfvars`
+Then simply call plan or apply with the `-var-file=` argument:
+
+`terraform plan -var-file=vars.tfvars`
+<sup>contact a team member for a prepared vars.tfvars file</sup>
+
+an example structure could look like this:
+
+```
+db_credentials_olap = base64string
+db_credentials_oltp = base64string
+sns_emails = base64string
+```
+
+These secrets are read directly into terraform without being stored into a file, and used in secrets.tf for database credentials, and alerts.tf for emails for the SNS topic.
+```mermaid
+%%{ init: 
+    {
+        'theme': 'dark'
+    }
+}%%
+graph LR
+CLI["Command line args
+
+-var=&quot;key=value&quot;"]
+TFV["vars.tfvars"]
+SCRT["Github Secrets"]
+
+CLI & TFV & SCRT -.-> vars.tf --> secrets.tf & alerts.tf
+```
+
 
 - AWS "parameters and secrets" ARN must be entered in the "layers" attribute for the lambda within terraform. This is a fixed ARN provided by AWS. E.g.:
 
