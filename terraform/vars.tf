@@ -1,14 +1,21 @@
 variable "lambda_name" {
     type = string
-    default = "totesys_ingestion"
+    default = "my_totesys_ingestion"
 }
 
 variable "db_credentials_oltp" {
   type = string
-  default = "db_credentials_oltp"
+  sensitive = true
+  nullable=false
 }
 
 variable "db_credentials_olap" {
   type = string
-  default = "db_credentials_olap"
+  sensitive = true
+  nullable=false
+}
+
+variable "sns_emails" {
+  type = string
+  nullable=false
 }
