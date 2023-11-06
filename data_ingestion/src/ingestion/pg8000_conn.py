@@ -1,4 +1,4 @@
-from pg8000 import connect, DatabaseError
+from pg8000.native import Connection, DatabaseError
 
 
 def get_conn(credentials):
@@ -9,7 +9,7 @@ def get_conn(credentials):
         DB_DB = credentials['database']
         DB_PASSWORD = credentials['password']
 
-        return (connect(user=DB_USER, host=DB_HOST,
+        return (Connection(user=DB_USER, host=DB_HOST,
                         database=DB_DB, password=DB_PASSWORD))
     except DatabaseError as e:
         print('Error connecting to DB')

@@ -12,7 +12,7 @@ credentials = {
     'password': 'test_pw'}
 
 
-@patch("ingestion.pg8000_conn.connect")
+@patch("ingestion.pg8000_conn.Connection")
 def test_get_conn_connects(patched_connect):
 
     get_conn(credentials)
@@ -23,7 +23,7 @@ def test_get_conn_connects(patched_connect):
         password='test_pw')
 
 
-@patch("ingestion.pg8000_conn.connect")
+@patch("ingestion.pg8000_conn.Connection")
 def test_DB_error_returned_for_invalid_credentials(patched_connect):
     patched_connect.side_effect = DatabaseError('Error connecting to DB')
     with pytest.raises(DatabaseError):
