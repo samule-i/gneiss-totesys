@@ -1,6 +1,6 @@
 variable "lambda_name" {
     type = string
-    default = "my_totesys_ingestion"
+    default = "totesys_ingestion"
 }
 
 variable "db_credentials_oltp" {
