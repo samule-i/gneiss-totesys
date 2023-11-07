@@ -1,4 +1,3 @@
-
 import logging
 from botocore.exceptions import ClientError
 import boto3
@@ -21,6 +20,11 @@ def write_to_ingestion(data, bucket):
         s3 = boto3.client('s3', region_name='eu-west-2')
         dict = json.loads(data)
         table_name = dict.get('table_name')
+
+        if dict.get("record_count", 0) == 0:
+            logger.info(f"write_to_ingestion: no records for '{table_name}'.")
+            return
+
         date_today = date.today()
         now = datetime.now()
         current_time = now.strftime("%H:%M:%S")
