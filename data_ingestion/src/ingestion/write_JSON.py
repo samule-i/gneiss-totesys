@@ -30,7 +30,7 @@ def write_to_ingestion(data, bucket):
         current_time = now.strftime("%H:%M:%S")
         s3.put_object(
             Bucket=bucket,
-            Key=f"{table_name}/{date_today}/{current_time}",
+            Key=f"{table_name}/{date_today}/{current_time}.json",
             Body=data)
     except ClientError as c:
         if c.response['Error']['Code'] == 'NoSuchBucket':
