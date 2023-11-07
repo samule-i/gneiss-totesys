@@ -3,7 +3,7 @@ resource "aws_lambda_function" "totesys_ingestion" {
   role          = aws_iam_role.lambda_role.arn
   s3_bucket     = aws_s3_bucket.code_bucket.id
   s3_key        = aws_s3_object.lambda_code.key
-  handler       = "ingestion.lambda_handler"
+  handler       = "ingestion.ingestion.lambda_handler"
   runtime       = "python3.11"
   environment {
     variables = {
@@ -22,4 +22,11 @@ resource "aws_lambda_permission" "allow_s3" {
   principal      = "s3.amazonaws.com"
   source_arn     = aws_s3_bucket.data_bucket.arn
   source_account = data.aws_caller_identity.current.account_id
+}
+
+resource "aws_lambda_permission" "allow_cloudwatch_to_invoke" {
+  action = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.totesys_ingestion.function_name
+  principal = "events.amazonaws.com"
+  source_arn = aws_cloudwatch_event_rule.ingestion_lambda_invocation_rule.arn
 }
