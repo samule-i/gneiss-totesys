@@ -39,7 +39,8 @@ number_of_tables = 11
 @mock_s3
 @mock_secretsmanager
 @patch('ingestion.ingestion.rows_to_json')
-def test_ingestion_calls_rows_to_json_for_each_table(mock_rows):
+@patch('ingestion.ingestion.get_conn')
+def test_ingestion_calls_rows_to_json_for_each_table(mock_conn, mock_rows):
     sm = boto3.client("secretsmanager", region_name="eu-west-2")
     secret = fake_credentials
     sm.create_secret(Name="db_credentials_oltp",
