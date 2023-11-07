@@ -10,10 +10,50 @@ resource "aws_cloudwatch_log_metric_filter" "Error_Filter" {
   }
 }
 
+resource "aws_cloudwatch_log_group" "json_to_parquet_logs" {
+  name = "/aws/lambda/${aws_lambda_function.json_to_parquet.function_name}"
+  depends_on = [aws_lambda_function.json_to_parquet]
+}
+
+
+resource "aws_cloudwatch_log_metric_filter" "JSON_to_Parquet_Error_Filter" {
+  name           = "ErrorFilter"
+  pattern        = "ERROR"
+  log_group_name = aws_cloudwatch_log_group.json_to_parquet_logs.name
+
+  metric_transformation {
+    name      = "ErrorMetric"
+    namespace = "CustomLambdaMetrics"
+    value     = "1"
+  }
+}
+
+resource "aws_cloudwatch_log_group" "parquet_to_OLAP_logs" {
+  name = "/aws/lambda/${aws_lambda_function.parquet_to_OLAP.function_name}"
+  depends_on = [aws_lambda_function.parquet_to_OLAP]
+}
+
+
+resource "aws_cloudwatch_log_metric_filter" "Parquet_to_OLAP_Error_Filter" {
+  name           = "ErrorFilter"
+  pattern        = "ERROR"
+  log_group_name = aws_cloudwatch_log_group.parquet_to_OLAP_logs.name
+
+  metric_transformation {
+    name      = "ErrorMetric"
+    namespace = "CustomLambdaMetrics"
+    value     = "1"
+  }
+}
+
+
 resource "aws_cloudwatch_log_group" "ingestion_logs" {
   name = "/aws/lambda/${aws_lambda_function.totesys_ingestion.function_name}"
   depends_on = [aws_lambda_function.totesys_ingestion]
 }
+
+
+
 
 resource "aws_sns_topic" "user_updates" {
   name = "ErrorAlertMessages"
