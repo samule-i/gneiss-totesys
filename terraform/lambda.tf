@@ -56,8 +56,6 @@ resource "aws_s3_bucket_notification" "json_bucket_notification" {
   lambda_function {
     lambda_function_arn = aws_lambda_function.json_to_parquet.arn
     events              = ["s3:ObjectCreated:*"]
-    # filter_prefix       = "AWSLogs/"
-    # filter_suffix       = ".log"
   }
 
   depends_on = [aws_lambda_permission.allow_s3]
@@ -91,4 +89,15 @@ resource "aws_lambda_permission" "allow_parquet_s3" {
   principal      = "s3.amazonaws.com"
   source_arn     = aws_s3_bucket.parquet_data_bucket.arn
   source_account = data.aws_caller_identity.current.account_id
+}
+
+resource "aws_s3_bucket_notification" "parquet_bucket_notification" {
+  bucket = aws_s3_bucket.parquet_data_bucket.id
+
+  lambda_function {
+    lambda_function_arn = aws_lambda_function.parquet_to_OLAP.arn
+    events              = ["s3:ObjectCreated:*"]
+  }
+
+  depends_on = [aws_lambda_permission.allow_parquet_s3]
 }
