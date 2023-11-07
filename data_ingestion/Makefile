@@ -37,21 +37,6 @@ dev-setup:
 # Build / Run
 unit-tests: coverage pytest
 
-
-postgres-install:
-	sudo apt-get update
-	sudo apt-get install -y postgresql postgresql-contrib
-	sudo service postgresql start
-	sudo -u postgres createuser --superuser test_user
-	sudo -u postgres createdb test_user
-	sudo -u postgres psql -c "ALTER USER test_user PASSWORD 'test_pw';"
-
-postgres-database:
-	PGPASSWORD=test_pw psql -U test_user -f ./test/sql/totesys.sql -h localhost
-
-postgres-all: postgres-install postgres-database
-
-
 pytest:
 	$(call execute_in_env, pytest -v)
 
@@ -69,3 +54,7 @@ coverage:
 
 ## Run all checks
 standards: safety bandit flake
+
+reset_terraform: 
+	terraform -chdir=../terraform destroy -auto-approve -var-file=vars.tfvars
+	terraform -chdir=../terraform apply -auto-approve -var-file=vars.tfvars

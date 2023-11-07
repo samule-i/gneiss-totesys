@@ -22,8 +22,6 @@ jobs:
     unit_tests:
         runs-on: ubuntu-latest
         needs: standard_tests
-        env:
-          PGPASSWORD: test_pw
         steps:
             - name: checkout
               uses: actions/checkout@v4
@@ -34,9 +32,6 @@ jobs:
             - name: init
               working-directory: ./data_ingestion
               run: make init
-            - name: postgres-setup
-              working-directory: ./data_ingestion
-              run: make postgres-all
             - name: unit-tests
               run: make unit-tests
               working-directory: ./data_ingestion

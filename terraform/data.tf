@@ -4,8 +4,8 @@ data "aws_region" "current" {}
 
 data "archive_file" "lambda" {
   type        = "zip"
-  excludes = [ "__pycache__" ]
-  source_dir = "${path.module}/../data_ingestion/src/ingestion"
+  excludes = [ "__pycache__", "totesys_data_ingestion.egg-info" ]
+  source_dir = "${path.module}/../data_ingestion/src"
   output_path = "${path.module}/../ingestion_function.zip"
 }
 
