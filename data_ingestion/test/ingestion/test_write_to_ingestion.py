@@ -6,6 +6,9 @@ import pytest
 from botocore.exceptions import ClientError
 import logging
 from datetime import date as dt
+from unittest.mock import patch
+
+
 logger = logging.getLogger('MyLogger')
 logger.setLevel(logging.ERROR)
 
@@ -85,3 +88,16 @@ def test_function_handles_when_there_is_no_existing_bucket():
         write_to_ingestion(json_data, bucket)
     except ClientError as c:
         assert c.response['Error']['Code'] == 'NoSuchBucket'
+
+
+@patch("ingestion.write_JSON.boto3.client")
+def test_no_file_created_when_there_is_no_new_data(patched_boto3):
+    data_with_no_rows = {
+        "table_name": "sales_order",
+        "column_names": ["a", "b", "c"],
+        "record_count": 0,
+        "rows": []
+    }
+    data_str = json.dumps(data_with_no_rows)
+    write_to_ingestion(data_str, "bucket")
+    patched_boto3.put_object.assert_not_called()
