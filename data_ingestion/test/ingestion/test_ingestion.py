@@ -38,7 +38,7 @@ number_of_tables = 11
 
 @mock_s3
 @mock_secretsmanager
-@patch('ingestion.rows_to_json.rows_to_json')
+@patch('ingestion.ingestion.rows_to_json')
 def test_ingestion_calls_rows_to_json_for_each_table(mock_rows):
     sm = boto3.client("secretsmanager", region_name="eu-west-2")
     secret = fake_credentials
@@ -56,17 +56,8 @@ def test_ingestion_calls_rows_to_json_for_each_table(mock_rows):
                   Key='timestamps.json',
                   Body=json.dumps(fake_time)
                   )
-
-    mock_rows_json = MagicMock()
-    mock_rows_json.return_value = {
-            "table_name": "test_table"
-    }
-
+    mock_rows.return_value = json.dumps({"table_name": ""})
     lambda_handler('', '')
-    print(mock_rows.assert_called)
-    assert False
-    # patcher = patch('ingestion.db_credentials.get_credentials', mock_rows_json)
-    # with patcher:
-    #     mock_rows_json.assert_called()
-    #     result = lambda_handler('', '')
-    #     print(mock_rows_json.call_args_list)
+    mock_rows.assert_called()
+    print(dir(mock_rows))
+    assert mock_rows.call_count == 11

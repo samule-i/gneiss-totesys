@@ -9,7 +9,7 @@ from decimal import Decimal
 def test_rows_to_json_executes_correct_query_string():
     query_str = """SELECT * FROM sales_order WHERE
             CAST(last_updated AS TIMESTAMP) >
-            CAST(':last_timestamp' AS TIMESTAMP)"""
+            CAST(:last_timestamp AS TIMESTAMP)"""
     conn = Mock()
     timestamp = "2023-11-06 10:00:00.000"
     rows_to_json("sales_order", timestamp, conn)

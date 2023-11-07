@@ -63,7 +63,7 @@ def rows_to_json(table_name, last_timestamp, conn):
     try:
         query = f"""SELECT * FROM {identifier(table_name)} WHERE
             CAST(last_updated AS TIMESTAMP) >
-            CAST(':last_timestamp' AS TIMESTAMP)"""
+            CAST(:last_timestamp AS TIMESTAMP)"""
 
         rows = conn.run(query, last_timestamp=last_timestamp)
         column_names = [item["name"] for item in conn.columns]
