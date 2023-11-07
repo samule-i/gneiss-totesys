@@ -23,3 +23,10 @@ resource "aws_lambda_permission" "allow_s3" {
   source_arn     = aws_s3_bucket.data_bucket.arn
   source_account = data.aws_caller_identity.current.account_id
 }
+
+resource "aws_lambda_permission" "allow_cloudwatch_to_invoke" {
+  action = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.totesys_ingestion.function_name
+  principal = "events.amazonaws.com"
+  source_arn = aws_cloudwatch_event_rule.ingestion_lambda_invocation_rule.arn
+}
