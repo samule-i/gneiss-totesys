@@ -20,7 +20,7 @@ def get_last_ingestion_timestamp():
         timestamp = json.loads(json_data)
         return timestamp['last_timestamp']
     except ClientError as e:
-        if e.response['Error']['Code'] == 'NoSuchKey':
+        if e.response['Error']['Code'] in ['AccessDenied', 'NoSuchKey']:
             logging.info('Default timestamp returned')
             return "1970-01-01 00:00:00"
     except Exception as e:
