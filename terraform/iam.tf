@@ -34,14 +34,53 @@ resource "aws_iam_role" "lambda_role" {
 
 
 
+resource "aws_iam_role" "lambda_json_to_parquet_role" {
+  name_prefix        = "role-${var.lambda_json_to_parquet_name}"
+  assume_role_policy = jsonencode({
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "sts:AssumeRole"
+                ],
+                "Principal": {
+                    "Service": [
+                        "lambda.amazonaws.com"
+                    ]
+                }
+            }
+        ]
+      })
+       inline_policy {
+    name = "sns_publish_policy"
+    policy = jsonencode({
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": "sns:Publish",
+          "Resource": aws_sns_topic.user_updates.arn
+        }
+      ]
+    })
+  }
+}
+
+
+
 data "aws_iam_policy_document" "s3_document" {
   statement {
 
-    actions = ["s3:GetObject"]
+    actions = ["s3:*Object",
+               "s3:ListBucket"
+    ]
 
     resources = [
       "${aws_s3_bucket.code_bucket.arn}/*",
       "${aws_s3_bucket.data_bucket.arn}/*",
+      "${aws_s3_bucket.json_to_parquet_code_bucket.arn}/*",
+      "${aws_s3_bucket.parquet_data_bucket.arn}/*"
     ]
   }
 }
