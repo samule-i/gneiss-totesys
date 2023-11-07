@@ -1,5 +1,5 @@
 from ingestion.ingestion import lambda_handler
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from moto import mock_secretsmanager, mock_s3
 import boto3
 import os
