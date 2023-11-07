@@ -5,6 +5,7 @@ resource "aws_lambda_function" "totesys_ingestion" {
   s3_key        = aws_s3_object.lambda_code.key
   handler       = "ingestion.ingestion.lambda_handler"
   runtime       = "python3.11"
+  timeout       = 60 # NOTE this must be less than the period defined in the eventbridge rule
   environment {
     variables = {
       "S3_DATA_ID" = aws_s3_bucket.data_bucket.id,
