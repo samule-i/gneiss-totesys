@@ -5,6 +5,7 @@ from moto import mock_s3
 import pytest
 from botocore.exceptions import ClientError
 import logging
+from datetime import date as dt
 logger = logging.getLogger('MyLogger')
 logger.setLevel(logging.ERROR)
 
@@ -62,7 +63,7 @@ def test_the_data_has_been_uploaded_to_S3_using_ls(s3_boto):
     s3_boto.create_bucket(Bucket=bucket, CreateBucketConfiguration=location)
     write_to_ingestion(json_data, bucket)
     response = s3_boto.list_objects_v2(Bucket=bucket)
-    assert ("sales_order/2023-11-07" in response['Contents'][0]['Key'])
+    assert (f"sales_order/{dt.today()}" in response['Contents'][0]['Key'])
 
 
 @mock_s3
