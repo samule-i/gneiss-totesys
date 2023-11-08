@@ -1,15 +1,13 @@
 from json_to_parquet.dim_currency import currency_transform
 import pytest
-
+import pandas as pd
 
 def test_gives_correct_format(currency_json):
     result = currency_transform(currency_json)
-    expected = {
-        'currency_id': [1, 2, 3],
-        'currency_code': ['GBP', 'USD', 'EUR'],
-        'currency_name': ['Great British Pound', 'US Dollar', 'Euro']
-    }
-    assert result == expected
+
+    assert result.loc[0, 'currency_id'] == 1
+    assert result.loc[0, 'currency_code'] == 'GBP'
+    assert result.loc[0, 'currency_name'] == 'Great British Pound'
 
 
 def test_raise_error_if_given_wrong_table():

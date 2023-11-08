@@ -1,3 +1,4 @@
+import pandas as pd
 def currency_transform(stored_data):
     if stored_data["table_name"] != 'currency':
         raise ValueError('Invalid table_name')
@@ -15,4 +16,6 @@ def currency_transform(stored_data):
                     }
     except KeyError as e:
         raise e
-    return currency
+    df = pd.DataFrame(currency)
+    print(df)
+    return df
