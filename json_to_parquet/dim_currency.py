@@ -1,4 +1,6 @@
 import pandas as pd
+
+
 def currency_transform(stored_data):
     if stored_data["table_name"] != 'currency':
         raise ValueError('Invalid table_name')

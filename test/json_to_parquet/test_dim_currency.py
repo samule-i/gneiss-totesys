@@ -1,6 +1,6 @@
 from json_to_parquet.dim_currency import currency_transform
 import pytest
-import pandas as pd
+
 
 def test_gives_correct_format(currency_json):
     result = currency_transform(currency_json)
