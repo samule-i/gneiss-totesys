@@ -1,7 +1,5 @@
 from json_to_parquet.dim_currency import currency_transform
 import pytest
-from json_to_parquet.dim_currency import IncompatibleTableException
-from copy import deepcopy
 
 
 def test_gives_correct_format(currency_json):
@@ -33,7 +31,7 @@ def test_raise_error_if_given_wrong_table():
             ]
         ]
     }
-    with pytest.raises(IncompatibleTableException):
+    with pytest.raises(ValueError):
         currency_transform(stored_data)
 
 
