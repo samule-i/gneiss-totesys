@@ -48,7 +48,7 @@ safety:
 bandit:
 	$(call execute_in_env, bandit -r -lll */*.py *c/*/*.py)
 flake:
-	$(call execute_in_env, flake8  ingestion json_to_parquet parquet_to_olap test)
+	$(call execute_in_env, flake8  ingestion json_to_parquet test)
 coverage:
 	$(call execute_in_env, coverage run --omit 'venv/*' -m pytest && coverage report -m --fail-under=${MINUMUM_COVERAGE})
 
