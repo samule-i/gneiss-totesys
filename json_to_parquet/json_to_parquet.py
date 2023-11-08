@@ -2,6 +2,8 @@ from json_to_parquet.get_s3_file import json_event()
 
 def fake_fn():
     pass
+def write_to_s3(_, __):
+    pass
 
 def lambda_handler(event, context):
     json_body = json_event(event)
@@ -23,3 +25,4 @@ def lambda_handler(event, context):
 
     table_name = json_body['table_name']
     transformed_data = function_dict[table_name]()
+    write_to_s3('key', transformed_data)
