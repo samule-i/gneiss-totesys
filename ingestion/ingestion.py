@@ -1,12 +1,12 @@
 import os
 from datetime import datetime as dt
-from ingestion.db_credentials import get_credentials
-from ingestion.pg8000_conn import get_conn
-from ingestion.write_JSON import write_to_ingestion
-from ingestion.get_timestamp import (
+from db_credentials import get_credentials
+from pg8000_conn import get_conn
+from write_JSON import write_to_ingestion
+from get_timestamp import (
     get_last_ingestion_timestamp as get_timestamp,
     update_last_ingestion_timestamp)
-from ingestion.rows_to_json import (
+from rows_to_json import (
     rows_to_json,
     totesys_tables)
 
