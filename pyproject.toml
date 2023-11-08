@@ -20,5 +20,5 @@ dev = ["autopep8", "bandit", "flake8", "moto", "safety", "pg8000", "pytest", "py
 requires = ["setuptools>=65.0"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools.packages.find]
-where = ["ingestion", "json_to_parquet", "parquet_to_olap"]
+[tool.setuptools]
+packages = ["ingestion", "json_to_parquet"]
