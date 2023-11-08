@@ -8,3 +8,18 @@ data "archive_file" "lambda" {
   source_dir = "${path.module}/../data_ingestion/src"
   output_path = "${path.module}/../ingestion_function.zip"
 }
+
+data "archive_file" "json_to_parquet_lambda" {
+  type        = "zip"
+  excludes = [ "__pycache__" ]
+  source_dir = "${path.module}/../json_to_parquet"
+  output_path = "${path.module}/../json_to_parquet_function.zip"
+}
+
+data "archive_file" "parquet_to_OLAP_lambda" {
+  type        = "zip"
+  excludes = [ "__pycache__" ]
+  source_dir = "${path.module}/../parquet_to_olap"
+  output_path = "${path.module}/../parquet_to_olap_function.zip"
+}
+
