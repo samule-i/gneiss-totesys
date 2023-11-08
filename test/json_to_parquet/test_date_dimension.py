@@ -1,5 +1,4 @@
 from json_to_parquet.date_dimension import date_dimension
-import pandas as pd
 
 
 def test_gets_year_correct():

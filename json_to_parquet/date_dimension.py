@@ -18,15 +18,7 @@ def date_dimension(start_date: str = '2022-01-01', duration_in_years: int = 5):
         'month_name': [],
         'quarter': []
     }
-    day_to_weekday_map = {
-        'Monday': 1,
-        'Tuesday': 2,
-        'Wednesday': 3,
-        'Thursday': 4,
-        'Friday': 5,
-        'Saturday': 6,
-        'Sunday': 7
-    }
+
     date = dt.fromisoformat(start_date)
 
     days = 365*duration_in_years
