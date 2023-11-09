@@ -80,7 +80,7 @@ resource "aws_lambda_function" "parquet_to_OLAP" {
       "P2OLAP_CODE_BUCKET_ARN" = aws_s3_bucket.parquet-to-olap-code_bucket.arn
     }
   }
-  layers        = [aws_lambda_layer_version.temp_boto_layer.arn]
+  layers        = ["arn:aws:lambda:eu-west-2:336392948345:layer:AWSSDKPandas-Python39:11"]
 }
 #Change Layer 
 

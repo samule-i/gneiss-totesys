@@ -14,7 +14,7 @@ handler.setFormatter(log_fmt)
 log.addHandler(handler)
 
 
-def parquet_event(event: dict) -> dict:
+def parquet_event(event: dict):
     '''Returns a parquet file from an S3 bucket
     bucket must exist & key must match a parquet file that exists.
     '''
@@ -24,7 +24,7 @@ def parquet_event(event: dict) -> dict:
     return data
 
 
-def parquet_S3_key(bucket: str, key: str) -> dict:
+def parquet_S3_key(bucket: str, key: str):
     '''Returns a parquet file from an S3 bucket
     bucket must exist & key must match a parquet file that exists.
     '''

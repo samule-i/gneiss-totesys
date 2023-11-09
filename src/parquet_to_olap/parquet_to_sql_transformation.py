@@ -13,16 +13,26 @@ log_fmt = logging.Formatter(
 handler.setFormatter(log_fmt)
 log.addHandler(handler)
 
+olap_table_names = {'dim_counterparty': 'counterparty_id',
+                    'dim_currency': 'currency_id',
+                    'dim_date': 'date_id',
+                    'dim_design': 'design_id',
+                    'dim_location': 'location_id',
+                    'dim_payment_type': 'payment_type_id',
+                    'dim_staff': 'staff_id',
+                    'dim_transaction': 'transaction_id',
+                    'fact_payment': 'payment_record_id',
+                    'fact_purchase_order': 'purchase_record_id',
+                    'fact_sales_order': 'sales_record_id'}
 
-def parquet_to_sql(dataframe, target_table, target_pkey_column, conn):
+
+def parquet_to_sql(dataframe, target_table, conn):
     """
     Writes to database table using upsert method
 
     Args:
         dataframe: target dataframe
         target_table: table to be written to
-        target_pkey_colum: column in target table that
-                           contains primary key
         conn: database connection
     """
     olap_table_names = {'dim_counterparty': 'counterparty_id',
@@ -41,12 +51,10 @@ def parquet_to_sql(dataframe, target_table, target_pkey_column, conn):
         raise TypeError('The dataframe input is not of type DataFrame')
     if target_table not in olap_table_names:
         raise ValueError('The target_table input is not a valid table')
-    if target_pkey_column != olap_table_names[target_table]:
-        raise ValueError(
-            'The target_table does not match the target_pkey_column')
     if not isinstance(conn, Connection):
         raise TypeError('The conn input is not a valid pg8000 Connection')
     try:
+        target_pkey_column = olap_table_names[target_table]
         wr.postgresql.to_sql(
             df=dataframe,
             table=target_table,
