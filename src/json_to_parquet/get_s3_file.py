@@ -54,7 +54,7 @@ def keys_of_specific_table(bucket, table):
     pass
 
 
-def find_json_with_id(bucket: str, table_name: str, idx: int) -> list:
+def json_from_row_id(bucket: str, table_name: str, idx: int) -> list:
     '''Reads the path of the JSON file that contains the row
     with the index provided
     '''
@@ -62,11 +62,15 @@ def find_json_with_id(bucket: str, table_name: str, idx: int) -> list:
     try:
         response = client.get_object(
             Bucket=bucket,
-            # ../ingestion/write_JSON.py
-            Key=f'.id_lookup/{table_name}/{idx}'
+            Key=f'.id_lookup/{table_name}/{idx}'  # ../ingestion/write_JSON.py
         )
         bytes = response['Body'].read()
-        return bytes.decode('utf-8')
+        response = client.get_object(
+            Bucket=bucket,
+            Key=bytes.decode('utf-8')
+        )
+        bytes = response['Body'].read()
+        return json.loads(bytes.decode())
     except ClientError as e:
         log.error(f'{e.response["Error"]["Code"]}')
         log.info(f'File: {bucket} is unavailable')

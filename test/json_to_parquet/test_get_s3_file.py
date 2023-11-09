@@ -2,7 +2,7 @@ from moto import mock_s3
 import boto3
 from botocore.exceptions import ClientError
 import pytest
-from json_to_parquet.get_s3_file import json_S3_key, json_event, bucket_list
+from json_to_parquet.get_s3_file import json_S3_key, json_event, bucket_list, json_from_row_id
 
 
 @mock_s3
@@ -130,3 +130,23 @@ def test_bucket_list_returns_list_if_empty():
     )
     keys = bucket_list(bucket)
     assert keys == []
+
+
+@mock_s3
+def test_get_id():
+    client = boto3.client('s3')
+    bucket = 'test-bucket'
+    client.create_bucket(
+        Bucket=bucket,
+        CreateBucketConfiguration={'LocationConstraint': 'eu-west-2'})
+    client.put_object(
+        Body='test/key',
+        Bucket=bucket,
+        Key='.id_lookup/test_table/230'
+    )
+    client.put_object(
+        Body='{"Hello": "from a referenced key"}',
+        Bucket=bucket,
+        Key='test/key'
+    )
+    assert json_from_row_id(bucket, 'test_table', 230)

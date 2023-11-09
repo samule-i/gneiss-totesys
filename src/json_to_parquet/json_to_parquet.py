@@ -15,8 +15,10 @@ log = logger(__name__)
 def fake_fn():
     pass
 
+
 def get_address_jsons(json_body):
     pass
+
 
 def lambda_handler(event, _):
     out_bucket: str = os.environ['PARQUET_S3_DATA_ID']
@@ -41,19 +43,22 @@ def lambda_handler(event, _):
         'transaction': fake_fn
     }
 
-    new_table_dict = {
-        'address': 'location',
-        'counterparty': 'counterparty',
-        'currency': currency_transform,
-        'department': fake_fn,
-        'design': transform_design,
-        'payment': fake_fn,
-        'payment_type': fake_fn,
-        'purchase_order': fake_fn,
-        'sales_order': transform_sales_order,
-        'staff': transform_staff,
-        'transaction': fake_fn
+    out_table_lookup = {
+        'address': 'dim_location',
+        'counterparty': 'dim_counterparty',
+        'currency': 'dim_currency',
+        'department': 'dim_staff',
+        'design': 'dim_design',
+        'payment': 'fact_payment',
+        'payment_type': 'dim_payment_type',
+        'purchase_order': 'fact_purchase_order',
+        'sales_order': 'fact_sales_order',
+        'staff': 'dim_staff',
+        'transaction': 'dim_transaction'
     }
+
+    out_key = triggering_key.replace(
+        table_name, out_table_lookup[table_name])
 
     date_dim_key = 'date/dim_date.parquet'
     if date_dim_key not in parquet_keys:
@@ -64,4 +69,4 @@ def lambda_handler(event, _):
 
     transformed_df: pd.DataFrame = function_dict[table_name](json_body)
     if len(transformed_df):
-        write_pq_to_s3(out_bucket, triggering_key, transformed_df)
+        write_pq_to_s3(out_bucket, out_key, transformed_df)

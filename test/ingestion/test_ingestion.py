@@ -57,7 +57,11 @@ def test_ingestion_calls_rows_to_json_for_each_table(mock_conn, mock_rows):
                   Key='timestamps.json',
                   Body=json.dumps(fake_time)
                   )
-    mock_rows.return_value = json.dumps({"table_name": ""})
+    mock_rows.return_value = json.dumps(
+        {"table_name": "",
+         "column_names": "",
+         "record_count": 0,
+         "data": ""})
     lambda_handler('', '')
     mock_rows.assert_called()
     print(dir(mock_rows))
