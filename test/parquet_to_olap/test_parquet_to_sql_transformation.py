@@ -4,7 +4,7 @@ from unittest.mock import Mock, patch
 from moto import mock_s3
 from pg8000 import Connection
 
-from src.parquet_to_sql_transformation import parquet_to_sql
+from parquet_to_olap.parquet_to_sql_transformation import parquet_to_sql
 
 
 @mock_s3
@@ -46,11 +46,10 @@ def test_that_error_raised_if_fourth_argument_not_pg8000_conn():
         parquet_to_sql(dataframe, target_table, target_pkey_column, conn)
 
 
-@patch('src.parquet_to_sql_transformation.wr.postgresql')
+@patch('parquet_to_olap.parquet_to_sql_transformation.wr.postgresql')
 def test_that_to_sql_method_called_once_with_valid_input(patched_wr):
     conn = Mock(spec=Connection)
-    dataframe = pd.read_parquet(
-        './test/test_parquet_files/address_transformed.parquet')
+    dataframe = pd.DataFrame()
     target_table = 'dim_location'
     target_pkey_column = 'location_id'
     parquet_to_sql(dataframe, target_table, target_pkey_column, conn)
@@ -65,7 +64,7 @@ def test_that_to_sql_method_called_once_with_valid_input(patched_wr):
     )
 
 
-@patch('src.parquet_to_sql_transformation.wr.postgresql')
+@patch('parquet_to_olap.parquet_to_sql_transformation.wr.postgresql')
 def test_that_Exception_raised_for_any_other_error(patched_wr):
     patched_wr.to_sql.side_effect = Exception
     with pytest.raises(Exception):
