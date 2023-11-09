@@ -32,5 +32,4 @@ def test_currency_fn_called_for_json(currency_event, currency_json):
     )
     with patch('json_to_parquet.dim_currency.currency_transform') as mocked:
         lambda_handler(currency_event, '')
-        print(mocked.call_args_list)
         assert mocked.assert_called

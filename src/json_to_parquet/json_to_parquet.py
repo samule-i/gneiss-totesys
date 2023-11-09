@@ -10,7 +10,7 @@ def fake_fn():
     pass
 
 
-def lambda_handler(event, context):
+def lambda_handler(event, _):
     out_bucket: str = os.environ['PARQUET_S3_DATA_ID']
     json_body = json_event(event)
     triggering_key = event['Records'][0]['s3']['object']['key']

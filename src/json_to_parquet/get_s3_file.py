@@ -1,18 +1,8 @@
 import boto3
 from botocore.exceptions import ClientError
 import json
-import logging
-
-
-log = logging.getLogger('get_s3_file')
-log.setLevel(logging.INFO)
-handler = logging.StreamHandler()
-handler.setLevel(logging.INFO)
-log_fmt = logging.Formatter(
-    '''%(levelname)s - %(message)s - %(name)s -
-    %(module)s/%(funcName)s()''')
-handler.setFormatter(log_fmt)
-log.addHandler(handler)
+from json_to_parquet.custom_log import logger
+log = logger(__name__)
 
 
 def json_event(event: dict) -> dict:

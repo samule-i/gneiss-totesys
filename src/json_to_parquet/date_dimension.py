@@ -1,7 +1,10 @@
 from datetime import datetime as dt
 from datetime import timedelta
+from json_to_parquet.custom_log import logger
 import math
 import pandas as pd
+
+log = logger(__name__)
 
 
 def date_dimension(start_date: str = '2022-01-01',
