@@ -1,4 +1,4 @@
-from ingestion.ingestion import lambda_handler
+from src.ingestion_main import lambda_handler
 from unittest.mock import patch
 from moto import mock_secretsmanager, mock_s3
 import boto3
@@ -38,8 +38,8 @@ number_of_tables = 11
 
 @mock_s3
 @mock_secretsmanager
-@patch('ingestion.ingestion.rows_to_json')
-@patch('ingestion.ingestion.get_conn')
+@patch('src.ingestion_main.rows_to_json')
+@patch('src.ingestion_main.get_conn')
 def test_ingestion_calls_rows_to_json_for_each_table(mock_conn, mock_rows):
     sm = boto3.client("secretsmanager", region_name="eu-west-2")
     secret = fake_credentials
