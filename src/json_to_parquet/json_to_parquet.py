@@ -43,6 +43,7 @@ def lambda_handler(event, _):
         'staff': transform_staff,
         'transaction': fake_fn
     }
+
     new_table_dict = {
         'address': 'location',
         'counterparty': 'counterparty',
@@ -56,8 +57,6 @@ def lambda_handler(event, _):
         'staff': transform_staff,
         'transaction': fake_fn
     }
-
-    if 
 
     date_dim_key = 'date/dim_date.parquet'
     if date_dim_key not in parquet_keys:
