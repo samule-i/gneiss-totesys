@@ -203,3 +203,45 @@ def transform_counterparty(counterparty_json, address_json):
     except Exception as e:
         logging.error(f"Error: {str(e)}")
         raise e
+
+
+def transform_purchase_order(purchase_order_data):
+    table_data = json.loads(purchase_order_data)
+    if table_data["table_name"] != "purchase_order":
+        logging.error("Invalid Table Name.")
+        raise ValueError("Invalid Table Name.")
+    try:
+        column_names = table_data["column_names"]
+        data = table_data["data"]
+        df = pd.DataFrame(data, columns=column_names)
+        df.insert(0, "purchase_record_id", range(1, 1 + df.shape[0]))
+        df["created_date"] = df["created_at"].str.split(" ").str[0]
+        df["created_time"] = df["created_at"].str.split(" ").str[1]
+        df["last_updated_date"] = df["last_updated"].str.split(" ").str[0]
+        df["last_updated_time"] = df["last_updated"].str.split(" ").str[1]
+
+        expected_columns = [
+
+            "purchase_record_id",
+            "purchase_order_id",
+            "created_date",
+            "created_time",
+            "last_updated_date",
+            "last_updated_time",
+            "staff_id",
+            "counterparty_id",
+            "item_code",
+            "item_quantity",
+            "item_unit_price",
+            "currency_id",
+            "agreed_delivery_date",
+            "agreed_payment_date",
+            "agreed_delivery_location_id",
+        ]
+
+        fact_purchase_order = df[expected_columns]
+
+        return fact_purchase_order
+    except Exception as e:
+        logging.error(f"Error: {str(e)}")
+        raise e
