@@ -1,4 +1,4 @@
-from src.ingestion.get_timestamp import (
+from ingestion.get_timestamp import (
     get_last_ingestion_timestamp,
     update_last_ingestion_timestamp)
 import boto3
@@ -44,7 +44,7 @@ def test_returns_default_timestamp(s3_boto):
     assert actual == expected
 
 
-@patch('src.ingestion.get_timestamp.boto3.client')
+@patch('ingestion.get_timestamp.boto3.client')
 def test_returns_exception(mock_client):
     mock_client.side_effect = ValueError
     with pytest.raises(ValueError):
@@ -70,7 +70,7 @@ def test_update_timestamp(s3_boto):
     assert updated_timestamp == updated_json_data
 
 
-@patch('src.ingestion.get_timestamp.boto3.client')
+@patch('ingestion.get_timestamp.boto3.client')
 def test_updater_returns_exception(mock_client):
     mock_client.side_effect = ValueError
     with pytest.raises(ValueError):

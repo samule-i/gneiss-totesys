@@ -1,4 +1,4 @@
-from src.json_to_parquet.example import examplefn
+from json_to_parquet.example import examplefn
 
 
 def test_example_works():

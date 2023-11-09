@@ -61,9 +61,7 @@ terra-destroy:
 terra-init:
 	terraform -chdir=terraform init
 
-_terra-apply:
+terra-apply:
 	terraform -chdir=terraform apply -auto-approve -var-file=vars.tfvars
 
-terra-apply: zip-packages _terra-apply
-
-terra-reset: terra-destroy zip-packages	terra-apply
+terra-reset: terra-destroy	terra-apply

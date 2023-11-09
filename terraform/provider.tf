@@ -4,7 +4,7 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket = "gneiss-totesys-backend"
+    bucket = "my-gneiss-totesys-backend"
     key    = "application.tfstate"
     region = "eu-west-2"
   }

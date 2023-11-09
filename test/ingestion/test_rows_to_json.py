@@ -1,4 +1,4 @@
-from src.ingestion.rows_to_json import rows_to_json, CustomEncoder
+from ingestion.rows_to_json import rows_to_json, CustomEncoder
 from unittest.mock import Mock
 import json
 import pytest

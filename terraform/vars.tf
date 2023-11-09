@@ -1,16 +1,16 @@
 variable "lambda_name" {
     type = string
-    default = "totesys_ingestion"
+    default = "___totesys_ingestion"
 }
 
 variable "lambda_json_to_parquet_name" {
     type = string
-    default = "json_to_parquet"
+    default = "___json_to_parquet"
 }
 
 variable "lambda_OLAP_loader_name" {
     type = string
-    default = "OLAP_loader"
+    default = "___OLAP_loader"
 }
 
 variable "db_credentials_oltp" {

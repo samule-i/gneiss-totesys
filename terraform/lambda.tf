@@ -4,7 +4,7 @@ resource "aws_lambda_function" "totesys_ingestion" {
   role          = aws_iam_role.lambda_role.arn
   s3_bucket     = aws_s3_bucket.code_bucket.id
   s3_key        = aws_s3_object.lambda_code.key
-  handler       = "ingestion.lambda_handler"
+  handler       = "ingestion.ingestion.lambda_handler"
   runtime       = "python3.11"
   timeout       = 60 # NOTE this must be less than the period defined in the eventbridge rule
   environment {
@@ -27,7 +27,7 @@ resource "aws_lambda_function" "json_to_parquet" {
   role          = aws_iam_role.lambda_json_to_parquet_role.arn
   s3_bucket     = aws_s3_bucket.json_to_parquet_code_bucket.id
   s3_key        = aws_s3_object.lambda_json_to_parquet_code.key
-  handler       = "json_to_parquet.lambda_handler"
+  handler       = "json_to_parquet.json_to_parquet.lambda_handler"
   runtime       = "python3.11"
   environment {
     variables = {
@@ -70,7 +70,7 @@ resource "aws_lambda_function" "parquet_to_OLAP" {
   role          = aws_iam_role.lambda_parquets_to_olap_role.arn
   s3_bucket     = aws_s3_bucket.parquet-to-olap-code_bucket.id
   s3_key        = aws_s3_object.lambda_parquet_to_OLAP_code.key
-  handler       = "parquet_to_olap.lambda_handler"
+  handler       = "parquet_to_olap.parquet_to_olap.lambda_handler"
   runtime       = "python3.11"
   environment {
     variables = {

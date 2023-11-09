@@ -1,5 +1,5 @@
 import json
-from src.ingestion.write_JSON import write_to_ingestion
+from ingestion.write_JSON import write_to_ingestion
 import boto3
 from moto import mock_s3
 import pytest
@@ -90,7 +90,7 @@ def test_function_handles_when_there_is_no_existing_bucket():
         assert c.response['Error']['Code'] == 'NoSuchBucket'
 
 
-@patch("src.ingestion.write_JSON.boto3.client")
+@patch("ingestion.write_JSON.boto3.client")
 def test_no_file_created_when_there_is_no_new_data(patched_boto3):
     data_with_no_rows = {
         "table_name": "sales_order",
