@@ -1,8 +1,9 @@
 from moto import mock_s3
 import boto3
+import os
 from botocore.exceptions import ClientError
 import pytest
-from json_to_parquet.get_s3_file import json_S3_key, json_event
+from json_to_parquet.get_s3_file import json_S3_key, json_event, bucket_list
 
 
 @mock_s3
@@ -84,3 +85,38 @@ def test_get_logs_error_when_no_key(caplog):
     assert message_list[0][0:5] == 'ERROR'
     expected_message = 'NoSuchKey'
     assert caplog.records[0].message == expected_message
+
+
+@mock_s3
+def test_bucket_list_get_logs_error_when_no_key(caplog):
+    os.environ['J2P_CODE_BUCKET_ID'] = 'expected_bucket'
+    s3_client = boto3.client('s3')
+    s3_client.create_bucket(
+        Bucket='test',
+        CreateBucketConfiguration={'LocationConstraint': 'eu-west-2'}
+    )
+    with pytest.raises(ClientError):
+        bucket_list()
+
+    message_list = caplog.text.split('\n')
+    assert message_list[0][0:5] == 'ERROR'
+    expected_message = 'NoSuchBucket'
+    assert caplog.records[0].message == expected_message
+
+
+@mock_s3
+def test_bucket_list_returns_keys():
+    os.environ['J2P_CODE_BUCKET_ID'] = 'expected_bucket'
+    s3_client = boto3.client('s3')
+    s3_client.create_bucket(
+        Bucket='expected_bucket',
+        CreateBucketConfiguration={'LocationConstraint': 'eu-west-2'}
+    )
+    s3_client.put_object(
+        Bucket='expected_bucket',
+        Key='test_key',
+        Body='{"a": "b"}'
+    )
+
+    keys = bucket_list()
+    assert 'test_key' in keys

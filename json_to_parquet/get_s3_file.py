@@ -2,6 +2,8 @@ import boto3
 from botocore.exceptions import ClientError
 import json
 import logging
+import os
+
 
 log = logging.getLogger('get_s3_file')
 log.setLevel(logging.INFO)
@@ -42,3 +44,18 @@ def json_S3_key(bucket: str, key: str) -> dict:
     data = bytes.read().decode('utf-8')
     json_data = json.loads(data)
     return json_data
+
+
+def bucket_list():
+    client = boto3.client('s3')
+    bucket = os.environ['J2P_CODE_BUCKET_ID']
+    try:
+        response = client.list_objects_v2(
+            Bucket=bucket)
+    except ClientError as e:
+        log.error(f'{e.response["Error"]["Code"]}')
+        log.info(f'File: {bucket} is unavailable')
+        raise (e)
+
+    keys = [item['Key'] for item in response['Contents']]
+    return keys
