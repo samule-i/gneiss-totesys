@@ -5,12 +5,12 @@ import pytest
 import awswrangler as wr
 import pandas as pd
 import json
-from src.get_s3_file import parquet_S3_key, parquet_event
+from parquet_to_olap.get_parquet_s3_file import parquet_S3_key, parquet_event
 
 
 @pytest.fixture(scope='function')
 def fake_event():
-    with open('test/fake_events/put_file.json') as file:
+    with open('test/_fake_events/par2olap_put_file.json') as file:
         data = file.read()
     event = json.loads(data)
     return event
@@ -24,13 +24,15 @@ def test_get_s3_returns_parquet_data():
         CreateBucketConfiguration={'LocationConstraint': 'eu-west-2'}
     )
 
-    df1 = pd.read_parquet('./test/test_parquet_files/address_1.parquet')
+    df1 = pd.read_parquet('./test/parquet_to_olap/'
+                          'test_parquet_files/address_1.parquet')
 
     wr.s3.to_parquet(
         df=df1,
         path='s3://bucket/address_1.parquet'
     )
-    df2 = pd.read_parquet('./test/test_parquet_files/address_2.parquet')
+    df2 = pd.read_parquet('./test/parquet_to_olap/'
+                          'test_parquet_files/address_2.parquet')
     wr.s3.to_parquet(
         df=df2,
         path='s3://bucket/address_2.parquet'
@@ -58,7 +60,8 @@ def test_get_input_file_returns_correct_data(fake_event):
         CreateBucketConfiguration={'LocationConstraint': 'eu-west-2'}
     )
 
-    df1 = pd.read_parquet('./test/test_parquet_files/address_1.parquet')
+    df1 = pd.read_parquet('./test/parquet_to_olap/'
+                          'test_parquet_files/address_1.parquet')
 
     wr.s3.to_parquet(
         df=df1,
