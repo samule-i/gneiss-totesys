@@ -54,7 +54,7 @@ def keys_of_specific_table(bucket, table):
     pass
 
 
-def json_from_row_id(bucket: str, table_name: str, idx: int) -> list:
+def key_from_row_id(bucket: str, table_name: str, idx: int) -> str:
     '''Reads the path of the JSON file that contains the row
     with the index provided
     '''
@@ -65,9 +65,23 @@ def json_from_row_id(bucket: str, table_name: str, idx: int) -> list:
             Key=f'.id_lookup/{table_name}/{idx}'  # ../ingestion/write_JSON.py
         )
         bytes = response['Body'].read()
+        return bytes.decode('utf-8')
+    except ClientError as e:
+        log.error(f'{e.response["Error"]["Code"]}')
+        log.info(f'File: {bucket} is unavailable')
+        raise (e)
+
+
+def json_from_row_id(bucket: str, table_name: str, idx: int) -> dict:
+    '''Reads the path of the JSON file that contains the row
+    with the index provided
+    '''
+    client = boto3.client('s3')
+    try:
+        key = key_from_row_id(bucket, table_name, idx)
         response = client.get_object(
             Bucket=bucket,
-            Key=bytes.decode('utf-8')
+            Key=key
         )
         bytes = response['Body'].read()
         return json.loads(bytes.decode())

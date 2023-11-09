@@ -1,0 +1,36 @@
+{
+    "table_name": "payment_type",
+    "column_names": [
+        "payment_type_id",
+        "payment_type_name",
+        "created_at",
+        "last_updated"
+    ],
+    "record_count": 4,
+    "data": [
+        [
+            1,
+            "SALES_RECEIPT",
+            "2022-11-03T14:20:49.962000",
+            "2022-11-03T14:20:49.962000"
+        ],
+        [
+            2,
+            "SALES_REFUND",
+            "2022-11-03T14:20:49.962000",
+            "2022-11-03T14:20:49.962000"
+        ],
+        [
+            3,
+            "PURCHASE_PAYMENT",
+            "2022-11-03T14:20:49.962000",
+            "2022-11-03T14:20:49.962000"
+        ],
+        [
+            4,
+            "PURCHASE_REFUND",
+            "2022-11-03T14:20:49.962000",
+            "2022-11-03T14:20:49.962000"
+        ]
+    ]
+}

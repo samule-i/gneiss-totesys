@@ -1,0 +1,42 @@
+{
+    "table_name": "address",
+    "column_names": [
+        "address_id",
+        "address_line_1",
+        "address_line_2",
+        "district",
+        "city",
+        "postal_code",
+        "country",
+        "phone",
+        "created_at",
+        "last_updated"
+    ],
+    "record_count": 2,
+    "data": [
+        [
+            1,
+            "1 fake line",
+            null,
+            "fake district",
+            "fake city",
+            "89360",
+            "fake country",
+            "1212 121212",
+            "2022-11-03T14:20:49.962000",
+            "2022-11-03T14:20:49.962000"
+        ],
+        [
+            2,
+            "1 test rd",
+            null,
+            null,
+            "test city",
+            "99305-7380",
+            "test country",
+            "0000 000000",
+            "2022-11-03T14:20:49.962000",
+            "2022-11-03T14:20:49.962000"
+        ]
+    ]
+}

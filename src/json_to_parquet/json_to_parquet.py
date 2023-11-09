@@ -16,14 +16,11 @@ def fake_fn():
     pass
 
 
-def get_address_jsons(json_body):
-    pass
-
-
 def lambda_handler(event, _):
     out_bucket: str = os.environ['PARQUET_S3_DATA_ID']
+    in_bucket: str = event['Records'][0]['s3']['bucket']['name']
+    in_key = event['Records'][0]['s3']['object']['key']
     json_body = json_event(event)
-    triggering_key = event['Records'][0]['s3']['object']['key']
     parquet_keys = bucket_list(out_bucket)
     table_name = json_body['table_name']
 
@@ -57,8 +54,7 @@ def lambda_handler(event, _):
         'transaction': 'dim_transaction'
     }
 
-    out_key = triggering_key.replace(
-        table_name, out_table_lookup[table_name])
+    out_key = in_key.replace(table_name, out_table_lookup[table_name])
 
     date_dim_key = 'date/dim_date.parquet'
     if date_dim_key not in parquet_keys:
