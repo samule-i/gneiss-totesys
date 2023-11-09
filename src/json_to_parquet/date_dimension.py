@@ -10,7 +10,7 @@ def date_dimension(start_date: str = '2022-01-01', duration_in_years: int = 5):
     Returns a pandas dataframe with every day in the range given.
     '''
     dimension = {
-        'id': [],
+        'date_id': [],
         'year': [],
         'month': [],
         'day': [],
@@ -26,7 +26,7 @@ def date_dimension(start_date: str = '2022-01-01', duration_in_years: int = 5):
     for i in range(days):
         month_number = date.strftime('%-m')
         quarter = math.ceil(int(month_number)/3)
-        dimension['id'].append(i)
+        dimension['date_id'].append(i)
         dimension['year'].append(int(date.strftime('%Y')))
         dimension['month'].append(int(date.strftime('%m')))
         dimension['day'].append(int(date.strftime('%-d')))
