@@ -35,30 +35,30 @@ fake_json_rows = {
 
 number_of_tables = 11
 
-# @pytest.
-# @mock_s3
-# @mock_secretsmanager
-# @patch('ingestion.ingestion.rows_to_json')
-# @patch('ingestion.ingestion.get_conn')
-# def test_ingestion_calls_rows_to_json_for_each_table(mock_conn, mock_rows):
-#     sm = boto3.client("secretsmanager", region_name="eu-west-2")
-#     secret = fake_credentials
-#     sm.create_secret(Name="db_credentials_oltp",
-#                      SecretString=json.dumps(secret))
 
-#     s3 = boto3.client("s3")
-#     location = {'LocationConstraint': 'eu-west-2'}
-#     s3.create_bucket(
-#         Bucket=os.environ['S3_DATA_ID'],
-#         CreateBucketConfiguration=location
-#     )
+@mock_s3
+@mock_secretsmanager
+@patch('ingestion.ingestion.rows_to_json')
+@patch('ingestion.ingestion.get_conn')
+def test_ingestion_calls_rows_to_json_for_each_table(mock_conn, mock_rows):
+    sm = boto3.client("secretsmanager", region_name="eu-west-2")
+    secret = fake_credentials
+    sm.create_secret(Name="db_credentials_oltp",
+                     SecretString=json.dumps(secret))
 
-#     s3.put_object(Bucket=os.environ['S3_DATA_ID'],
-#                   Key='timestamps.json',
-#                   Body=json.dumps(fake_time)
-#                   )
-#     mock_rows.return_value = json.dumps({"table_name": ""})
-#     lambda_handler('', '')
-#     mock_rows.assert_called()
-#     print(dir(mock_rows))
-#     assert mock_rows.call_count == 11
+    s3 = boto3.client("s3")
+    location = {'LocationConstraint': 'eu-west-2'}
+    s3.create_bucket(
+        Bucket=os.environ['S3_DATA_ID'],
+        CreateBucketConfiguration=location
+    )
+
+    s3.put_object(Bucket=os.environ['S3_DATA_ID'],
+                  Key='timestamps.json',
+                  Body=json.dumps(fake_time)
+                  )
+    mock_rows.return_value = json.dumps({"table_name": ""})
+    lambda_handler('', '')
+    mock_rows.assert_called()
+    print(dir(mock_rows))
+    assert mock_rows.call_count == 11
