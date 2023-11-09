@@ -46,15 +46,24 @@ init: create-environment dev-setup
 safety:
 	$(call execute_in_env, safety check)
 bandit:
-	$(call execute_in_env, bandit -r -lll */*.py *c/*/*.py)
+	$(call execute_in_env, bandit -r -lll ingestion json_to_parquet parquet_to_olap *c/*/*.py)
 flake:
-	$(call execute_in_env, flake8  ingestion json_to_parquet parquet_to_olap test)
+	$(call execute_in_env, flake8 ingestion json_to_parquet parquet_to_olap test)
 coverage:
 	$(call execute_in_env, coverage run --omit 'venv/*' -m pytest && coverage report -m --fail-under=${MINUMUM_COVERAGE})
 
 ## Run all checks
 standards: safety bandit flake
 
-reset_terraform: 
-	terraform -chdir=../terraform destroy -auto-approve -var-file=vars.tfvars
-	terraform -chdir=../terraform apply -auto-approve -var-file=vars.tfvars
+terra-destroy:
+	terraform -chdir=terraform destroy -auto-approve -var-file=vars.tfvars
+
+terra-init:
+	terraform -chdir=terraform init
+
+_terra-apply:
+	terraform -chdir=terraform apply -auto-approve -var-file=vars.tfvars
+
+terra-apply: zip-packages _terra-apply
+
+terra-reset: terra-destroy zip-packages	terra-apply
