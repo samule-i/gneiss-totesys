@@ -1,6 +1,13 @@
 from json_to_parquet.date_dimension import date_dimension
 
 
+def test_increments_id():
+    result = date_dimension('2023-11-08', 1)
+    assert result.loc[0, "date_id"] == 0
+    assert result.loc[1, "date_id"] == 1
+    assert result.loc[10, "date_id"] == 10
+
+
 def test_gets_year_correct():
     result = date_dimension('2023-11-08', 1)
     assert result.loc[0, "year"] == 2023
