@@ -46,9 +46,11 @@ def json_S3_key(bucket: str, key: str) -> dict:
     return json_data
 
 
-def bucket_list():
+def bucket_list() -> list[str]:
+    '''returns a list of keys from the bucket containing parquet files
+    '''
     client = boto3.client('s3')
-    bucket = os.environ['J2P_CODE_BUCKET_ID']
+    bucket = os.environ['PARQUET_S3_DATA_ID']
     try:
         response = client.list_objects_v2(
             Bucket=bucket)
