@@ -2,7 +2,6 @@ import boto3
 from botocore.exceptions import ClientError
 import json
 import logging
-import os
 
 
 log = logging.getLogger('get_s3_file')
