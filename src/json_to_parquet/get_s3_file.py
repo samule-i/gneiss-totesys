@@ -48,3 +48,11 @@ def bucket_list(bucket) -> list[str]:
 
     keys = [item['Key'] for item in response.get('Contents', [])]
     return keys
+
+
+def keys_of_specific_table(bucket, table):
+    pass
+
+
+def search_for_entry_of_id():
+    pass
