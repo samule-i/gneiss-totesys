@@ -11,7 +11,7 @@ name = "totesys_data_ingestion"
 version = "0.1"
 description = "Retrieves data from Postgres RDBMS to store in S3 Buckets"
 requires-python = ">=3.10"
-dependencies = ["boto3", "botocore"]
+dependencies = ["boto3", "botocore","pandas","awswrangler"]
 
 [project.optional-dependencies]
 dev = ["autopep8", "bandit", "flake8", "moto", "safety", "pg8000", "pytest", "pytest-cov"]
@@ -20,8 +20,6 @@ dev = ["autopep8", "bandit", "flake8", "moto", "safety", "pg8000", "pytest", "py
 requires = ["setuptools>=65.0"]
 build-backend = "setuptools.build_meta"
 
-[project.scripts]
-password_manager = "data_ingestion:main"
-
-[tool.setuptools.packages.find]
-where = ["src"]
+[tool.setuptools]
+package-dir = { "" = "src" }
+packages = ["ingestion"]

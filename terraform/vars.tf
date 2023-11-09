@@ -1,6 +1,6 @@
 variable "lambda_name" {
     type = string
-    default = "totesys_ingestion"
+    default = "my_totesys_ingestion"
 }
 
 variable "lambda_json_to_parquet_name" {
