@@ -1,8 +1,10 @@
 import os
 import boto3
 
+os.environ['PARQUET_S3_DATA_ID'] = 'test_bucket'
 
-def write_pq_to_s3(key: str, dataframe):
+
+def write_pq_to_s3(bucket: str, key: str, dataframe):
     '''Writes dataframe contents to S3
     '''
     if key.endswith('.json'):
@@ -11,7 +13,6 @@ def write_pq_to_s3(key: str, dataframe):
     if not key.endswith('.parquet'):
         key = f'{key}.parquet'
 
-    bucket = os.environ['DATA_BUCKET']
     client = boto3.client('s3')
     dataframe.to_parquet('/tmp/df.parquet')
     client.put_object(Bucket=bucket,

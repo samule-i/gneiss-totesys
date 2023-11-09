@@ -88,15 +88,15 @@ def test_get_logs_error_when_no_key(caplog):
 
 
 @mock_s3
-def test_bucket_list_get_logs_error_when_no_key(caplog):
-    os.environ['PARQUET_S3_DATA_ID'] = 'expected_bucket'
+def test_bucket_list_logs_error_when_wrong_bucket(caplog):
+    bucket = 'test_bucket'
     s3_client = boto3.client('s3')
     s3_client.create_bucket(
-        Bucket='test',
+        Bucket=bucket,
         CreateBucketConfiguration={'LocationConstraint': 'eu-west-2'}
     )
     with pytest.raises(ClientError):
-        bucket_list()
+        bucket_list('not_bucket')
 
     message_list = caplog.text.split('\n')
     assert message_list[0][0:5] == 'ERROR'
@@ -106,17 +106,28 @@ def test_bucket_list_get_logs_error_when_no_key(caplog):
 
 @mock_s3
 def test_bucket_list_returns_keys():
-    os.environ['PARQUET_S3_DATA_ID'] = 'expected_bucket'
+    bucket = 'test_bucket'
     s3_client = boto3.client('s3')
     s3_client.create_bucket(
-        Bucket='expected_bucket',
+        Bucket=bucket,
         CreateBucketConfiguration={'LocationConstraint': 'eu-west-2'}
     )
     s3_client.put_object(
-        Bucket='expected_bucket',
+        Bucket=bucket,
         Key='test_key',
         Body='{"a": "b"}'
     )
-
-    keys = bucket_list()
+    keys = bucket_list(bucket)
     assert 'test_key' in keys
+
+
+@mock_s3
+def test_bucket_list_returns_list_if_empty():
+    bucket = 'test_bucket'
+    s3_client = boto3.client('s3')
+    s3_client.create_bucket(
+        Bucket=bucket,
+        CreateBucketConfiguration={'LocationConstraint': 'eu-west-2'}
+    )
+    keys = bucket_list(bucket)
+    assert keys == []

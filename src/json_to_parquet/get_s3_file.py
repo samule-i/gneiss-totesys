@@ -46,18 +46,16 @@ def json_S3_key(bucket: str, key: str) -> dict:
     return json_data
 
 
-def bucket_list() -> list[str]:
+def bucket_list(bucket) -> list[str]:
     '''returns a list of keys from the bucket containing parquet files
     '''
     client = boto3.client('s3')
-    bucket = os.environ['PARQUET_S3_DATA_ID']
     try:
-        response = client.list_objects_v2(
-            Bucket=bucket)
+        response = client.list_objects_v2(Bucket=bucket)
     except ClientError as e:
         log.error(f'{e.response["Error"]["Code"]}')
         log.info(f'File: {bucket} is unavailable')
         raise (e)
 
-    keys = [item['Key'] for item in response['Contents']]
+    keys = [item['Key'] for item in response.get('Contents', [])]
     return keys

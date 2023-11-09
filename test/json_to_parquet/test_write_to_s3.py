@@ -22,7 +22,7 @@ def test_removes_json_from_name():
             Bucket='bucket',
             CreateBucketConfiguration={'LocationConstraint': 'eu-west-2'}
         )
-        write_pq_to_s3('example.json', fake_data)
+        write_pq_to_s3('bucket', 'example.json', fake_data)
         calls = mock_client.put_object.call_args_list
         assert calls[0][1]['Key'] == 'example.parquet'
 
@@ -39,7 +39,7 @@ def test_adds_parquet_to_name():
             Bucket='bucket',
             CreateBucketConfiguration={'LocationConstraint': 'eu-west-2'}
         )
-        write_pq_to_s3('example', fake_data)
+        write_pq_to_s3('bucket', 'example', fake_data)
         calls = mock_client.put_object.call_args_list
         assert calls[0][1]['Key'] == 'example.parquet'
 
@@ -56,6 +56,6 @@ def test_doesnt_add_parquet_if_not_needed():
             Bucket='bucket',
             CreateBucketConfiguration={'LocationConstraint': 'eu-west-2'}
         )
-        write_pq_to_s3('example.parquet', fake_data)
+        write_pq_to_s3('bucket', 'example.parquet', fake_data)
         calls = mock_client.put_object.call_args_list
         assert calls[0][1]['Key'] == 'example.parquet'
