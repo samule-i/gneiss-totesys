@@ -54,5 +54,20 @@ def keys_of_specific_table(bucket, table):
     pass
 
 
-def search_for_entry_of_id():
-    pass
+def find_json_with_id(bucket: str, table_name: str, idx: int) -> list:
+    '''Reads the path of the JSON file that contains the row
+    with the index provided
+    '''
+    client = boto3.client('s3')
+    try:
+        response = client.get_object(
+            Bucket=bucket,
+            # ../ingestion/write_JSON.py
+            Key=f'.id_lookup/{table_name}/{idx}'
+        )
+        bytes = response['Body'].read()
+        return bytes.decode('utf-8')
+    except ClientError as e:
+        log.error(f'{e.response["Error"]["Code"]}')
+        log.info(f'File: {bucket} is unavailable')
+        raise (e)

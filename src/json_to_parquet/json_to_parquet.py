@@ -15,9 +15,6 @@ log = logger(__name__)
 def fake_fn():
     pass
 
-def find_json_with_id(table_name:str, idx:int)->list:
-    pass
-
 def get_address_jsons(json_body):
     pass
 

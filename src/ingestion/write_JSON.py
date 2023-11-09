@@ -28,10 +28,21 @@ def write_to_ingestion(data, bucket):
         date_today = date.today()
         now = datetime.now()
         current_time = now.strftime("%H:%M:%S")
+        json_key = f"{table_name}/{date_today}/{current_time}.json"
         s3.put_object(
             Bucket=bucket,
-            Key=f"{table_name}/{date_today}/{current_time}.json",
+            Key=json_key,
             Body=data)
+
+        for row in dict['data']:
+            row_id = row[0]
+            body = json_key
+            s3.put_object(
+                Bucket=bucket,
+                Key=f".id_lookup/{table_name}/{row_id}",
+                Body=body
+            )
+
     except ClientError as c:
         if c.response['Error']['Code'] == 'NoSuchBucket':
             logger.error(f'No such bucket - {bucket}')
