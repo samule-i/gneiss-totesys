@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-def currency_transform(stored_data):
+def currency_transform(stored_data: dict) -> pd.DataFrame:
     if stored_data["table_name"] != 'currency':
         raise ValueError('Invalid table_name')
     currency_name_mapping = {

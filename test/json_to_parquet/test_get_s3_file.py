@@ -89,7 +89,7 @@ def test_get_logs_error_when_no_key(caplog):
 
 @mock_s3
 def test_bucket_list_get_logs_error_when_no_key(caplog):
-    os.environ['J2P_CODE_BUCKET_ID'] = 'expected_bucket'
+    os.environ['PARQUET_S3_DATA_ID'] = 'expected_bucket'
     s3_client = boto3.client('s3')
     s3_client.create_bucket(
         Bucket='test',
@@ -106,7 +106,7 @@ def test_bucket_list_get_logs_error_when_no_key(caplog):
 
 @mock_s3
 def test_bucket_list_returns_keys():
-    os.environ['J2P_CODE_BUCKET_ID'] = 'expected_bucket'
+    os.environ['PARQUET_S3_DATA_ID'] = 'expected_bucket'
     s3_client = boto3.client('s3')
     s3_client.create_bucket(
         Bucket='expected_bucket',

@@ -4,7 +4,7 @@ import math
 import pandas as pd
 
 
-def date_dimension(start_date: str = '2022-01-01', duration_in_years: int = 5):
+def date_dimension(start_date: str = '2022-01-01', duration_in_years: int = 5) -> pd.DataFrame:
     ''' start_date='2022-01-01', duration_in_years=5
 
     Returns a pandas dataframe with every day in the range given.
