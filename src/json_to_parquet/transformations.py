@@ -11,13 +11,35 @@ def transform_sales_order(sales_order_data):
     try:
         column_names = table_data["column_names"]
         data = table_data["data"]
-        fact_sales_order = pd.DataFrame(data, columns=column_names)
-        start = 1
-        fact_sales_order.insert(
-            0,
+        df = pd.DataFrame(data, columns=column_names)
+        df.insert(0, "sales_record_id", range(1, 1 + df.shape[0]))
+        df["created_date"] = df["created_at"].str.split(" ").str[0]
+        df["created_time"] = df["created_at"].str.split(" ").str[1]
+        df["last_updated_date"] = df["last_updated"].str.split(" ").str[0]
+        df["last_updated_time"] = df["last_updated"].str.split(" ").str[1]
+
+        df.rename(columns={"staff_id": "sales_staff_id"},
+                  inplace=True)
+        expected_columns = [
             "sales_record_id",
-            [id for id in range(start, start + fact_sales_order.shape[0])],
-        )
+            "sales_order_id",
+            "created_date",
+            "created_time",
+            "last_updated_date",
+            "last_updated_time",
+            "sales_staff_id",
+            "counterparty_id",
+            "units_sold",
+            "unit_price",
+            "currency_id",
+            "design_id",
+            "agreed_payment_date",
+            "agreed_delivery_date",
+            "agreed_delivery_location_id",
+        ]
+
+        fact_sales_order = df[expected_columns]
+
         return fact_sales_order
     except Exception as e:
         logging.error(f"Error: {str(e)}")

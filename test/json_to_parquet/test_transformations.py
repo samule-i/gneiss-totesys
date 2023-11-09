@@ -16,11 +16,9 @@ def test_sales_order_returns_correct_columns_and_rows():
             "table_name": "sales_order",
             "column_names": [
                 "sales_order_id",
-                "created_date",
-                "created_time",
-                "last_updated_date",
-                "last_updated_time",
-                "sales_staff_id",
+                "created_at",
+                "last_updated",
+                "staff_id",
                 "counterparty_id",
                 "units_sold",
                 "unit_price",
@@ -34,10 +32,8 @@ def test_sales_order_returns_correct_columns_and_rows():
             "data": [
                 [
                     5030,
-                    "2023-11-01",
-                    "14:22:10.329000",
-                    "2023-11-01",
-                    "14:22:10.329000",
+                    "2023-11-01 14:22:10.329000",
+                    "2023-11-01 14:22:10.329000",
                     186,
                     11,
                     51651,
@@ -50,10 +46,8 @@ def test_sales_order_returns_correct_columns_and_rows():
                 ],
                 [
                     5029,
-                    "2023-11-01",
-                    "14:22:10.124000",
-                    "2023-11-01",
-                    "14:22:10.124000",
+                    "2023-11-01 14:22:10.124000",
+                    "2023-11-01 14:22:10.124000",
                     39,
                     13,
                     57395,
@@ -66,10 +60,8 @@ def test_sales_order_returns_correct_columns_and_rows():
                 ],
                 [
                     5028,
-                    "2023-11-01",
-                    "13:33:10.231000",
-                    "2023-11-01",
-                    "13:33:10.231000",
+                    "2023-11-01 13:33:10.231000",
+                    "2023-11-01 13:33:10.231000",
                     229,
                     20,
                     34701,
@@ -159,7 +151,8 @@ def test_sales_order_returns_correct_columns_and_rows():
             28,
         ],
     ]
-
+    print(df_sales_order.columns)
+    print(expected_columns)
     assert list(df_sales_order.columns) == expected_columns
     assert df_sales_order.values[0][0] == expected_rows[0][0]
     assert df_sales_order.values[0][1] == expected_rows[0][1]
