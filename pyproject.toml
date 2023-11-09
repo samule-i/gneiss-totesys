@@ -20,8 +20,6 @@ dev = ["autopep8", "bandit", "flake8", "moto", "safety", "pg8000", "pytest", "py
 requires = ["setuptools>=65.0"]
 build-backend = "setuptools.build_meta"
 
-[project.scripts]
-password_manager = "data_ingestion:main"
-
-[tool.setuptools.packages.find]
-where = ["src"]
+[tool.setuptools]
+package-dir = { "" = "src" }
+packages = ["ingestion"]
