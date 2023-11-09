@@ -4,6 +4,9 @@ from json_to_parquet.get_s3_file import json_event, bucket_list
 from json_to_parquet.dim_currency import currency_transform
 from json_to_parquet.date_dimension import date_dimension
 from json_to_parquet.write_pq_to_s3 import write_pq_to_s3
+from json_to_parquet.custom_log import logger
+
+log = logger(__name__)
 
 
 def fake_fn():
@@ -35,6 +38,6 @@ def lambda_handler(event, _):
         df = date_dimension()
         write_pq_to_s3(out_bucket, date_dim_key, df)
 
-    table_name = json_body['table_name']
-    transformed_df: pd.DataFrame = function_dict[table_name](json_body)
-    write_pq_to_s3(out_bucket, triggering_key, transformed_df)
+    # table_name = json_body['table_name']
+    # transformed_df: pd.DataFrame = function_dict[table_name](json_body)
+    # write_pq_to_s3(out_bucket, triggering_key, transformed_df)
