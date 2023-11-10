@@ -29,7 +29,7 @@ resource "aws_lambda_function" "json_to_parquet" {
   s3_key        = aws_s3_object.lambda_json_to_parquet_code.key
   handler       = "json_to_parquet.json_to_parquet.lambda_handler"
   runtime       = "python3.11"
-  timeout       = 900 
+  timeout       = 60
   environment {
     variables = {
       "S3_DATA_ID" = aws_s3_bucket.data_bucket.id,
@@ -74,6 +74,7 @@ resource "aws_lambda_function" "parquet_to_OLAP" {
   s3_key        = aws_s3_object.lambda_parquet_to_OLAP_code.key
   handler       = "parquet_to_olap.parquet_to_olap.lambda_handler"
   runtime       = "python3.11"
+  timeout       = 60
   environment {
     variables = {
       "PARQUET_S3_DATA_ID" = aws_s3_bucket.parquet_data_bucket.id,
@@ -82,7 +83,7 @@ resource "aws_lambda_function" "parquet_to_OLAP" {
       "P2OLAP_CODE_BUCKET_ARN" = aws_s3_bucket.parquet-to-olap-code_bucket.arn
     }
   }
-  layers        = [aws_lambda_layer_version.temp_boto_layer.arn]
+  layers        = ["arn:aws:lambda:eu-west-2:336392948345:layer:AWSSDKPandas-Python311:2"]
 }
 #Change Layer 
 

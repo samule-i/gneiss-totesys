@@ -1,8 +1,7 @@
 import os
 from datetime import datetime as dt
-import json
-from ingestion.db_credentials import get_credentials
-from ingestion.pg8000_conn import get_conn
+from utils.db_credentials import get_credentials
+from utils.pg8000_conn import get_conn
 from ingestion.write_JSON import write_to_ingestion, write_lookup
 from ingestion.get_timestamp import (
     get_last_ingestion_timestamp as get_timestamp,

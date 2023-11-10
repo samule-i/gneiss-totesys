@@ -22,7 +22,7 @@ resource "aws_cloudwatch_log_metric_filter" "JSON_to_Parquet_Error_Filter" {
   log_group_name = aws_cloudwatch_log_group.json_to_parquet_logs.name
 
   metric_transformation {
-    name      = "ErrorMetric"
+    name      = "JSON-to-parquet Lambda"
     namespace = "CustomLambdaMetrics"
     value     = "1"
   }
@@ -40,7 +40,7 @@ resource "aws_cloudwatch_log_metric_filter" "Parquet_to_OLAP_Error_Filter" {
   log_group_name = aws_cloudwatch_log_group.parquet_to_OLAP_logs.name
 
   metric_transformation {
-    name      = "ErrorMetric"
+    name      = "Parquet-to-OLAP Lambda"
     namespace = "CustomLambdaMetrics"
     value     = "1"
   }
@@ -76,6 +76,34 @@ resource "aws_cloudwatch_metric_alarm" "ingestion_alerts" {
   statistic                 = "Sum"
   threshold                 = 1
   alarm_description         = "This metric monitors Errors in the execution of the ingestion application."
+  insufficient_data_actions = []
+  alarm_actions = [aws_sns_topic.user_updates.arn]
+}
+
+resource "aws_cloudwatch_metric_alarm" "json_to_parquet_alerts" {
+  alarm_name                = "Error-Alerts"
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
+  evaluation_periods        = 1
+  metric_name               = "JSON-to-parquet Lambda"
+  namespace                 = "CustomLambdaMetrics"
+  period                    = 600
+  statistic                 = "Sum"
+  threshold                 = 1
+  alarm_description         = "This metric monitors Errors in the execution of the JSON-to-parquet application."
+  insufficient_data_actions = []
+  alarm_actions = [aws_sns_topic.user_updates.arn]
+}
+
+resource "aws_cloudwatch_metric_alarm" "parquet_to_olap_alerts" {
+  alarm_name                = "Error-Alerts"
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
+  evaluation_periods        = 1
+  metric_name               = "Parquet-to-OLAP Lambda"
+  namespace                 = "CustomLambdaMetrics"
+  period                    = 600
+  statistic                 = "Sum"
+  threshold                 = 1
+  alarm_description         = "This metric monitors Errors in the execution of the parquet-to-OLAP application."
   insufficient_data_actions = []
   alarm_actions = [aws_sns_topic.user_updates.arn]
 }
