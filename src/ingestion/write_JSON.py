@@ -64,11 +64,10 @@ def write_lookup(json_body: dict, bucket_name: str, json_key: str):
             'table_name': table,
             'indexes': {}
         }
-
+logger.info(f'Writing {table}/{json_key} to {table_index_lookup}')
     for row in rows:
         id = row[0]
         body['indexes'][id] = json_key
-        logger.info(f'Writing {table}/{json_key} to {table_index_lookup}')
         count += 1
     s3.put_object(
         Body=json.dumps(body),
