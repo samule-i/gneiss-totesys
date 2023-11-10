@@ -219,7 +219,7 @@ Returns:
         result.rename(
             columns={
                 "address_line_1": "counterparty_legal_address_line_1",
-                "address_line_2": "counterparty_legal_address_line2",
+                "address_line_2": "counterparty_legal_address_line_2",
                 "district": "counterparty_legal_district",
                 "city": "counterparty_legal_city",
                 "postal_code": "counterparty_legal_postal_code",
