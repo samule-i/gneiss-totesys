@@ -49,6 +49,7 @@ def lambda_handler(event, _):
     out_bucket: str = os.environ['PARQUET_S3_DATA_ID']
     json_body = json_event(event)
 
+
     parquet_keys = bucket_list(out_bucket)
     table_name = json_body['table_name']
     in_key = event['Records'][0]['s3']['object']['key']

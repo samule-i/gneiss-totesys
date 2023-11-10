@@ -42,6 +42,7 @@ def json_S3_key(bucket: str, key: str) -> dict:
 def bucket_list(bucket) -> list[str]:
     '''returns a list of keys from the bucket containing parquet files
     '''
+    log.info(f' [S3] Called with {bucket}')
     client = boto3.client('s3')
     try:
         log.info(f'Accessing {bucket}')

@@ -12,7 +12,7 @@ def write_pq_to_s3(bucket: str, key: str, dataframe):
 
     if not key.endswith('.parquet'):
         key = f'{key}.parquet'
-
+    key = key.replace('%3A', ':')
     log.info(f'writing to {bucket}/{key}')
     client = boto3.client('s3')
     dataframe.to_parquet('/tmp/df.parquet')
