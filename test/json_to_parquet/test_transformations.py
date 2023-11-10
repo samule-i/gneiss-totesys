@@ -1,9 +1,9 @@
 import json
 from json_to_parquet.transformations import (
     transform_sales_order,
-    transform_staff,
+    transform_staff_and_department,
     transform_address,
-    transform_counterparty,
+    transform_counterparty_and_address,
     transform_design,
 )
 from ingestion.rows_to_json import CustomEncoder
@@ -204,7 +204,7 @@ def test_transform_sales_order_handles_value_error():
         transform_sales_order(incorrect_data)
 
 
-def test_transform_sales_orderexceptions():
+def test_transform_sales_order_exceptions():
     incorrect_data = json.dumps(
         {
             "table_name": "sales_order",
@@ -586,7 +586,7 @@ def test_transform_design_exception_handling():
         transform_design(incorrect_data)
 
 
-def test_transform_staff_returns_correct_columns_and_rows():
+def test_transform_staff_and_address_eturns_correct_columns_and_rows():
     staff_data = json.dumps(
         {
             "table_name": "staff",
@@ -679,13 +679,13 @@ def test_transform_staff_returns_correct_columns_and_rows():
         [1, "John", "Doe", "Finance", "Chicago", "john.doe@example.com"],
         [2, "Jane", "Smith", "Sales", "New York", "jane.smith@example.com"],
     ]
-    staffdf = transform_staff(staff_data, department_data)
+    staffdf = transform_staff_and_department(staff_data, department_data)
     assert list(staffdf.columns) == expected_columns
     assert list(staffdf.values[0]) == expected_rows[0]
     assert list(staffdf.values[1]) == expected_rows[1]
 
 
-def test_transform_staff_handles_value_error():
+def test_transform_staff_and_address_handles_value_error():
     incorrect_data = json.dumps(
         {
             "table_name": "design",
@@ -773,10 +773,10 @@ def test_transform_staff_handles_value_error():
     )
 
     with pytest.raises(ValueError):
-        transform_staff(incorrect_data, department_data)
+        transform_staff_and_department(incorrect_data, department_data)
 
 
-def test_transform_staff_exception_handling():
+def test_transform_staff_and_address_exception_handling():
     incorrect__staff_data = json.dumps(
         {
             "table_name": "staff",
@@ -841,10 +841,10 @@ def test_transform_staff_exception_handling():
     )
 
     with pytest.raises(Exception):
-        transform_staff(incorrect__staff_data, department_data)
+        transform_staff_and_department(incorrect__staff_data, department_data)
 
 
-def test_transform_counterpart_returns_coloumns_and_rows():
+def test_transform_counterparty_and_address_returns_coloumns_and_rows():
     counterparty_data = json.dumps(
         {
             "table_name": "counterparty",
@@ -998,7 +998,8 @@ def test_transform_counterpart_returns_coloumns_and_rows():
         ],
     ]
 
-    counterpartydf = transform_counterparty(counterparty_data, address_data)
+    counterpartydf = transform_counterparty_and_address(
+        counterparty_data, address_data)
     assert list(counterpartydf.columns) == expected_columns
 
     print(list(counterpartydf.values[1]))
@@ -1009,7 +1010,7 @@ def test_transform_counterpart_returns_coloumns_and_rows():
     assert list(counterpartydf.values[2]) == expected_rows[2]
 
 
-def test_transform_counterparty_handles_value_error():
+def test_transform_counterparty_and_address_handles_value_error():
     counterparty_data = json.dumps(
         {
             "table_name": "counterparty",
@@ -1067,7 +1068,7 @@ def test_transform_counterparty_handles_value_error():
     )
 
     with pytest.raises(ValueError):
-        transform_counterparty(counterparty_data, incorrect_data)
+        transform_counterparty_and_address(counterparty_data, incorrect_data)
 
 
 def test_transform_counterparty_exception_handling():
@@ -1133,4 +1134,5 @@ def test_transform_counterparty_exception_handling():
         cls=CustomEncoder,
     )
     with pytest.raises(Exception):
-        transform_counterparty(counterparty_data, incorrect_address_data)
+        transform_counterparty_and_address(
+            counterparty_data, incorrect_address_data)

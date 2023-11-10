@@ -3,6 +3,32 @@ import json
 import logging
 
 
+"""
+Functions Included:
+transform_sales_order,
+transform_address,
+transform_design,
+transform_staff_and_department,
+transform_counterparty_and_address,
+transform_purchase_order,
+transform_payment,
+transform_transaction,
+transform_payment_type.
+
+Functions transform JSON data into a Pandas DataFrame for a specified table.
+
+Parameters:
+- table_data : JSON data containing information about the table.
+
+Returns:
+- pd.DataFrame: data in a DataFrame, matching star schema table format.
+
+Raises:
+- ValueError: If the provided data is not for the specified target table.
+- Exception: If an error occurs during the transformation process.
+"""
+
+
 def transform_sales_order(sales_order_data):
     table_data = json.loads(sales_order_data)
     if table_data["table_name"] != "sales_order":
@@ -99,7 +125,17 @@ def transform_design(design_data):
         raise e
 
 
-def transform_staff(staff_json, department_json):
+def transform_staff_and_department(staff_json, department_json):
+    """
+Transform JSON data for the 'staff' table along with related 'department' data.
+
+Parameters:
+- staff_json : JSON-formatted data for the 'staff' table.
+- department_json : JSON-formatted data for the 'department' table.
+
+Returns:
+- pd.DataFrame: Transformed data in a DataFrame for the 'dim_staff' table.
+"""
     staff_dict = json.loads(staff_json)
     department_dict = json.loads(department_json)
     if (
@@ -142,7 +178,17 @@ def transform_staff(staff_json, department_json):
         raise e
 
 
-def transform_counterparty(counterparty_json, address_json):
+def transform_counterparty_and_address(counterparty_json, address_json):
+    """
+Transform JSON data for the 'counterparty' table with related 'address' data.
+
+Parameters:
+- counterparty_json: JSON-formatted data for the 'counterparty table.
+- address_json : JSON-formatted data for the 'address' table.
+
+Returns:
+- pd.DataFrame: data in a DataFrame for the 'dim_counterparty' table.
+"""
     counterparty_dict = json.loads(counterparty_json)
     address_dict = json.loads(address_json)
     if (
