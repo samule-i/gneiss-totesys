@@ -71,6 +71,16 @@ def parquet_to_sql(dataframe, target_table, conn):
 
 
 def generate_sql_list_for_dataframe(df, table_name, target_pkey_column):
+    """
+    Generates a list of SQL queries for a Pandas DataFrame.
+
+    Args:
+        dataframe: target dataframe
+        table_name The name of the target table in the database.
+        target_pkey_column (str): The primary key column.
+
+    Returns:
+        list: A list of SQL INSERT statements. """
     column_names = [f"{column}" for column in df.columns]
     column_str = f"({', '.join(column_names)})"
 
