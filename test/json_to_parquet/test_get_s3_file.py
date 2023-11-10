@@ -2,7 +2,8 @@ from moto import mock_s3
 import boto3
 from botocore.exceptions import ClientError
 import pytest
-from json_to_parquet.get_s3_file import json_S3_key, json_event, bucket_list, json_from_row_id
+from json_to_parquet.get_s3_file import (json_S3_key, json_event,
+                                         bucket_list, json_from_row_id)
 
 
 @mock_s3

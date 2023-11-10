@@ -59,6 +59,7 @@ def key_from_row_id(bucket: str, table_name: str, idx: int) -> str:
     with the index provided
     '''
     client = boto3.client('s3')
+    log.info(f'Getting key for {bucket}/{table_name}/{idx}')
     try:
         response = client.get_object(
             Bucket=bucket,
@@ -68,7 +69,9 @@ def key_from_row_id(bucket: str, table_name: str, idx: int) -> str:
         return bytes.decode('utf-8')
     except ClientError as e:
         log.error(f'{e.response["Error"]["Code"]}')
-        log.info(f'File: {bucket} is unavailable')
+        log.info(
+            f'''Key or Bucket: {bucket} is unavailable,
+            did you accidentally add ".json"?''')
         raise (e)
 
 
@@ -77,8 +80,10 @@ def json_from_row_id(bucket: str, table_name: str, idx: int) -> dict:
     with the index provided
     '''
     client = boto3.client('s3')
+    log.info(f'Getting data for {bucket}/{table_name}/{idx}')
     try:
         key = key_from_row_id(bucket, table_name, idx)
+        log.info(f'Found Key: {key}')
         response = client.get_object(
             Bucket=bucket,
             Key=key
@@ -87,5 +92,7 @@ def json_from_row_id(bucket: str, table_name: str, idx: int) -> dict:
         return json.loads(bytes.decode())
     except ClientError as e:
         log.error(f'{e.response["Error"]["Code"]}')
-        log.info(f'File: {bucket} is unavailable')
+        log.info(
+            f'''Key or Bucket: {bucket} is unavailable,
+            did you accidentally add ".json"?''')
         raise (e)
