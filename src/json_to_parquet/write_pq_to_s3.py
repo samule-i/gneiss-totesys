@@ -1,8 +1,5 @@
-import os
 import boto3
 from json_to_parquet.custom_log import logger
-
-os.environ['PARQUET_S3_DATA_ID'] = 'test_bucket'
 log = logger(__name__)
 
 
