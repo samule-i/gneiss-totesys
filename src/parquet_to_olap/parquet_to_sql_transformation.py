@@ -59,12 +59,18 @@ def parquet_to_sql(dataframe, target_table, conn):
         raise TypeError("The conn input is not a valid pg8000 Connection")
     try:
         target_pkey_column = olap_table_names[target_table]
-        query_list = generate_sql_list_for_dataframe(
-            dataframe, target_table, target_pkey_column
-        )
+        query_list, row_string_list, column_str, update_columns_str, \
+            excluded_str = generate_sql_list_for_dataframe(
+                        dataframe, target_table, target_pkey_column)
 
-        for query in query_list:
-            conn.run(query)
+        # for index, query in enumerate (query_list):
+        for i in range(len(dataframe)):
+            conn.run(
+                query_list[i],
+                (column_str,
+                 row_string_list[i],
+                 update_columns_str,
+                 excluded_str))
     except Exception as e:
         log.error(f"{e}")
         raise e
@@ -74,7 +80,7 @@ def generate_sql_list_for_dataframe(df, table_name, target_pkey_column):
     column_names = [f"{column}" for column in df.columns]
     column_str = f"({', '.join(column_names)})"
 
-    sql_start = f"INSERT INTO {identifier(table_name)} {column_str} VALUES "
+    sql_start = f"INSERT INTO {identifier(table_name)} %s VALUES "
 
     sql_end = f"on conflict ({target_pkey_column}) "
 
@@ -85,9 +91,10 @@ def generate_sql_list_for_dataframe(df, table_name, target_pkey_column):
     excluded_columns = ["excluded." + column for column in update_columns]
     excluded_str = f"({', '.join(excluded_columns)})"
 
-    sql_end += f"do update set {update_columns_str} = {excluded_str};"
+    sql_end += f"do update set %s = %s;"
 
     query_list = []
+    row_string_list = []
 
     for i in range(len(df)):
         row_values = df.iloc[i, :].values.flatten().tolist()
@@ -95,7 +102,10 @@ def generate_sql_list_for_dataframe(df, table_name, target_pkey_column):
             "'" + f"{str(value)}".replace("'", "''") + "'"
             for value in row_values
         ]
-        sql = f'({", ".join(row_values_str)}) '
+        row_string = f'({", ".join(row_values_str)})'
+        sql = f"%s "
         query_list.append(sql_start + sql + sql_end)
+        row_string_list.append(row_string)
 
-    return query_list
+    return query_list, row_string_list, column_str, \
+        update_columns_str, excluded_str
