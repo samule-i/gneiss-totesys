@@ -105,13 +105,15 @@ data "aws_iam_policy_document" "s3_document" {
   statement {
     effect = "Allow"
     actions = ["s3:*Object",
-               "s3:ListBucket"
+               "s3:ListBucket",
+               
     ]
     resources = [
       "${aws_s3_bucket.code_bucket.arn}/*",
       "${aws_s3_bucket.data_bucket.arn}/*",
       "${aws_s3_bucket.json_to_parquet_code_bucket.arn}/*",
       "${aws_s3_bucket.parquet_data_bucket.arn}/*",
+      "${aws_s3_bucket.parquet_data_bucket.arn}",
       "${aws_s3_bucket.parquet-to-olap-code_bucket.arn}/*"
     ]
   }
