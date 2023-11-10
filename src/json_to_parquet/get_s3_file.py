@@ -23,6 +23,7 @@ def json_S3_key(bucket: str, key: str) -> dict:
     bucket must exist & key must match a json file that exists.
     '''
     key = key.replace('%3A', ':')
+    log.info(f' [S3] Called with {bucket}&{key}')
     try:
         s3_client = boto3.client('s3')
         log.info(f'Accessing {bucket}/{key}')
@@ -32,7 +33,7 @@ def json_S3_key(bucket: str, key: str) -> dict:
         log.error(f'{e.response["Error"]["Code"]}')
         log.info(f'File: {bucket}/{key} is unavailable')
         raise (e)
-
+    log.info(f' [S3] completed with {bucket}&{key}')
     data = bytes.read().decode('utf-8')
     json_data = json.loads(data)
     return json_data
@@ -43,7 +44,7 @@ def bucket_list(bucket) -> list[str]:
     '''
     client = boto3.client('s3')
     try:
-        log.info(f'Accessing f{bucket}')
+        log.info(f'Accessing {bucket}')
         response = client.list_objects_v2(Bucket=bucket)
     except ClientError as e:
         log.error(f'{e.response["Error"]["Code"]}')

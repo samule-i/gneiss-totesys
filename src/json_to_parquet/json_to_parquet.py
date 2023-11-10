@@ -10,6 +10,7 @@ from json_to_parquet.transformations import (
     transform_sales_order)
 from json_to_parquet.dim_counterparty import dim_counterparty
 from json_to_parquet.dim_staff import dim_staff
+import boto3
 
 log = logger(__name__)
 
@@ -45,16 +46,16 @@ def lambda_handler(event, _):
         'transaction': fake_fn
     }
 
-    out_bucket: str = os.environ.get('PARQUET_S3_DATA_ID', 'test_bucket')
+    out_bucket: str = os.environ['PARQUET_S3_DATA_ID']
     json_body = json_event(event)
+
     parquet_keys = bucket_list(out_bucket)
     table_name = json_body['table_name']
     in_key = event['Records'][0]['s3']['object']['key']
     out_key = in_key.replace(table_name, out_table_lookup[table_name])
-
     log.info(f'Processing {table_name} to {out_bucket}/{out_key}')
-
     date_dim_key = 'date/dim_date.parquet'
+
     if date_dim_key not in parquet_keys:
         log.info('Date parquet not found, creating...')
         df = date_dimension()

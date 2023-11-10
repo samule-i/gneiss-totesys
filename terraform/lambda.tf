@@ -29,6 +29,7 @@ resource "aws_lambda_function" "json_to_parquet" {
   s3_key        = aws_s3_object.lambda_json_to_parquet_code.key
   handler       = "json_to_parquet.json_to_parquet.lambda_handler"
   runtime       = "python3.11"
+  timeout       = 900 
   environment {
     variables = {
       "S3_DATA_ID" = aws_s3_bucket.data_bucket.id,
