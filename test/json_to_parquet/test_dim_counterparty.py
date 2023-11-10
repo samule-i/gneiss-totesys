@@ -3,8 +3,8 @@ from json_to_parquet.dim_counterparty import dim_counterparty
 from moto import mock_s3
 import boto3
 import os
-import pytest
 from ingestion.write_JSON import write_lookup
+
 
 @mock_s3
 def test_values_return_correctly():

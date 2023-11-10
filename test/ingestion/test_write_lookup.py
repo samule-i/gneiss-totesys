@@ -2,7 +2,6 @@ import json
 from ingestion.write_JSON import write_lookup
 from moto import mock_s3
 import boto3
-import pytest
 
 
 @mock_s3

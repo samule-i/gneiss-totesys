@@ -4,7 +4,6 @@ from json_to_parquet.dim_staff import dim_staff
 from moto import mock_s3
 import boto3
 import os
-import pytest
 
 
 @mock_s3
