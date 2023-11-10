@@ -1,7 +1,10 @@
+import json
+from ingestion.write_JSON import write_lookup
 from json_to_parquet.dim_staff import dim_staff
 from moto import mock_s3
 import boto3
 import os
+import pytest
 
 
 @mock_s3
@@ -24,12 +27,7 @@ def test_values_return_correctly():
         Key='department/file.json',
         Body=department
     )
-    for i in range(10):
-        client.put_object(
-            Bucket=bucket,
-            Key=f'.id_lookup/department/{i}',
-            Body='department/file.json'
-        )
+    write_lookup(json.loads(department), bucket, 'department/file.json')
 
     df = dim_staff(staff)
     result = df.loc[df['staff_id'] == 1]
@@ -63,12 +61,12 @@ def test_drops_unused_column():
         Key='department/file.json',
         Body=department
     )
-    for i in range(10):
-        client.put_object(
-            Bucket=bucket,
-            Key=f'.id_lookup/department/{i}',
-            Body='department/file.json'
-        )
+    client.put_object(
+        Bucket=bucket,
+        Key='department/file.json',
+        Body=department
+    )
+    write_lookup(json.loads(department), bucket, 'department/file.json')
     df = dim_staff(staff)
     result = df.get('manager')
     assert result is None

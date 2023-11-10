@@ -3,7 +3,8 @@ from json_to_parquet.dim_counterparty import dim_counterparty
 from moto import mock_s3
 import boto3
 import os
-
+import pytest
+from ingestion.write_JSON import write_lookup
 
 @mock_s3
 def test_values_return_correctly():
@@ -25,16 +26,7 @@ def test_values_return_correctly():
         Key='address/file.json',
         Body=address
     )
-    client.put_object(
-        Bucket=bucket,
-        Key='.id_lookup/address/1',
-        Body='address/file.json'
-    )
-    client.put_object(
-        Bucket=bucket,
-        Key='.id_lookup/address/2',
-        Body='address/file.json'
-    )
+    write_lookup(json.loads(address), bucket, 'address/file.json')
 
     df = dim_counterparty(counterparty)
     result = df.loc[df['counterparty_legal_name'] == 'test_name1']
@@ -44,6 +36,7 @@ def test_values_return_correctly():
     result = df.loc[df['counterparty_legal_name'] == 'test_name2']
     result = result['counterparty_legal_country'].item()
     assert result == 'test country'
+    # assert False
 
 
 @mock_s3
@@ -80,16 +73,7 @@ def test_drops_unused_addresses():
         Key='address/file.json',
         Body=address
     )
-    client.put_object(
-        Bucket=bucket,
-        Key='.id_lookup/address/1',
-        Body='address/file.json'
-    )
-    client.put_object(
-        Bucket=bucket,
-        Key='.id_lookup/address/2',
-        Body='address/file.json'
-    )
+    write_lookup(json.loads(address), bucket, 'address/file.json')
 
     df = dim_counterparty(counterparty)
     result = df['counterparty_legal_phone_number']

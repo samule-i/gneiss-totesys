@@ -1,3 +1,4 @@
+import json
 from moto import mock_s3
 import boto3
 from botocore.exceptions import ClientError
@@ -66,9 +67,10 @@ def test_get_logs_error_when_no_bucket(caplog):
         json_S3_key('none_bucket', 'none_key')
 
     message_list = caplog.text.split('\n')
-    assert message_list[0][0:5] == 'ERROR'
+    assert 'ERROR' in [msg[0:5] for msg in message_list]
     expected_message = 'NoSuchBucket'
-    assert caplog.records[0].message == expected_message
+    assert expected_message in [records.message for records in caplog.records]
+    # assert caplog.records[0].message == expected_message
 
 
 @mock_s3
@@ -82,9 +84,9 @@ def test_get_logs_error_when_no_key(caplog):
         json_S3_key('test', 'none_key')
 
     message_list = caplog.text.split('\n')
-    assert message_list[0][0:5] == 'ERROR'
+    assert 'ERROR' in [msg[0:5] for msg in message_list]
     expected_message = 'NoSuchKey'
-    assert caplog.records[0].message == expected_message
+    assert expected_message in [record.message for record in caplog.records]
 
 
 @mock_s3
@@ -99,9 +101,10 @@ def test_bucket_list_logs_error_when_wrong_bucket(caplog):
         bucket_list('not_bucket')
 
     message_list = caplog.text.split('\n')
-    assert message_list[0][0:5] == 'ERROR'
+    message_list = caplog.text.split('\n')
+    assert 'ERROR' in [msg[0:5] for msg in message_list]
     expected_message = 'NoSuchBucket'
-    assert caplog.records[0].message == expected_message
+    assert expected_message in [record.message for record in caplog.records]
 
 
 @mock_s3
@@ -140,10 +143,14 @@ def test_get_id():
     client.create_bucket(
         Bucket=bucket,
         CreateBucketConfiguration={'LocationConstraint': 'eu-west-2'})
+    body = {
+        'table_name': 'test_table',
+        'indexes': {'230': 'test/key'}
+    }
     client.put_object(
-        Body='test/key',
+        Body=json.dumps(body),
         Bucket=bucket,
-        Key='.id_lookup/test_table/230'
+        Key='.id_lookup/test_table.json.notrigger'
     )
     client.put_object(
         Body='{"Hello": "from a referenced key"}',

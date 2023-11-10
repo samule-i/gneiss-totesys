@@ -53,15 +53,23 @@ def dim_counterparty(data: dict | str) -> pd.DataFrame:
     dim.rename(columns=foreign_key_map, inplace=True)
 
     foreign_ids = dim[foreign_key].unique()
-
+    print('0')
+    print(foreign_ids)
     for id in foreign_ids:
+        print('in for')
+        print(bucket, foreign_table_name, id)
         data = json_from_row_id(bucket, foreign_table_name, id)
+        print('one didnt get here')
         foreign_df = pd.DataFrame(data['data'], columns=data['column_names'])
+        print('one')
         foreign_table = pd.concat([foreign_table, foreign_df])
+        print('one')
         foreign_table.drop(columns=['created_at', 'last_updated'],
                            inplace=True)
+    print('10')
     foreign_table.drop_duplicates(inplace=True)
 
+    print('20')
     dim = dim.merge(foreign_table, on=foreign_key)
     dim.drop(columns=discard_columns, inplace=True)
     dim.rename(columns=dim_column_rename_map, inplace=True)

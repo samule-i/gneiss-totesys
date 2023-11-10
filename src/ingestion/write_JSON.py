@@ -59,7 +59,7 @@ def write_lookup(json_body: dict, bucket_name: str, json_key: str):
         )
         body = response['Body'].read()
         body = json.loads(body)
-    except ClientError as e:
+    except ClientError:
         body = {
             'table_name': table,
             'indexes': {}
