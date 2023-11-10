@@ -1,52 +1,45 @@
+##############################################################################
+# Buckets
+##############################################################################
 resource "aws_s3_bucket" "code_bucket" {
-  bucket_prefix = "totesys-ingress-"
+  bucket_prefix = "gneiss-totesys-code-"
+  force_destroy = true
 }
 
-resource "aws_s3_object" "lambda_code" {
+resource "aws_s3_bucket" "ingestion_bucket" {
+  bucket_prefix = "gneiss-totesys-ingestion-"
+  force_destroy = true
+}
+
+resource "aws_s3_bucket" "transformed_bucket" {
+  bucket_prefix = "gneiss-totesys-transformed-"
+  force_destroy = true
+}
+
+##############################################################################
+# Lambda code
+##############################################################################
+resource "aws_s3_object" "lambda_ingestion_code" {
   key    = "ingestion_function.zip"
   source = "${path.module}/../ingestion_function.zip"
   bucket = aws_s3_bucket.code_bucket.id
 }
 
-resource "aws_s3_bucket" "data_bucket" {
-  bucket_prefix = "totesys-transform-"
-  force_destroy = true
-
-}
-
-
-resource "aws_s3_bucket" "json_to_parquet_code_bucket" {
-  bucket_prefix = "json-to-parquet-"
-}
-
 resource "aws_s3_object" "lambda_json_to_parquet_code" {
   key    = "json_to_parquet_function.zip"
   source = "${path.module}/../json_to_parquet_function.zip"
-  bucket = aws_s3_bucket.json_to_parquet_code_bucket.id
-}
-
-resource "aws_s3_bucket" "parquet_data_bucket" {
-  bucket_prefix = "parquet-"
-}
-
-resource "aws_s3_bucket" "parquet-to-olap-code_bucket" {
-  bucket_prefix = "olap-loader-"
+  bucket = aws_s3_bucket.code_bucket.id
 }
 
 resource "aws_s3_object" "lambda_parquet_to_OLAP_code" {
   key    = "parquet_to_olap_function.zip"
   source = "${path.module}/../parquet_to_olap_function.zip"
-  bucket = aws_s3_bucket.parquet-to-olap-code_bucket.id
-}
-
-
-resource "aws_s3_object" "pg8000_layer" {
-  key    = "pg8000_layer.zip"
-  source = "${path.module}/../aws_assets/pg8000_layer.zip"
   bucket = aws_s3_bucket.code_bucket.id
 }
 
-
+##############################################################################
+# Lambda layers
+##############################################################################
 resource "aws_lambda_layer_version" "pg8000_layer" {
   filename   = "${path.module}/../aws_assets/pg8000_layer.zip"
   layer_name = "pg8000_layer"
