@@ -155,6 +155,6 @@ resource "aws_iam_role_policy_attachment" "parquet_to_OLAP_lambda_sm_policy_atta
 }
 
 resource "aws_iam_role_policy_attachment" "parquet_to_OLAP_lambda_cw_policy_attachment" {
-  role       = aws_iam_role.lambda_role.name
+  role       = aws_iam_role.lambda_parquets_to_olap_role.name
   policy_arn = aws_iam_policy.cw_policy.arn
 }
