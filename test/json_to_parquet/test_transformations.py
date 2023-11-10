@@ -584,6 +584,8 @@ def test_transform_design_exception_handling():
 
     with pytest.raises(Exception):
         transform_design(incorrect_data)
+
+
 def test_transform_staff_and_address_eturns_correct_columns_and_rows():
     staff_data = json.dumps(
         {

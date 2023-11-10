@@ -124,6 +124,7 @@ def transform_design(design_data):
         logging.error(f"Error: {str(e)}")
         raise e
 
+
 def transform_staff_and_department(staff_json, department_json):
     """
 Transform JSON data for the 'staff' table along with related 'department' data.

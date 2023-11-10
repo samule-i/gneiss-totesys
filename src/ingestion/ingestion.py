@@ -10,6 +10,8 @@ from ingestion.rows_to_json import (
     rows_to_json,
     totesys_tables)
 import logging
+import json
+
 logger = logging.getLogger('MyLogger')
 logger.setLevel(logging.INFO)
 
