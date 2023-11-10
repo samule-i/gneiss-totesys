@@ -39,6 +39,7 @@ def write_to_ingestion(data, bucket) -> str | None:
     except Exception as e:
         logger.error(e)
         raise RuntimeError
+    logger.info(f'Completed writing to: {json_key} ')
     return json_key
 
 
@@ -48,11 +49,30 @@ def write_lookup(json_body: dict, bucket_name: str, json_key: str):
     s3 = boto3.client('s3')
     table = json_body['table_name']
     rows = json_body['data']
+    logger.info(f'Writing to {table}...')
+    count = 0
+    table_index_lookup = f'.id_lookup/{table}.json.notrigger'
+    try:
+        response = s3.get_object(
+            Bucket=bucket_name,
+            Key=table_index_lookup
+        )
+        body = response['Body'].read()
+        body = json.loads(body)
+    except ClientError as e:
+        body = {
+            'table_name': table,
+            'indexes': {}
+        }
+
     for row in rows:
         id = row[0]
-        key = f'.id_lookup/{table}/{id}'
-        body = json_key
-        s3.put_object(
-            Body=body,
-            Bucket=bucket_name,
-            Key=key)
+        body['indexes'][id] = json_key
+        logger.info(f'Writing {table}/{json_key} to {table_index_lookup}')
+        count += 1
+    s3.put_object(
+        Body=json.dumps(body),
+        Bucket=bucket_name,
+        Key=table_index_lookup)
+
+    logger.info(f'Wrote {count} entries')

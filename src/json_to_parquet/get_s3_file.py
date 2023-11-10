@@ -60,18 +60,20 @@ def key_from_row_id(bucket: str, table_name: str, idx: int) -> str:
     '''
     client = boto3.client('s3')
     log.info(f'Getting key for {bucket}/{table_name}/{idx}')
+    table_index_lookup = f'.id_lookup/{table_name}.csv'
     try:
         response = client.get_object(
             Bucket=bucket,
-            Key=f'.id_lookup/{table_name}/{idx}'  # ../ingestion/write_JSON.py
+            Key=table_index_lookup  # ../ingestion/write_JSON.py
         )
         bytes = response['Body'].read()
-        return bytes.decode('utf-8')
+        data = json.loads(bytes)
+        wanted_key = data['indexes'][idx]
+        return wanted_key
     except ClientError as e:
         log.error(f'{e.response["Error"]["Code"]}')
         log.info(
-            f'''Key or Bucket: {bucket} is unavailable,
-            did you accidentally add ".json"?''')
+            f'''Key or Bucket: {bucket} is unavailable''')
         raise (e)
 
 
@@ -93,6 +95,5 @@ def json_from_row_id(bucket: str, table_name: str, idx: int) -> dict:
     except ClientError as e:
         log.error(f'{e.response["Error"]["Code"]}')
         log.info(
-            f'''Key or Bucket: {bucket} is unavailable,
-            did you accidentally add ".json"?''')
+            f'''Key or Bucket: {bucket} is unavailable''')
         raise (e)
