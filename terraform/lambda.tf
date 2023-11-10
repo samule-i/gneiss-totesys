@@ -1,4 +1,6 @@
+##############################################################################
 # Lambda 1 - ingestion from OLTP DB to JSON bucket
+##############################################################################
 resource "aws_lambda_function" "totesys_ingestion" {
   function_name = var.lambda_name
   role          = aws_iam_role.lambda_role.arn
@@ -22,10 +24,17 @@ resource "aws_lambda_function" "totesys_ingestion" {
   ]
 }
 
+resource "aws_lambda_permission" "allow_events" {
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.totesys_ingestion.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.ingestion_lambda_invocation_rule.arn
+  source_account = data.aws_caller_identity.current.account_id
+}
 
-
-
+##############################################################################
 # Lambda 2 - Transformation - JSON bucket to Parquet bucket
+##############################################################################
 resource "aws_lambda_function" "json_to_parquet" {
   function_name = var.lambda_json_to_parquet_name
   role          = aws_iam_role.lambda_json_to_parquet_role.arn
@@ -44,7 +53,6 @@ resource "aws_lambda_function" "json_to_parquet" {
   }
   layers = [aws_lambda_layer_version.temp_boto_layer.arn]
 }
-#Change Layer
 
 resource "aws_lambda_permission" "allow_s3" {
   action         = "lambda:InvokeFunction"
@@ -65,9 +73,9 @@ resource "aws_s3_bucket_notification" "json_bucket_notification" {
   depends_on = [aws_lambda_permission.allow_s3]
 }
 
-
-
+##############################################################################
 # Lambda 3 - Transformation - Parquet bucket to OLAP DB
+##############################################################################
 resource "aws_lambda_function" "parquet_to_OLAP" {
   function_name = var.lambda_OLAP_loader_name
   role          = aws_iam_role.lambda_parquets_to_olap_role.arn
@@ -84,7 +92,6 @@ resource "aws_lambda_function" "parquet_to_OLAP" {
   }
   layers = ["arn:aws:lambda:eu-west-2:336392948345:layer:AWSSDKPandas-Python311:2"]
 }
-#Change Layer 
 
 resource "aws_lambda_permission" "allow_parquet_s3" {
   action         = "lambda:InvokeFunction"
