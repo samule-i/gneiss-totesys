@@ -45,7 +45,7 @@ def lambda_handler(event, _):
         'transaction': fake_fn
     }
 
-    out_bucket: str = os.environ['PARQUET_S3_DATA_ID']
+    out_bucket: str = os.environ.get('PARQUET_S3_DATA_ID', 'test_bucket')
     json_body = json_event(event)
     parquet_keys = bucket_list(out_bucket)
     table_name = json_body['table_name']

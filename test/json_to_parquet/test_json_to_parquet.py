@@ -1,6 +1,5 @@
 from moto import mock_s3
 import boto3
-import os
 import json
 
 from unittest.mock import patch
@@ -9,7 +8,7 @@ from json_to_parquet.json_to_parquet import lambda_handler
 
 @mock_s3
 def test_currency_fn_called_for_json(currency_event, currency_json):
-    out_bucket = os.environ['PARQUET_S3_DATA_ID']
+    out_bucket = 'test_bucket'
     in_bucket = currency_event['Records'][0]['s3']['bucket']['name']
     in_key = currency_event['Records'][0]['s3']['object']['key']
 
