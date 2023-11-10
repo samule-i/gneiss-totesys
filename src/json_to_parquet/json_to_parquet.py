@@ -10,7 +10,6 @@ from json_to_parquet.transformations import (
     transform_sales_order)
 from json_to_parquet.dim_counterparty import dim_counterparty
 from json_to_parquet.dim_staff import dim_staff
-import boto3
 
 log = logger(__name__)
 
@@ -48,7 +47,6 @@ def lambda_handler(event, _):
 
     out_bucket: str = os.environ['PARQUET_S3_DATA_ID']
     json_body = json_event(event)
-
 
     parquet_keys = bucket_list(out_bucket)
     table_name = json_body['table_name']
