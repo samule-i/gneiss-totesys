@@ -2,7 +2,7 @@ import boto3
 import json
 import pytest
 
-from ingestion.db_credentials import get_credentials, CredentialsException
+from utils.db_credentials import get_credentials, CredentialsException
 from moto import mock_secretsmanager
 
 
