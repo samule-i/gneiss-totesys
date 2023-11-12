@@ -27,6 +27,7 @@ resource "aws_s3_object" "lambda_json_to_parquet_code" {
 
 resource "aws_s3_bucket" "parquet_data_bucket" {
   bucket_prefix = "parquet-"
+  force_destroy = true
 }
 
 resource "aws_s3_bucket" "parquet-to-olap-code_bucket" {
