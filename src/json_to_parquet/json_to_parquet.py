@@ -16,7 +16,7 @@ log = logger(__name__)
 
 def fake_fn(data)->pd.DataFrame:
     log.info(f'Processing {data["table_name"]} not implemented. Quitting')
-    return pd.DataFrame
+    return pd.DataFrame()
 
 
 def lambda_handler(event, _):
