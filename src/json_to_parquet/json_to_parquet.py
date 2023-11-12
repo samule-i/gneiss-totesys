@@ -10,15 +10,13 @@ from json_to_parquet.transformations import (
     transform_sales_order)
 from json_to_parquet.dim_counterparty import dim_counterparty
 from json_to_parquet.dim_staff import dim_staff
-import sys
 
 log = logger(__name__)
 
 
-def fake_fn(data):
+def fake_fn(data)->pd.DataFrame:
     log.info(f'Processing {data["table_name"]} not implemented. Quitting')
-    sys.exit()
-    pass
+    return pd.DataFrame
 
 
 def lambda_handler(event, _):
