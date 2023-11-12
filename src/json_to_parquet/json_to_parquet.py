@@ -72,6 +72,9 @@ def lambda_handler(event, _):
         log.info('Done')
 
     transformed_df: pd.DataFrame = function_dict[table_name](json_body)
+    if not isinstance(transformed_df, pd.DataFrame):
+        log.error(f'transformed_df is not a DataFrame whilst processing {table_name}')
+        return {'status': 400}
     if len(transformed_df):
         log.info(f'Writing output to {out_bucket}/{out_key}')
         write_pq_to_s3(out_bucket, out_key, transformed_df)
