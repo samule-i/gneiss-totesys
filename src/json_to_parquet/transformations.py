@@ -29,8 +29,12 @@ Raises:
 """
 
 
-def transform_sales_order(sales_order_data):
-    table_data = json.loads(sales_order_data)
+def transform_sales_order(sales_order_data: str | dict):
+    if isinstance(sales_order_data, str):
+        table_data = json.loads(sales_order_data)
+    else:
+        table_data = sales_order_data
+
     if table_data["table_name"] != "sales_order":
         logging.error("Invalid Table Name.")
         raise ValueError("Invalid Table Name.")
@@ -70,8 +74,12 @@ def transform_sales_order(sales_order_data):
         raise e
 
 
-def transform_address(address_data):
-    table_data = json.loads(address_data)
+def transform_address(address_data: str | dict):
+    if isinstance(address_data, str):
+        table_data = json.loads(address_data)
+    else:
+        table_data = address_data
+
     if table_data["table_name"] != "address":
         logging.error("Invalid Table Name.")
         raise ValueError("Invalid Table Name.")
@@ -101,8 +109,12 @@ def transform_address(address_data):
         raise e
 
 
-def transform_design(design_data):
-    table_data = json.loads(design_data)
+def transform_design(design_data: str | dict):
+    if isinstance(design_data, str):
+        table_data = json.loads(design_data)
+    else:
+        table_data = design_data
+
     if table_data["table_name"] != "design":
         logging.error("Invalid Table Name.")
         raise ValueError("Invalid Table Name.")
@@ -136,8 +148,15 @@ Parameters:
 Returns:
 - pd.DataFrame: Transformed data in a DataFrame for the 'dim_staff' table.
 """
-    staff_dict = json.loads(staff_json)
-    department_dict = json.loads(department_json)
+    if isinstance(staff_json, str):
+        staff_dict = json.loads(staff_json)
+    else:
+        staff_dict = staff_json
+    if isinstance(department_json, str):
+        department_dict = json.loads(department_json)
+    else:
+        department_dict = department_json
+
     if (
         staff_dict["table_name"] != "staff"
         or department_dict["table_name"] != "department"
@@ -189,8 +208,15 @@ Parameters:
 Returns:
 - pd.DataFrame: data in a DataFrame for the 'dim_counterparty' table.
 """
-    counterparty_dict = json.loads(counterparty_json)
-    address_dict = json.loads(address_json)
+    if isinstance(counterparty_json, str):
+        counterparty_dict = json.loads(counterparty_json)
+    else:
+        counterparty_dict = counterparty_json
+    if isinstance(address_json, str):
+        address_dict = json.loads(address_json)
+    else:
+        address_dict = address_json
+
     if (
         counterparty_dict["table_name"] != "counterparty"
         or address_dict["table_name"] != "address"
@@ -249,8 +275,11 @@ Returns:
         raise e
 
 
-def transform_purchase_order(purchase_order_data):
-    table_data = json.loads(purchase_order_data)
+def transform_purchase_order(purchase_order_data: str | dict):
+    if isinstance(purchase_order_data, str):
+        table_data = json.loads(purchase_order_data)
+    else:
+        table_data = purchase_order_data
     if table_data["table_name"] != "purchase_order":
         logging.error("Invalid Table Name.")
         raise ValueError("Invalid Table Name.")
@@ -290,7 +319,10 @@ def transform_purchase_order(purchase_order_data):
 
 
 def transform_payment(payment_data):
-    table_data = json.loads(payment_data)
+    if isinstance(payment_data, str):
+        table_data = json.loads(payment_data)
+    else:
+        table_data = payment_data
     if table_data["table_name"] != "payment":
         logging.error("Invalid Table Name.")
         raise ValueError("Invalid Table Name.")
@@ -327,7 +359,11 @@ def transform_payment(payment_data):
 
 
 def transform_transaction(transaction_data):
-    table_data = json.loads(transaction_data)
+    if isinstance(transaction_data, str):
+        table_data = json.loads(transaction_data)
+    else:
+        table_data = transaction_data
+
     if table_data["table_name"] != "transaction":
         logging.error("Invalid Table Name.")
         raise ValueError("Invalid Table Name.")
@@ -351,7 +387,11 @@ def transform_transaction(transaction_data):
 
 
 def transform_payment_type(payment_type_data):
-    table_data = json.loads(payment_type_data)
+    if isinstance(payment_type_data, str):
+        table_data = json.loads(payment_type_data)
+    else:
+        table_data = payment_type_data
+
     if table_data["table_name"] != "payment_type":
         logging.error("Invalid Table Name.")
         raise ValueError("Invalid Table Name.")
