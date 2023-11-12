@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import json
 from json_to_parquet.get_s3_file import json_from_row_id
-from json_to_parquet.custom_log import logger
+from utils.custom_log import logger
 log = logger(__name__)
 
 

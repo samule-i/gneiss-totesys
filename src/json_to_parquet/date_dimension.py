@@ -1,6 +1,6 @@
 from datetime import datetime as dt
 from datetime import timedelta
-from json_to_parquet.custom_log import logger
+from utils.custom_log import logger
 import math
 import pandas as pd
 

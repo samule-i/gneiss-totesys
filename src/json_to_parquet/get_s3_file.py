@@ -1,7 +1,7 @@
 import boto3
 from botocore.exceptions import ClientError
 import json
-from json_to_parquet.custom_log import logger
+from utils.custom_log import logger
 log = logger(__name__)
 
 

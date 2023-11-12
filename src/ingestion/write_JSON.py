@@ -1,11 +1,9 @@
-import logging
 from botocore.exceptions import ClientError
 import boto3
 from datetime import date, datetime
 import json
-
-logger = logging.getLogger('MyLogger')
-logger.setLevel(logging.ERROR)
+from utils import custom_log
+logger = custom_log.logger(__name__)
 
 
 def write_to_ingestion(data, bucket) -> str | None:
@@ -64,6 +62,9 @@ def write_lookup(json_body: dict, bucket_name: str, json_key: str):
             'table_name': table,
             'indexes': {}
         }
+    if not json_key:
+        logger.info('Nothing to write')
+        return
     logger.info(f'Writing {table}/{json_key} to {table_index_lookup}')
     for row in rows:
         id = row[0]
