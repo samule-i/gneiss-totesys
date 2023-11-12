@@ -1,5 +1,7 @@
 import boto3
-from json_to_parquet.custom_log import logger
+import pandas as pd
+from utils.custom_log import logger
+import awswrangler as wr
 log = logger(__name__)
 
 
@@ -14,8 +16,8 @@ def write_pq_to_s3(bucket: str, key: str, dataframe):
         key = f'{key}.parquet'
     key = key.replace('%3A', ':')
     log.info(f'writing to {bucket}/{key}')
-    client = boto3.client('s3')
-    dataframe.to_parquet('/tmp/df.parquet')
-    client.put_object(Bucket=bucket,
-                      Key=key,
-                      Body='/tmp/write_file.parquet')
+    path=f's3://{bucket}/{key}'
+    wr.s3.to_parquet(
+        df=dataframe,
+        path=path
+    )
