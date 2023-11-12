@@ -50,6 +50,12 @@ def fake_event() -> dict:
     return _fake_event()
 
 
+@pytest.fixture(scope='function')
+def fake_design_json() -> dict:
+    with open('test/sample_jsons/sample_design.json') as file:
+        return json.loads(file.read())
+
+
 def _fake_event() -> dict:
     with open('test/_fake_events/put_file.json') as file:
         data = file.read()
