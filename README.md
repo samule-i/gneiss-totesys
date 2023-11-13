@@ -20,11 +20,21 @@ Github Actions: A CI/CD workflow using github actions ensures that testing is up
 
 ## Methodologies
 
+Thorough planning was a key consideration before beginning the project, the team took time to properly evaluate a course of action to complete the project, we relied on the [C4 model](https://c4model.com) to inform our planning and help break the project down into manageable problems to solve.
+
 Developed with an AGILE approach to working, taking rapid iterative steps to ensure that time and resources don't get wasted that keeps the team well informed about problems and solutions that are being used.
+
+Our work was organized through several methods.
+
+- Github was used for code review
+- Slack was used for video meetings, standups and discussion
+- Trello was used to prioritise and distribute work
 
 Daily stand-ups and pair programming was used extensively to keep team members better informed throughout the project and to encourage collaboration and thoroughness with produced work.
 
 Communication has been key throughout, a team effort has allowed us to explore solutions rapidly whilst providing feedback to the entire team and produced more maintainable and trusted code as a result.
+
+Consistently maintaining an effort to remain organised and on-track helped prevent us from creating duplicate work and prevented us from developing work that had no use or did not meet the needs of the spec.
 
 ## Setup
 
