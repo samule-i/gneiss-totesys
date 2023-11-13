@@ -8,7 +8,7 @@ resource "aws_lambda_function" "totesys_ingestion" {
   s3_key        = aws_s3_object.lambda_ingestion_code.key
   handler       = "ingestion.ingestion.lambda_handler"
   runtime       = "python3.11"
-  timeout       = 60 # NOTE this must be less than the period defined in the eventbridge rule
+  timeout       = 900 # NOTE this must be less than the period defined in the eventbridge rule
   environment {
     variables = {
       "S3_DATA_ID"      = aws_s3_bucket.ingestion_bucket.id,
@@ -51,7 +51,7 @@ resource "aws_lambda_function" "json_to_parquet" {
       "PARQUET_S3_DATA_ARN" = aws_s3_bucket.transformed_bucket.arn,
     }
   }
-  layers = [aws_lambda_layer_version.temp_boto_layer.arn]
+  layers = ["arn:aws:lambda:eu-west-2:336392948345:layer:AWSSDKPandas-Python311:2"]
 }
 
 resource "aws_lambda_permission" "allow_s3" {
@@ -68,6 +68,7 @@ resource "aws_s3_bucket_notification" "json_bucket_notification" {
   lambda_function {
     lambda_function_arn = aws_lambda_function.json_to_parquet.arn
     events              = ["s3:ObjectCreated:*"]
+    filter_suffix       = ".json"
   }
 
   depends_on = [aws_lambda_permission.allow_s3]
@@ -107,6 +108,7 @@ resource "aws_s3_bucket_notification" "parquet_bucket_notification" {
   lambda_function {
     lambda_function_arn = aws_lambda_function.parquet_to_OLAP.arn
     events              = ["s3:ObjectCreated:*"]
+    filter_suffix = ".parquet"
   }
 
   depends_on = [aws_lambda_permission.allow_parquet_s3]
