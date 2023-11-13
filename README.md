@@ -1,3 +1,5 @@
+[![data-ingestion test & deploy](https://github.com/samule-i/gneiss-totesys/actions/workflows/test_deploy.yml/badge.svg)](https://github.com/samule-i/gneiss-totesys/actions/workflows/test_deploy.yml)
+
 # gneiss-totesys
 Project for taking data out of a PGSQL DB to generate an OLAP DB with visible results in a Quickswitch dash
 
