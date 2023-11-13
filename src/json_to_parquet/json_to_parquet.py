@@ -14,7 +14,7 @@ from json_to_parquet.dim_staff import dim_staff
 log = logger(__name__)
 
 
-def fake_fn(data)->pd.DataFrame:
+def fake_fn(data) -> pd.DataFrame:
     log.info(f'Processing {data["table_name"]} not implemented. Quitting')
     return pd.DataFrame()
 
@@ -58,7 +58,7 @@ def lambda_handler(event, _):
         table_name = json_body['table_name']
     except KeyError:
         log.error(f'Table_name does not exits in {in_key}')
-        return { "status": 400 }
+        return {"status": 400}
 
     out_key = in_key.replace(table_name, out_table_lookup[table_name])
     log.info(f'Processing {table_name} to {out_bucket}/{out_key}')
@@ -73,7 +73,9 @@ def lambda_handler(event, _):
 
     transformed_df: pd.DataFrame = function_dict[table_name](json_body)
     if not isinstance(transformed_df, pd.DataFrame):
-        log.error(f'transformed_df is not a DataFrame whilst processing {table_name}')
+        logstring = f'''
+transformed_df is not a DataFrame whilst processing {table_name}'''
+        log.error(logstring)
         return {'status': 400}
     if len(transformed_df):
         log.info(f'Writing output to {out_bucket}/{out_key}')

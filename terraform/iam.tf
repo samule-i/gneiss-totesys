@@ -33,6 +33,7 @@ data "aws_iam_policy_document" "s3_document" {
       "${aws_s3_bucket.code_bucket.arn}/*",
       "${aws_s3_bucket.ingestion_bucket.arn}/*",
       "${aws_s3_bucket.transformed_bucket.arn}/*",
+      "${aws_s3_bucket.transformed_bucket.arn}"
     ]
   }
 }
