@@ -1,5 +1,13 @@
 [![data-ingestion test & deploy](https://github.com/samule-i/gneiss-totesys/actions/workflows/test_deploy.yml/badge.svg)](https://github.com/samule-i/gneiss-totesys/actions/workflows/test_deploy.yml)
 [![Coverage Status](https://coveralls.io/repos/github/samule-i/gneiss-totesys/badge.svg)](https://coveralls.io/github/samule-i/gneiss-totesys)
+
+- [technologies](#technologies)
+- [methodologies](#methodologies)
+- [setup guide](#setup)
+- [deployment](#deployment)
+- [pipeline diagram](#pipeline)
+
+
 # gneiss-totesys
 
 Gneiss-totesys generates a Data Warehouse by collecting data from an OLTP database and transforming the data into an easily queriable and analysable state on an OLAP database in accordance with a specification.
