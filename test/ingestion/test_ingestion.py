@@ -41,6 +41,7 @@ number_of_tables = 11
 @patch('ingestion.ingestion.rows_to_json')
 @patch('ingestion.ingestion.get_conn')
 def test_ingestion_calls_rows_to_json_for_each_table(mock_conn, mock_rows):
+    os.environ['S3_DATA_ID'] = 'test_bucket'
     sm = boto3.client("secretsmanager", region_name="eu-west-2")
     secret = fake_credentials
     sm.create_secret(Name="db_credentials_oltp",
@@ -64,5 +65,40 @@ def test_ingestion_calls_rows_to_json_for_each_table(mock_conn, mock_rows):
          "data": ""})
     lambda_handler('', '')
     mock_rows.assert_called()
-    print(dir(mock_rows))
     assert mock_rows.call_count == 11
+
+
+@mock_s3
+@mock_secretsmanager
+# @patch('ingestion.ingestion.rows_to_json')
+@patch('ingestion.ingestion.get_conn')
+def test_ingestion_calls_rows_to_json_in_the_correct_order(mock_conn):
+    os.environ['S3_DATA_ID'] = 'test_bucket'
+    sm = boto3.client("secretsmanager", region_name="eu-west-2")
+    secret = fake_credentials
+    sm.create_secret(Name="db_credentials_oltp",
+                     SecretString=json.dumps(secret))
+
+    s3 = boto3.client("s3")
+    location = {'LocationConstraint': 'eu-west-2'}
+    s3.create_bucket(
+        Bucket=os.environ['S3_DATA_ID'],
+        CreateBucketConfiguration=location
+    )
+
+    s3.put_object(Bucket=os.environ['S3_DATA_ID'],
+                  Key='timestamps.json',
+                  Body=json.dumps(fake_time)
+                  )
+    with patch('ingestion.ingestion.rows_to_json') as mock_fn:
+        mock_fn.return_value = json.dumps(
+            {"table_name": "",
+             "column_names": "",
+             "record_count": 0,
+             "data": ""})
+        lambda_handler('', '')
+        mock_fn.assert_called()
+        last_three_called_tables = [arg[0][0]
+                                    for arg in mock_fn.call_args_list[-3:]]
+        assert ['sales_order',
+                'purchase_order'] == last_three_called_tables
