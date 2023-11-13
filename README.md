@@ -86,8 +86,8 @@ terraform -chdir=terraform init
 ```
 #### to deploy to aws
 ```sh
-terraform -chdir=terraform plan
-terraform -chdir=terraform apply
+terraform -chdir=terraform plan -var-file=vars.tfvars
+terraform -chdir=terraform apply -var-file=vars.tfvars
 ```
 
 # Pipeline
