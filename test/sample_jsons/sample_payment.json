@@ -1,0 +1,48 @@
+{
+    "table_name": "payment",
+    "column_names": [
+        "payment_id",
+        "created_at",
+        "last_updated",
+        "transaction_id",
+        "counterparty_id",
+        "payment_amount",
+        "currency_id",
+        "payment_type_id",
+        "paid",
+        "payment_date",
+        "company_ac_number",
+        "counterparty_ac_number"
+    ],
+    "record_count": 2,
+    "data": [
+        [
+            2,
+            "2001-01-01T00:00:00.000000",
+            "2001-01-01T00:00:00.000000",
+            1,
+            1,
+            100000.50,
+            2,
+            3,
+            false,
+            "2001-01-01",
+            10000000,
+            10000000
+        ],
+        [
+            3,
+            "2001-01-01T00:00:00.000000",
+            "2001-01-01T00:00:00.000000",
+            1,
+            2,
+            205952.22,
+            3,
+            1,
+            false,
+            "2001-01-01",
+            10000000,
+            10000000
+        ]
+    ]
+}

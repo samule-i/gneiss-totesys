@@ -1,0 +1,60 @@
+{
+    "table_name": "counterparty",
+    "column_names": [
+        "counterparty_id",
+        "counterparty_legal_name",
+        "legal_address_id",
+        "commercial_contact",
+        "delivery_contact",
+        "created_at",
+        "last_updated"
+    ],
+    "record_count": 20,
+    "data": [
+        [
+            1,
+            "test_name1",
+            1,
+            "Micheal Toy",
+            "Mrs. Lucy Runolfsdottir",
+            "2022-11-03T14:20:51.563000",
+            "2022-11-03T14:20:51.563000"
+        ],
+        [
+            2,
+            "test_name2",
+            2,
+            "Melba Sanford",
+            "Jean Hane III",
+            "2022-11-03T14:20:51.563000",
+            "2022-11-03T14:20:51.563000"
+        ],
+        [
+            3,
+            "Armstrong Inc",
+            2,
+            "Jane Wiza",
+            "Myra Kovacek",
+            "2022-11-03T14:20:51.563000",
+            "2022-11-03T14:20:51.563000"
+        ],
+        [
+            4,
+            "Kohler Inc",
+            1,
+            "Taylor Haag",
+            "Alfredo Cassin II",
+            "2022-11-03T14:20:51.563000",
+            "2022-11-03T14:20:51.563000"
+        ],
+        [
+            5,
+            "Frami, Yundt and Macejkovic",
+            1,
+            "Homer Mitchell",
+            "Ivan Balistreri",
+            "2022-11-03T14:20:51.563000",
+            "2022-11-03T14:20:51.563000"
+        ]
+    ]
+}

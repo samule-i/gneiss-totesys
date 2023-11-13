@@ -70,12 +70,12 @@ def test_the_data_has_been_uploaded_to_S3_using_ls(s3_boto):
 
 
 @mock_s3
-def test_function_handles_runtime_error(s3_boto):
+def test_function_handles_type_error(s3_boto):
     bucket = 'test-bucket-geni'
     data = []
     location = {'LocationConstraint': 'eu-west-2'}
     s3_boto.create_bucket(Bucket=bucket, CreateBucketConfiguration=location)
-    with pytest.raises(RuntimeError):
+    with pytest.raises(TypeError):
         write_to_ingestion(data, bucket)
 
 

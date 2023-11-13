@@ -29,23 +29,39 @@ Raises:
 """
 
 
-def transform_sales_order(sales_order_data):
-    table_data = json.loads(sales_order_data)
+def transform_sales_order(sales_order_data: str | dict):
+    if isinstance(sales_order_data, str):
+        table_data = json.loads(sales_order_data)
+    else:
+        table_data = sales_order_data
+
     if table_data["table_name"] != "sales_order":
         logging.error("Invalid Table Name.")
         raise ValueError("Invalid Table Name.")
     try:
         column_names = table_data["column_names"]
         data = table_data["data"]
-        df = pd.DataFrame(data, columns=column_names)
-        df["created_date"] = df["created_at"].str.split(" ").str[0]
-        df["created_time"] = df["created_at"].str.split(" ").str[1]
-        df["last_updated_date"] = df["last_updated"].str.split(" ").str[0]
-        df["last_updated_time"] = df["last_updated"].str.split(" ").str[1]
 
-        df.rename(columns={"staff_id": "sales_staff_id"},
-                  inplace=True)
+        df = pd.DataFrame(data, columns=column_names)
+
+        df["created_at"] = pd.to_datetime(df["created_at"], format='ISO8601')
+        df["last_updated"] = pd.to_datetime(
+            df["last_updated"], format='ISO8601')
+        df["agreed_payment_date"] = pd.to_datetime(
+            df["agreed_payment_date"], format='ISO8601').dt.date
+        df["agreed_delivery_date"] = pd.to_datetime(
+            df["agreed_delivery_date"], format='ISO8601').dt.date
+
+        df["created_date"] = df["created_at"].dt.date
+        df["created_time"] = df["created_at"].dt.time
+        df["last_updated_date"] = df["last_updated"].dt.date
+        df["last_updated_time"] = df["last_updated"].dt.time
+
+        df.rename(columns={"staff_id": "sales_staff_id"}, inplace=True)
+
+        df["sales_record_id"] = range(1, 1 + df.shape[0])
         expected_columns = [
+            "sales_record_id",
             "sales_order_id",
             "created_date",
             "created_time",
@@ -63,15 +79,19 @@ def transform_sales_order(sales_order_data):
         ]
 
         fact_sales_order = df[expected_columns]
-
         return fact_sales_order
+
     except Exception as e:
         logging.error(f"Error: {str(e)}")
         raise e
 
 
-def transform_address(address_data):
-    table_data = json.loads(address_data)
+def transform_address(address_data: str | dict):
+    if isinstance(address_data, str):
+        table_data = json.loads(address_data)
+    else:
+        table_data = address_data
+
     if table_data["table_name"] != "address":
         logging.error("Invalid Table Name.")
         raise ValueError("Invalid Table Name.")
@@ -101,8 +121,12 @@ def transform_address(address_data):
         raise e
 
 
-def transform_design(design_data):
-    table_data = json.loads(design_data)
+def transform_design(design_data: str | dict):
+    if isinstance(design_data, str):
+        table_data = json.loads(design_data)
+    else:
+        table_data = design_data
+
     if table_data["table_name"] != "design":
         logging.error("Invalid Table Name.")
         raise ValueError("Invalid Table Name.")
@@ -136,8 +160,15 @@ Parameters:
 Returns:
 - pd.DataFrame: Transformed data in a DataFrame for the 'dim_staff' table.
 """
-    staff_dict = json.loads(staff_json)
-    department_dict = json.loads(department_json)
+    if isinstance(staff_json, str):
+        staff_dict = json.loads(staff_json)
+    else:
+        staff_dict = staff_json
+    if isinstance(department_json, str):
+        department_dict = json.loads(department_json)
+    else:
+        department_dict = department_json
+
     if (
         staff_dict["table_name"] != "staff"
         or department_dict["table_name"] != "department"
@@ -189,8 +220,15 @@ Parameters:
 Returns:
 - pd.DataFrame: data in a DataFrame for the 'dim_counterparty' table.
 """
-    counterparty_dict = json.loads(counterparty_json)
-    address_dict = json.loads(address_json)
+    if isinstance(counterparty_json, str):
+        counterparty_dict = json.loads(counterparty_json)
+    else:
+        counterparty_dict = counterparty_json
+    if isinstance(address_json, str):
+        address_dict = json.loads(address_json)
+    else:
+        address_dict = address_json
+
     if (
         counterparty_dict["table_name"] != "counterparty"
         or address_dict["table_name"] != "address"
@@ -249,8 +287,11 @@ Returns:
         raise e
 
 
-def transform_purchase_order(purchase_order_data):
-    table_data = json.loads(purchase_order_data)
+def transform_purchase_order(purchase_order_data: str | dict):
+    if isinstance(purchase_order_data, str):
+        table_data = json.loads(purchase_order_data)
+    else:
+        table_data = purchase_order_data
     if table_data["table_name"] != "purchase_order":
         logging.error("Invalid Table Name.")
         raise ValueError("Invalid Table Name.")
@@ -258,13 +299,23 @@ def transform_purchase_order(purchase_order_data):
         column_names = table_data["column_names"]
         data = table_data["data"]
         df = pd.DataFrame(data, columns=column_names)
-        df["created_date"] = df["created_at"].str.split(" ").str[0]
-        df["created_time"] = df["created_at"].str.split(" ").str[1]
-        df["last_updated_date"] = df["last_updated"].str.split(" ").str[0]
-        df["last_updated_time"] = df["last_updated"].str.split(" ").str[1]
+        df["created_at"] = pd.to_datetime(df["created_at"], format='ISO8601')
+        df["last_updated"] = pd.to_datetime(
+            df["last_updated"], format='ISO8601')
+        df["agreed_delivery_date"] = pd.to_datetime(
+            df["agreed_delivery_date"], format='ISO8601').dt.date
+        df["agreed_payment_date"] = pd.to_datetime(
+            df["agreed_payment_date"], format='ISO8601').dt.date
+
+        df["created_date"] = df["created_at"].dt.date
+        df["created_time"] = df["created_at"].dt.time
+        df["last_updated_date"] = df["last_updated"].dt.date
+        df["last_updated_time"] = df["last_updated"].dt.time
+
+        df["purchase_record_id"] = range(1, 1 + df.shape[0])
 
         expected_columns = [
-
+            "purchase_record_id",
             "purchase_order_id",
             "created_date",
             "created_time",
@@ -290,7 +341,10 @@ def transform_purchase_order(purchase_order_data):
 
 
 def transform_payment(payment_data):
-    table_data = json.loads(payment_data)
+    if isinstance(payment_data, str):
+        table_data = json.loads(payment_data)
+    else:
+        table_data = payment_data
     if table_data["table_name"] != "payment":
         logging.error("Invalid Table Name.")
         raise ValueError("Invalid Table Name.")
@@ -298,12 +352,22 @@ def transform_payment(payment_data):
         column_names = table_data["column_names"]
         data = table_data["data"]
         df = pd.DataFrame(data, columns=column_names)
-        df["created_date"] = df["created_at"].str.split(" ").str[0]
-        df["created_time"] = df["created_at"].str.split(" ").str[1]
-        df["last_updated_date"] = df["last_updated"].str.split(" ").str[0]
-        df["last_updated_time"] = df["last_updated"].str.split(" ").str[1]
+
+        df["created_at"] = pd.to_datetime(df["created_at"], format='ISO8601')
+        df["last_updated"] = pd.to_datetime(
+            df["last_updated"], format='ISO8601')
+        df["payment_date"] = pd.to_datetime(
+            df["payment_date"], format='ISO8601').dt.date
+
+        df["created_date"] = df["created_at"].dt.date
+        df["created_time"] = df["created_at"].dt.time
+        df["last_updated_date"] = df["last_updated"].dt.date
+        df["last_updated_time"] = df["last_updated"].dt.time
+
+        df["payment_record_id"] = range(1, 1 + df.shape[0])
 
         expected_columns = [
+            "payment_record_id",
             "payment_id",
             "created_date",
             "created_time",
@@ -327,7 +391,11 @@ def transform_payment(payment_data):
 
 
 def transform_transaction(transaction_data):
-    table_data = json.loads(transaction_data)
+    if isinstance(transaction_data, str):
+        table_data = json.loads(transaction_data)
+    else:
+        table_data = transaction_data
+
     if table_data["table_name"] != "transaction":
         logging.error("Invalid Table Name.")
         raise ValueError("Invalid Table Name.")
@@ -351,7 +419,11 @@ def transform_transaction(transaction_data):
 
 
 def transform_payment_type(payment_type_data):
-    table_data = json.loads(payment_type_data)
+    if isinstance(payment_type_data, str):
+        table_data = json.loads(payment_type_data)
+    else:
+        table_data = payment_type_data
+
     if table_data["table_name"] != "payment_type":
         logging.error("Invalid Table Name.")
         raise ValueError("Invalid Table Name.")

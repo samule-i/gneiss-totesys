@@ -38,7 +38,25 @@ def currency_json():
 
 
 @pytest.fixture(scope='function')
-def fake_event():
+def currency_event() -> dict:
+    event = _fake_event()
+    key_string = '/currency/2023/11/09/13 58 01.json'
+    event['Records'][0]['s3']['object']['key'] = key_string
+    return event
+
+
+@pytest.fixture(scope='function')
+def fake_event() -> dict:
+    return _fake_event()
+
+
+@pytest.fixture(scope='function')
+def fake_design_json() -> dict:
+    with open('test/sample_jsons/sample_design.json') as file:
+        return json.loads(file.read())
+
+
+def _fake_event() -> dict:
     with open('test/_fake_events/put_file.json') as file:
         data = file.read()
     event = json.loads(data)

@@ -1,0 +1,48 @@
+{
+    "table_name": "sales_order",
+    "column_names": [
+        "sales_order_id",
+        "created_at",
+        "last_updated",
+        "design_id",
+        "staff_id",
+        "counterparty_id",
+        "units_sold",
+        "unit_price",
+        "currency_id",
+        "agreed_delivery_date",
+        "agreed_payment_date",
+        "agreed_delivery_location_id"
+    ],
+    "record_count": 2,
+    "data": [
+        [
+            1,
+            "2001-01-01T00:00:00.000000",
+            "2001-01-01T00:00:00.000000",
+            2,
+            15,
+            20,
+            99999,
+            1.50,
+            5,
+            "2022-01-01",
+            "2022-01-01",
+            4
+        ],
+        [
+            2,
+            "2001-01-01T00:00:00.000000",
+            "2001-01-01T00:00:00.000000",
+            10,
+            12,
+            13,
+            50111,
+            5.23,
+            2,
+            "2022-01-01",
+            "2022-01-01",
+            8
+        ]
+    ]
+}

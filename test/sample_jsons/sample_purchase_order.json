@@ -1,0 +1,48 @@
+{
+    "table_name": "purchase_order",
+    "column_names": [
+        "purchase_order_id",
+        "created_at",
+        "last_updated",
+        "staff_id",
+        "counterparty_id",
+        "item_code",
+        "item_quantity",
+        "item_unit_price",
+        "currency_id",
+        "agreed_delivery_date",
+        "agreed_payment_date",
+        "agreed_delivery_location_id"
+    ],
+    "record_count": 2,
+    "data": [
+        [
+            1,
+            "2001-01-01T00:00:00.000000",
+            "2001-01-01T00:00:00.000000",
+            12,
+            11,
+            "test_code",
+            100,
+            200.99,
+            2,
+            "2022-01-01",
+            "2022-01-01",
+            6
+        ],
+        [
+            2,
+            "2001-01-01T00:00:00.000000",
+            "2001-01-01T00:00:00.000000",
+            20,
+            17,
+            "test_code2",
+            200,
+            200.50,
+            2,
+            "2022-01-01",
+            "2022-01-01",
+            8
+        ]
+    ]
+}

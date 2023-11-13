@@ -1,0 +1,54 @@
+{
+    "table_name": "department",
+    "column_names": [
+        "department_id",
+        "department_name",
+        "location",
+        "manager",
+        "created_at",
+        "last_updated"
+    ],
+    "record_count": 8,
+    "data": [
+        [
+            1,
+            "Sales",
+            "A",
+            "ABE CED",
+            "2022-01-01T00:00:00.000000",
+            "2022-01-01T00:00:00.000000"
+        ],
+        [
+            2,
+            "Purchasing",
+            "B",
+            "TEST PERSON",
+            "2022-01-01T00:00:00.000000",
+            "2022-01-01T00:00:00.000000"
+        ],
+        [
+            3,
+            "Production",
+            "C",
+            "IMA HORSE",
+            "2022-01-01T00:00:00.000000",
+            "2022-01-01T00:00:00.000000"
+        ],
+        [
+            4,
+            "Dispatch",
+            "D",
+            "JUMP LIZARD",
+            "2022-01-01T00:00:00.000000",
+            "2022-01-01T00:00:00.000000"
+        ],
+        [
+            5,
+            "Finance",
+            "E",
+            "TROG DOOR",
+            "2022-01-01T00:00:00.000000",
+            "2022-01-01T00:00:00.000000"
+        ]
+    ]
+}

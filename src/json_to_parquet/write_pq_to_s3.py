@@ -1,19 +1,21 @@
-import os
-import boto3
+from utils.custom_log import logger
+from awswrangler import s3
+log = logger(__name__)
 
 
-def write_pq_to_s3(key: str, dataframe):
-    '''Writes dataframe contents to S3
+def write_pq_to_s3(bucket: str, key: str, dataframe):
+    '''Writes dataframe contents to S3 as parquet
+    Does not validate inputs
     '''
     if key.endswith('.json'):
         key = key[:-5]
 
     if not key.endswith('.parquet'):
         key = f'{key}.parquet'
-
-    bucket = os.environ['DATA_BUCKET']
-    client = boto3.client('s3')
-    dataframe.to_parquet('/tmp/df.parquet')
-    client.put_object(Bucket=bucket,
-                      Key=key,
-                      Body='/tmp/write_file.parquet')
+    key = key.replace('%3A', ':')
+    log.info(f'writing to {bucket}/{key}')
+    path = f's3://{bucket}/{key}'
+    s3.to_parquet(
+        df=dataframe,
+        path=path
+    )

@@ -1,0 +1,30 @@
+{
+    "table_name": "design",
+    "column_names": [
+        "design_id",
+        "created_at",
+        "design_name",
+        "file_location",
+        "file_name",
+        "last_updated"
+    ],
+    "record_count": 2,
+    "data": [
+        [
+            8,
+            "2001-01-01T00:00:00.000000",
+            "test_name",
+            "/test_loc",
+            "test_fn.json",
+            "2001-01-01T00:00:00.000000"
+        ],
+        [
+            51,
+            "2001-01-01T00:00:00.000000",
+            "Abcd",
+            "/another_test",
+            "name.json",
+            "2001-01-01T00:00:00.000000"
+        ]
+    ]
+}
