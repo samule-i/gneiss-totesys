@@ -1,11 +1,11 @@
 [![data-ingestion test & deploy](https://github.com/samule-i/gneiss-totesys/actions/workflows/test_deploy.yml/badge.svg)](https://github.com/samule-i/gneiss-totesys/actions/workflows/test_deploy.yml)
 [![Coverage Status](https://coveralls.io/repos/github/samule-i/gneiss-totesys/badge.svg)](https://coveralls.io/github/samule-i/gneiss-totesys)
 
-- [technologies](#technologies)
-- [methodologies](#methodologies)
-- [setup guide](#setup)
-- [deployment](#deployment)
-- [pipeline diagram](#pipeline)
+- [Technologies](#technologies)
+- [Methodologies](#methodologies)
+- [Setup guide](#setup)
+- [Deployment](#deployment)
+- [Pipeline diagram](#pipeline)
 
 
 # gneiss-totesys
