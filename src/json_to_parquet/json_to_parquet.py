@@ -63,7 +63,7 @@ def lambda_handler(event, _):
 
     out_key = in_key.replace(table_name, out_table_lookup[table_name])
     log.info(f'Processing {table_name} to {out_bucket}/{out_key}')
-    date_dim_key = 'date/dim_date.parquet'
+    date_dim_key = 'dim_date/dim_date.parquet'
 
     parquet_keys = bucket_list(out_bucket)
     if date_dim_key not in parquet_keys:
