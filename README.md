@@ -2,14 +2,29 @@
 [![Coverage Status](https://coveralls.io/repos/github/samule-i/gneiss-totesys/badge.svg)](https://coveralls.io/github/samule-i/gneiss-totesys)
 # gneiss-totesys
 
-Gneiss-totesys generates a Data Warehouse for the company 'Terrific Totes'
-
-It does this by collecting data from their OLTP database and transforming the data into an easily queriable and analysable state on an OLAP database in accordance with a spec that they have provided.
+Gneiss-totesys generates a Data Warehouse by collecting data from an OLTP database and transforming the data into an easily queriable and analysable state on an OLAP database in accordance with a specification.
 
 This database provides business insights that are otherwise unavailable and can help inform future business decisions by ensuring that the data is useful and as up to date as possible with their current activity.
 
-TDD is implemented to ensure that this set of applications remains stable and performs to the customers wishes
-This set of applications are deployed to Amazon Web Services to provide reliability in uptime and provide a rapid support response from the developers if there is an unexpected change in state anywhere in the pipeline.
+## Technologies
+
+Python: python was used as it provides a set of tools that allow managing datasets safely and reliably, with a testing suite that prevents errors in the data we handle.
+
+TDD: pytest & coverage is implemented to ensure that this set of applications remains stable and performs to the customers wishes, with an explicit restriction that 90% coverage must be met for code to be accepted.
+
+Terraform: This set of applications are deployed to Amazon Web Services to provide reliability in uptime and provide a rapid support response from the developers if there is an unexpected change in state anywhere in the pipeline.
+
+PostgreSQL: Postgresql is used to collect and store data in a safe and reliable way, paramaterisation is used to prevent oversights or vulnerabilities that would ruin trust in the resulting data.
+
+Github Actions: A CI/CD workflow using github actions ensures that testing is up to date and that the development team is quickly aware of any issues as they happen.
+
+## Methodologies
+
+Developed with an AGILE approach to working, taking rapid iterative steps to ensure that time and resources don't get wasted that keeps the team well informed about problems and solutions that are being used.
+
+Daily stand-ups and pair programming was used extensively to keep team members better informed throughout the project and to encourage collaboration and thoroughness with produced work.
+
+Communication has been key throughout, a team effort has allowed us to explore solutions rapidly whilst providing feedback to the entire team and produced more maintainable and trusted code as a result.
 
 ## Setup
 
