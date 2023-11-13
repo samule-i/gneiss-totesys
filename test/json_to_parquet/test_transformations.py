@@ -81,7 +81,7 @@ def test_sales_order_returns_correct_columns_and_rows():
     df_sales_order = transform_sales_order(json_data_sales_order)
 
     expected_columns = [
-        "sales_order_id",
+        "sales_record_id",
         "created_date",
         "created_time",
         "last_updated_date",
@@ -151,6 +151,7 @@ def test_sales_order_returns_correct_columns_and_rows():
     assert list(df_sales_order.values[0]) == expected_rows[0]
     assert list(df_sales_order.values[1]) == expected_rows[1]
     assert list(df_sales_order.values[2]) == expected_rows[2]
+    assert False
 
 
 def test_transform_sales_order_handles_value_error():
