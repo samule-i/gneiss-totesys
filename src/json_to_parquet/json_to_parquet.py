@@ -38,6 +38,7 @@ def lambda_handler(event, _):
         'address': transform_address,
         'counterparty': dim_counterparty,
         'currency': currency_transform,
+        'department': fake_fn,
         'design': transform_design,
         'payment': fake_fn,
         'payment_type': fake_fn,

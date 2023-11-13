@@ -147,11 +147,19 @@ def test_sales_order_returns_correct_columns_and_rows():
             28,
         ],
     ]
+
+    df_sales_order['created_date'] = df_sales_order[
+        'created_date'].astype(str)
+    df_sales_order['created_time'] = df_sales_order[
+        'created_time'].astype(str)
+    df_sales_order['last_updated_date'] = df_sales_order[
+        'last_updated_date'].astype(str)
+    df_sales_order['last_updated_time'] = df_sales_order[
+        'last_updated_time'].astype(str)
     assert list(df_sales_order.columns) == expected_columns
     assert list(df_sales_order.values[0]) == expected_rows[0]
     assert list(df_sales_order.values[1]) == expected_rows[1]
     assert list(df_sales_order.values[2]) == expected_rows[2]
-    assert False
 
 
 def test_transform_sales_order_handles_value_error():
