@@ -50,11 +50,10 @@ def transform_sales_order(sales_order_data: str | dict):
         df["last_updated_date"] = last_updated.dt.date
         df["last_updated_time"] = last_updated.dt.time
 
-        df.rename(columns={"staff_id": "sales_staff_id",
-                           'sales_order_id': 'sales_record_id'},
+        df.rename(columns={"staff_id": "sales_staff_id"},
                   inplace=True)
         expected_columns = [
-            "sales_record_id",
+            "sales_order_id",
             "created_date",
             "created_time",
             "last_updated_date",
