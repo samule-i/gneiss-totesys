@@ -43,3 +43,6 @@ def lambda_handler(event, context):
         raise e
     finally:
         conn.close()
+    return {
+        'statusCode': 200
+    }
