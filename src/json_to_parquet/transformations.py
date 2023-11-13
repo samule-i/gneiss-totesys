@@ -42,8 +42,8 @@ def transform_sales_order(sales_order_data: str | dict):
         column_names = table_data["column_names"]
         data = table_data["data"]
         df = pd.DataFrame(data, columns=column_names)
-        created_at = pd.to_datetime(df["created_at"])
-        last_updated = pd.to_datetime(df["last_updated"])
+        created_at = pd.to_datetime(df["created_at"], format='ISO8601')
+        last_updated = pd.to_datetime(df["last_updated"], format='ISO8601')
 
         df["created_date"] = created_at.dt.date
         df["created_time"] = created_at.dt.time
