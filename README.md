@@ -13,28 +13,37 @@ This set of applications are deployed to Amazon Web Services to provide reliabil
 ## Setup
 
 #### Download the repository
-```
+
+```sh
 git clone https://github.com/samule-i/gneiss-totesys
 cd gneiss-totesys
 ```
+
 #### download requirements & setup environment
-```
+
+```sh
 apt install python3 python-is-python3
 make init
 ```
+
 #### Running standards tests and unit tests
-```
+
+```sh
 make standards && make unit-tests
 ```
 
 ## Deployment
+
 ### Setting your environment
+
 Ensure that you have AWS keys available in `~/.aws/credentials`, available when you create a user at [iam/users](https://us-east-1.console.aws.amazon.com/iam/home?region=eu-north-1#/users)
-```
+
+```sh
 [default]
 aws_access_key_id = ...
 aws_secret_access_key = ...
 ```
+
 Create the file `./terraform/vars.tfvars`
 
 ```tf
@@ -47,15 +56,20 @@ lambda_OLAP_loader_name = "your_olap_lambda_name"
 ```
 
 ### email base64 generation
+
 emails should be seperated by `', '` here, it is important because terraform parses emails as a comma seperated list.
+
 ```sh
 EMAILS="email1@domain.com, email2@domain.com, email3@domain.com,"
 echo $EMAILS | base64
 ```
 
 ### credentials base64 generation
+
 Create a json file for both your input & your output database
+
 #### ./example.json
+
 ```json
 {
     "hostname": "your_postgres_database_host",
@@ -71,11 +85,14 @@ cat ./example.json | base64
 ```
 
 ## pre-deployment set-up
+
 ### !important
+
 Before deploying this to AWS, you must first manually create a bucket in your account to store terraforms state, create a bucket with a unique name and use this to populate the key `bucket` in the file `./terraform/provider.tf`.
 
 eg:
-```
+
+```tf
 terraform {
   backend "s3" {
     bucket = "YOUR_BACKEND_BUCKET"
@@ -88,17 +105,36 @@ terraform {
 Having valid AWS credentials & database credentials is necessary for deployment.
 
 ### deploying
+
 #### init is require for the first-run only:
+
 ```sh
 terraform -chdir=terraform init
 ```
+
 #### to deploy to aws
+
 ```sh
 terraform -chdir=terraform plan -var-file=vars.tfvars
 terraform -chdir=terraform apply -var-file=vars.tfvars
 ```
 
+### forking this repository and using CI/CD deployment:
+
+To use github actions reliably in a fork, you must provide the variables that the provided workflow expects:
+
+- AWS_ACCESS_KEY_ID
+- AWS_SECRET_ACCESS_KEY
+- DB_CREDENTIALS_OLAP
+- DB_CREDENTIALS_OLTP
+- SNS_EMAILS
+
+SNS_EMAILS, DB_CREDENTIALS_OLAP and DB_CREDENTIALS_OLTP should be the same as the base64 string you provide as a value in the vars.tfvars file.
+
+AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are string that are identical to the ones in your .aws/credentials file. (Not base64)
+
 # Pipeline
+
 ```mermaid
 %%{ init: 
     {
