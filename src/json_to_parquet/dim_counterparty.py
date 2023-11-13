@@ -22,7 +22,7 @@ def dim_counterparty(data: dict | str) -> pd.DataFrame:
     foreign_table_name = 'address'
     foreign_key = 'address_id'
     foreign_key_map = {'legal_address_id': 'address_id'}
-    discard_columns = ['commercial_contact', 'delivery_contact']
+    discard_columns = ['commercial_contact', 'delivery_contact', 'address_id']
     valid_tables = ['staff', 'counterparty']
     dim_column_rename_map = {
         'counterparty_id': 'counterparty_id',
