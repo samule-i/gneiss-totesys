@@ -37,20 +37,6 @@ def parquet_to_sql(dataframe, target_table, conn):
         target_table: table to be written to
         conn: database connection
     """
-    olap_table_names = {
-        "dim_counterparty": "counterparty_id",
-        "dim_currency": "currency_id",
-        "dim_date": "date_id",
-        "dim_design": "design_id",
-        "dim_location": "location_id",
-        "dim_payment_type": "payment_type_id",
-        "dim_staff": "staff_id",
-        "dim_transaction": "transaction_id",
-        "fact_payment": "payment_record_id",
-        "fact_purchase_order": "purchase_record_id",
-        "fact_sales_order": "sales_record_id",
-    }
-
     if not isinstance(dataframe, pd.DataFrame):
         raise TypeError("The dataframe input is not of type DataFrame")
     if target_table not in olap_table_names:
@@ -63,8 +49,9 @@ def parquet_to_sql(dataframe, target_table, conn):
             dataframe, target_table, target_pkey_column
         )
 
-        for query in query_list:
-            conn.run(query)
+        for item in query_list:
+            query_str, args = item
+            conn.run(query_str, **args)
     except Exception as e:
         log.error(f"{e}")
         raise e
@@ -80,13 +67,13 @@ def generate_sql_list_for_dataframe(df, table_name, target_pkey_column):
         target_pkey_column (str): The primary key column.
 
     Returns:
-        list: A list of SQL INSERT statements. """
-    column_names = [f"{column}" for column in df.columns]
+        list: A list of tuples, each containing two parts:
+              1st: (str) Parametised SQL INSERT statement.
+              2nd: (dict) parameter values to match the insert statement.
+              This output is intended to be consumed by the pg8000.native
+              conn.run method."""
+    column_names = [f"{identifier(column)}" for column in df.columns]
     column_str = f"({', '.join(column_names)})"
-
-    sql_start = f"INSERT INTO {identifier(table_name)} {column_str} VALUES "
-
-    sql_end = f"on conflict ({target_pkey_column}) "
 
     update_columns = [
         column for column in column_names if column != target_pkey_column
@@ -95,17 +82,21 @@ def generate_sql_list_for_dataframe(df, table_name, target_pkey_column):
     excluded_columns = ["excluded." + column for column in update_columns]
     excluded_str = f"({', '.join(excluded_columns)})"
 
+    sql_start = f"INSERT INTO {identifier(table_name)} {column_str} VALUES "
+
+    sql_end = f"on conflict ({target_pkey_column}) "
     sql_end += f"do update set {update_columns_str} = {excluded_str};"
 
     query_list = []
 
     for i in range(len(df)):
         row_values = df.iloc[i, :].values.flatten().tolist()
-        row_values_str = [
-            "'" + f"{str(value)}".replace("'", "''") + "'"
-            for value in row_values
-        ]
-        sql = f'({", ".join(row_values_str)}) '
-        query_list.append(sql_start + sql + sql_end)
+        column_symbols = [":" + column for column in column_names]
+        sql_mid = f'({", ".join(column_symbols)}) '
+        values_dict = dict(zip(column_names, row_values))
+
+        final_sql = sql_start + sql_mid + sql_end
+
+        query_list.append((final_sql, values_dict))
 
     return query_list
