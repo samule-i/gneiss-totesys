@@ -1,7 +1,14 @@
 [![data-ingestion test & deploy](https://github.com/samule-i/gneiss-totesys/actions/workflows/test_deploy.yml/badge.svg)](https://github.com/samule-i/gneiss-totesys/actions/workflows/test_deploy.yml)
 
 # gneiss-totesys
-Project for taking data out of a PGSQL DB to generate an OLAP DB with visible results in a Quickswitch dash
+Gneiss-totesys generates a Data Warehouse for the company 'Terrific Totes'
+
+It does this by collecting data from their OLTP database and transforming the data into an easily queriable and analysable state on an OLAP database in accordance with a spec that they have provided.
+
+This database provides business insights that are otherwise unavailable and can help inform future business decisions by ensuring that the data is useful and as up to date as possible with their current activity.
+
+TDD is implemented to ensure that this set of applications remains stable and performs to the customers wishes
+This set of applications are deployed to Amazon Web Services to provide reliability in uptime and provide a rapid support response from the developers if there is an unexpected change in state anywhere in the pipeline.
 
 ## Setup
 
