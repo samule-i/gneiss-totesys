@@ -31,8 +31,8 @@ aws_secret_access_key = ...
 Create the file `./terraform/vars.tfvars`
 
 ```tf
-db_credentials_olap = "base64 string"
-db_credentials_oltp = "base64 string"
+db_credentials_olap = "base64 string" // eg. "ZXhhbXBsZSBqYXp6IG11c2ljCg...=="
+db_credentials_oltp = "base64 string" // eg. "ZXhhbXBsZSBqYXp6IG11c2ljCg...=="
 sns_emails = "base64 string"
 lambda_name = "your_ingest_lambda_name"
 lambda_json_to_parquet_name = "your_parquet_lambda_name"
@@ -40,6 +40,7 @@ lambda_OLAP_loader_name = "your_olap_lambda_name"
 ```
 
 ### email base64 generation
+emails should be seperated by `', '` here, it is important because terraform parses emails as a comma seperated list.
 ```sh
 EMAILS="email1@domain.com, email2@domain.com, email3@domain.com,"
 echo $EMAILS | base64
