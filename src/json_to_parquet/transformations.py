@@ -274,9 +274,9 @@ def transform_purchase_order(purchase_order_data):
         df["last_updated"] = pd.to_datetime(
             df["last_updated"], format='ISO8601')
         df["agreed_delivery_date"] = pd.to_datetime(
-            df["agreed_payment_date"], format='ISO8601').dt.date
-        df["agreed_payment_date"] = pd.to_datetime(
             df["agreed_delivery_date"], format='ISO8601').dt.date
+        df["agreed_payment_date"] = pd.to_datetime(
+            df["agreed_payment_date"], format='ISO8601').dt.date
 
         df["created_date"] = df["created_at"].dt.date
         df["created_time"] = df["created_at"].dt.time

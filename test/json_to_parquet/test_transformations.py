@@ -81,6 +81,7 @@ def test_sales_order_returns_correct_columns_and_rows():
     df_sales_order = transform_sales_order(json_data_sales_order)
 
     expected_columns = [
+        "sales_record_id",
         "sales_order_id",
         "created_date",
         "created_time",
@@ -98,7 +99,7 @@ def test_sales_order_returns_correct_columns_and_rows():
     ]
 
     expected_rows = [
-        [
+        [1,
             5030,
             "2023-11-01",
             "14:22:10.329000",
@@ -113,8 +114,8 @@ def test_sales_order_returns_correct_columns_and_rows():
             "2023-11-06",
             "2023-11-05",
             27,
-        ],
-        [
+         ],
+        [2,
             5029,
             "2023-11-01",
             "14:22:10.124000",
@@ -129,8 +130,8 @@ def test_sales_order_returns_correct_columns_and_rows():
             "2023-11-04",
             "2023-11-02",
             26,
-        ],
-        [
+         ],
+        [3,
             5028,
             "2023-11-01",
             "13:33:10.231000",
@@ -145,7 +146,7 @@ def test_sales_order_returns_correct_columns_and_rows():
             "2023-11-03",
             "2023-11-04",
             28,
-        ],
+         ],
     ]
     df_sales_order['created_date'] = df_sales_order[
         'created_date'].astype(str)

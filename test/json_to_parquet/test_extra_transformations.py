@@ -76,7 +76,7 @@ def test_purchase_order_returns_correct_columns_and_rows():
     )
     df_purchase_order = transform_purchase_order(json_data_purchase_order)
     expected_columns = [
-
+        "purchase_record_id",
         "purchase_order_id",
         "created_date",
         "created_time",
@@ -92,55 +92,72 @@ def test_purchase_order_returns_correct_columns_and_rows():
         "agreed_payment_date",
         "agreed_delivery_location_id",
     ]
-    expected_rows = [[
-        6010,
-        "2023-11-01",
-        "14:22:10.329000",
-        "2023-11-01",
-        "14:22:10.329000",
-        186,
-        11,
-        "ABC123",
-        10,
-        25.99,
-        2,
-        "2023-11-06",
-        "2023-11-05",
-        27
-    ],
-        [
-        6011,
-        "2023-11-01",
-        "14:22:10.124000",
-        "2023-11-01",
-        "14:22:10.124000",
-        39,
-        13,
-        "XYZ456",
-        5,
-        19.95,
-        1,
-        "2023-11-04",
-        "2023-11-02",
-        26
-    ],
-        [
-        6012,
-        "2023-11-01",
-        "13:33:10.231000",
-        "2023-11-01",
-        "13:33:10.231000",
-        229,
-        20,
-        "PQR789",
-        8,
-        34.50,
-        1,
-        "2023-11-03",
-        "2023-11-04",
-        28
-    ]]
+    expected_rows = [[1,
+                      6010,
+                      "2023-11-01",
+                      "14:22:10.329000",
+                      "2023-11-01",
+                      "14:22:10.329000",
+                      186,
+                      11,
+                      "ABC123",
+                      10,
+                      25.99,
+                      2,
+                      "2023-11-06",
+                      "2023-11-05",
+                      27
+                      ],
+                     [2,
+                      6011,
+                      "2023-11-01",
+                      "14:22:10.124000",
+                      "2023-11-01",
+                      "14:22:10.124000",
+                      39,
+                      13,
+                      "XYZ456",
+                      5,
+                      19.95,
+                      1,
+                      "2023-11-04",
+                      "2023-11-02",
+                      26
+                      ],
+                     [3,
+                      6012,
+                      "2023-11-01",
+                      "13:33:10.231000",
+                      "2023-11-01",
+                      "13:33:10.231000",
+                      229,
+                      20,
+                      "PQR789",
+                      8,
+                      34.50,
+                      1,
+                      "2023-11-03",
+                      "2023-11-04",
+                      28
+                      ]]
+    df_purchase_order['created_date'] = df_purchase_order[
+        'created_date'].astype(str)
+    df_purchase_order['created_time'] = df_purchase_order[
+        'created_time'].astype(str)
+    df_purchase_order['last_updated_date'] = df_purchase_order[
+        'last_updated_date'].astype(str)
+    df_purchase_order['last_updated_time'] = df_purchase_order[
+        'last_updated_time'].astype(str)
+    df_purchase_order['agreed_delivery_date'] = df_purchase_order[
+        'agreed_delivery_date'].astype(
+        str)
+    df_purchase_order['agreed_payment_date'] = df_purchase_order[
+        'agreed_payment_date'].astype(
+        str)
+
     assert list(df_purchase_order.columns) == expected_columns
+    print(list(df_purchase_order.values[0]))
+
     assert list(df_purchase_order.values[0]) == expected_rows[0]
     assert list(df_purchase_order.values[1]) == expected_rows[1]
     assert list(df_purchase_order.values[2]) == expected_rows[2]
@@ -310,7 +327,7 @@ def test_transform_payment_returns_correct_columns_and_rows():
 
     df_payment = transform_payment(json_data_payment)
     expected_columns = [
-
+        "payment_record_id",
         "payment_id",
         "created_date",
         "created_time",
@@ -326,7 +343,7 @@ def test_transform_payment_returns_correct_columns_and_rows():
     ]
 
     expected_rows = [
-        [
+        [1,
             7001,
             "2023-11-01",
             "14:22:10.329000",
@@ -339,8 +356,8 @@ def test_transform_payment_returns_correct_columns_and_rows():
             1,
             True,
             "2023-11-06",
-        ],
-        [
+         ],
+        [2,
             7002,
             "2023-11-01",
             "14:22:10.124000",
@@ -353,8 +370,8 @@ def test_transform_payment_returns_correct_columns_and_rows():
             2,
             False,
             "2023-11-04",
-        ],
-        [
+         ],
+        [3,
             7003,
             "2023-11-01",
             "13:33:10.231000",
@@ -367,8 +384,19 @@ def test_transform_payment_returns_correct_columns_and_rows():
             3,
             True,
             "2023-11-03",
-        ]
+         ]
     ]
+    df_payment['created_date'] = df_payment[
+        'created_date'].astype(str)
+    df_payment['created_time'] = df_payment[
+        'created_time'].astype(str)
+    df_payment['last_updated_date'] = df_payment[
+        'last_updated_date'].astype(str)
+    df_payment['last_updated_time'] = df_payment[
+        'last_updated_time'].astype(str)
+    df_payment['payment_date'] = df_payment[
+        'payment_date'].astype(
+        str)
 
     assert list(df_payment.columns) == expected_columns
     assert list(df_payment.values[0]) == expected_rows[0]
