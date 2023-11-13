@@ -50,12 +50,14 @@ Create a json file for both your input & your output database
 #### ./example.json
 ```json
 {
-    "hostname": your_postgres_database_host,
-    "port": your_postgres_port,
-    "database": your_postgres_database_name,
-    "username": your_postgres_username,
-    "password": your_postgres_password,
+    "hostname": "your_postgres_database_host",
+    "port": 5432, // Your database port
+    "database": "your_postgres_database_name",
+    "username": "your_postgres_username",
+    "password": "your_postgres_password",
 }
+```
+
 ```sh
 cat ./example.json | base64
 ```
