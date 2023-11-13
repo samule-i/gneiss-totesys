@@ -20,6 +20,11 @@ Python: python was used as it provides a set of tools that allow managing datase
 
 TDD: pytest & coverage is implemented to ensure that this set of applications remains stable and performs to the customers wishes, with an explicit restriction that 90% coverage must be met for code to be accepted.
 
+Maintaining Standards:
+ - Bandit was used to prevent any security vulnerabilities from being introduced into our code as we developed it.
+ - Safety was used to assess dependencies for vulnerabilities and prevents us from introductin unsafe third party code.
+ - flake8 was used to maintain pep8 compliance for readable and maintainable code.
+
 Terraform: This set of applications are deployed to Amazon Web Services to provide reliability in uptime and provide a rapid support response from the developers if there is an unexpected change in state anywhere in the pipeline.
 
 PostgreSQL: Postgresql is used to collect and store data in a safe and reliable way, paramaterisation is used to prevent oversights or vulnerabilities that would ruin trust in the resulting data.
