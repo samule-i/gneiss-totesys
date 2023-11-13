@@ -1,6 +1,7 @@
 [![data-ingestion test & deploy](https://github.com/samule-i/gneiss-totesys/actions/workflows/test_deploy.yml/badge.svg)](https://github.com/samule-i/gneiss-totesys/actions/workflows/test_deploy.yml)
-
+[![Coverage Status](https://coveralls.io/repos/github/samule-i/gneiss-totesys/badge.svg)](https://coveralls.io/github/samule-i/gneiss-totesys)
 # gneiss-totesys
+
 Gneiss-totesys generates a Data Warehouse for the company 'Terrific Totes'
 
 It does this by collecting data from their OLTP database and transforming the data into an easily queriable and analysable state on an OLAP database in accordance with a spec that they have provided.
@@ -12,21 +13,21 @@ This set of applications are deployed to Amazon Web Services to provide reliabil
 
 ## Setup
 
-#### Download the repository
+### Download the repository
 
 ```sh
 git clone https://github.com/samule-i/gneiss-totesys
 cd gneiss-totesys
 ```
 
-#### download requirements & setup environment
+### download requirements & setup environment
 
 ```sh
 apt install python3 python-is-python3
 make init
 ```
 
-#### Running standards tests and unit tests
+### Running standards tests and unit tests
 
 ```sh
 make standards && make unit-tests
@@ -106,7 +107,7 @@ Having valid AWS credentials & database credentials is necessary for deployment.
 
 ### deploying
 
-#### init is require for the first-run only:
+#### init is require for the first-run only
 
 ```sh
 terraform -chdir=terraform init
@@ -119,7 +120,7 @@ terraform -chdir=terraform plan -var-file=vars.tfvars
 terraform -chdir=terraform apply -var-file=vars.tfvars
 ```
 
-### forking this repository and using CI/CD deployment:
+### forking this repository and using CI/CD deployment
 
 To use github actions reliably in a fork, you must provide the variables that the provided workflow expects:
 
