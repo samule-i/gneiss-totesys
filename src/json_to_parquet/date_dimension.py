@@ -26,11 +26,11 @@ def date_dimension(start_date: str = '2022-01-01',
 
     date = dt.fromisoformat(start_date)
 
-    days = 365*duration_in_years
+    days = 365 * duration_in_years
     for i in range(days):
         month_number = date.strftime('%-m')
-        quarter = math.ceil(int(month_number)/3)
-        dimension['date_id'].append(i)
+        quarter = math.ceil(int(month_number) / 3)
+        dimension['date_id'].append((date.strftime('%Y-%m-%d')))
         dimension['year'].append(int(date.strftime('%Y')))
         dimension['month'].append(int(date.strftime('%m')))
         dimension['day'].append(int(date.strftime('%-d')))
@@ -41,5 +41,7 @@ def date_dimension(start_date: str = '2022-01-01',
 
         date += timedelta(days=1)
     df = pd.DataFrame(dimension)
+    df["date_id"] = pd.to_datetime(
+        df["date_id"]).dt.date
 
     return df

@@ -41,18 +41,27 @@ def transform_sales_order(sales_order_data: str | dict):
     try:
         column_names = table_data["column_names"]
         data = table_data["data"]
+
         df = pd.DataFrame(data, columns=column_names)
-        created_at = pd.to_datetime(df["created_at"], format='ISO8601')
-        last_updated = pd.to_datetime(df["last_updated"], format='ISO8601')
 
-        df["created_date"] = created_at.dt.date
-        df["created_time"] = created_at.dt.time
-        df["last_updated_date"] = last_updated.dt.date
-        df["last_updated_time"] = last_updated.dt.time
+        df["created_at"] = pd.to_datetime(df["created_at"], format='ISO8601')
+        df["last_updated"] = pd.to_datetime(
+            df["last_updated"], format='ISO8601')
+        df["agreed_payment_date"] = pd.to_datetime(
+            df["agreed_payment_date"], format='ISO8601').dt.date
+        df["agreed_delivery_date"] = pd.to_datetime(
+            df["agreed_delivery_date"], format='ISO8601').dt.date
 
-        df.rename(columns={"staff_id": "sales_staff_id"},
-                  inplace=True)
+        df["created_date"] = df["created_at"].dt.date
+        df["created_time"] = df["created_at"].dt.time
+        df["last_updated_date"] = df["last_updated"].dt.date
+        df["last_updated_time"] = df["last_updated"].dt.time
+
+        df.rename(columns={"staff_id": "sales_staff_id"}, inplace=True)
+
+        df["sales_record_id"] = range(1, 1 + df.shape[0])
         expected_columns = [
+            "sales_record_id",
             "sales_order_id",
             "created_date",
             "created_time",
@@ -70,8 +79,8 @@ def transform_sales_order(sales_order_data: str | dict):
         ]
 
         fact_sales_order = df[expected_columns]
-
         return fact_sales_order
+
     except Exception as e:
         logging.error(f"Error: {str(e)}")
         raise e
@@ -290,13 +299,23 @@ def transform_purchase_order(purchase_order_data: str | dict):
         column_names = table_data["column_names"]
         data = table_data["data"]
         df = pd.DataFrame(data, columns=column_names)
-        df["created_date"] = df["created_at"].str.split(" ").str[0]
-        df["created_time"] = df["created_at"].str.split(" ").str[1]
-        df["last_updated_date"] = df["last_updated"].str.split(" ").str[0]
-        df["last_updated_time"] = df["last_updated"].str.split(" ").str[1]
+        df["created_at"] = pd.to_datetime(df["created_at"], format='ISO8601')
+        df["last_updated"] = pd.to_datetime(
+            df["last_updated"], format='ISO8601')
+        df["agreed_delivery_date"] = pd.to_datetime(
+            df["agreed_delivery_date"], format='ISO8601').dt.date
+        df["agreed_payment_date"] = pd.to_datetime(
+            df["agreed_payment_date"], format='ISO8601').dt.date
+
+        df["created_date"] = df["created_at"].dt.date
+        df["created_time"] = df["created_at"].dt.time
+        df["last_updated_date"] = df["last_updated"].dt.date
+        df["last_updated_time"] = df["last_updated"].dt.time
+
+        df["purchase_record_id"] = range(1, 1 + df.shape[0])
 
         expected_columns = [
-
+            "purchase_record_id",
             "purchase_order_id",
             "created_date",
             "created_time",
@@ -333,12 +352,22 @@ def transform_payment(payment_data):
         column_names = table_data["column_names"]
         data = table_data["data"]
         df = pd.DataFrame(data, columns=column_names)
-        df["created_date"] = df["created_at"].str.split(" ").str[0]
-        df["created_time"] = df["created_at"].str.split(" ").str[1]
-        df["last_updated_date"] = df["last_updated"].str.split(" ").str[0]
-        df["last_updated_time"] = df["last_updated"].str.split(" ").str[1]
+
+        df["created_at"] = pd.to_datetime(df["created_at"], format='ISO8601')
+        df["last_updated"] = pd.to_datetime(
+            df["last_updated"], format='ISO8601')
+        df["payment_date"] = pd.to_datetime(
+            df["payment_date"], format='ISO8601').dt.date
+
+        df["created_date"] = df["created_at"].dt.date
+        df["created_time"] = df["created_at"].dt.time
+        df["last_updated_date"] = df["last_updated"].dt.date
+        df["last_updated_time"] = df["last_updated"].dt.time
+
+        df["payment_record_id"] = range(1, 1 + df.shape[0])
 
         expected_columns = [
+            "payment_record_id",
             "payment_id",
             "created_date",
             "created_time",
