@@ -108,7 +108,7 @@ resource "aws_s3_bucket_notification" "parquet_bucket_notification" {
   lambda_function {
     lambda_function_arn = aws_lambda_function.parquet_to_OLAP.arn
     events              = ["s3:ObjectCreated:*"]
-    filter_suffix = ".json"
+    filter_suffix = ".parquet"
   }
 
   depends_on = [aws_lambda_permission.allow_parquet_s3]

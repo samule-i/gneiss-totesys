@@ -29,12 +29,12 @@ totesys_tables = [
     "currency",
     "department",
     "design",
-    "payment",
     "payment_type",
-    "purchase_order",
-    "sales_order",
     "staff",
     "transaction",
+    "sales_order",
+    "payment",
+    "purchase_order"
 ]
 
 
