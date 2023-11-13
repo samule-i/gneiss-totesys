@@ -340,7 +340,7 @@ def transform_purchase_order(purchase_order_data: str | dict):
         raise e
 
 
-def transform_payment(payment_data):
+def transform_payment(payment_data: str | dict):
     if isinstance(payment_data, str):
         table_data = json.loads(payment_data)
     else:
@@ -390,7 +390,7 @@ def transform_payment(payment_data):
         raise e
 
 
-def transform_transaction(transaction_data):
+def transform_transaction(transaction_data: str | dict):
     if isinstance(transaction_data, str):
         table_data = json.loads(transaction_data)
     else:
