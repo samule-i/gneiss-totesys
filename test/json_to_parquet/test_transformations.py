@@ -81,7 +81,7 @@ def test_sales_order_returns_correct_columns_and_rows():
     df_sales_order = transform_sales_order(json_data_sales_order)
 
     expected_columns = [
-        "sales_record_id",
+        "sales_order_id",
         "created_date",
         "created_time",
         "last_updated_date",
