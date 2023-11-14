@@ -232,7 +232,7 @@ def transform_payment(payment_data: str | dict):
         df["created_date"] = df["created_at"].dt.date
         df["created_time"] = df["created_at"].dt.time
         df["last_updated_date"] = df["last_updated"].dt.date
-        df["last_updated_time"] = df["last_updated"].dt.time
+        df["last_updated"] = df["last_updated"].dt.time
 
         df["payment_record_id"] = range(1, 1 + df.shape[0])
 
@@ -242,7 +242,7 @@ def transform_payment(payment_data: str | dict):
             "created_date",
             "created_time",
             "last_updated_date",
-            "last_updated_time",
+            "last_updated",
             "transaction_id",
             "counterparty_id",
             "payment_amount",
