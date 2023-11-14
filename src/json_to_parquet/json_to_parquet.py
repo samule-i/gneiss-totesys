@@ -4,7 +4,7 @@ from json_to_parquet.get_s3_file import json_event, bucket_list
 from json_to_parquet.dim_currency import currency_transform
 from json_to_parquet.date_dimension import date_dimension
 from json_to_parquet.write_pq_to_s3 import write_pq_to_s3
-from utils.custom_log import logger
+from utils.custom_log import totesys_logger
 from json_to_parquet.transformations import (
     transform_address, transform_design,
     transform_sales_order, transform_payment,
@@ -13,7 +13,7 @@ from json_to_parquet.transformations import (
 from json_to_parquet.dim_counterparty import dim_counterparty
 from json_to_parquet.dim_staff import dim_staff
 
-log = logger(__name__)
+log = totesys_logger()
 
 
 def fake_fn(data) -> pd.DataFrame:

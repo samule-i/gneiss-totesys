@@ -41,8 +41,8 @@ def test_that_error_raised_if_fourth_argument_not_pg8000_conn():
     "generate_sql_list_for_dataframe"
 )
 def test_that_to_sql_method_called_once_with_valid_input(patched_sql_list):
-    query_params = {"field1": "value2"}
-    patched_sql_list.return_value = [["query1", query_params]]
+    query_params = [{"field1": "value2"}]
+    patched_sql_list.return_value = ("query1", query_params)
     conn = Mock(spec=Connection)
     dataframe = pd.DataFrame()
     target_table = "dim_location"
@@ -53,7 +53,7 @@ def test_that_to_sql_method_called_once_with_valid_input(patched_sql_list):
         target_table,
         target_pkey_column,
     )
-    conn.run.assert_called_with("query1", **query_params)
+    conn.run.assert_called_with("query1", **query_params[0])
 
 
 @patch(
@@ -72,24 +72,15 @@ def test_that_Exception_raised_for_any_other_error(patched_sql_list):
 def test_generate_sql_list_returns_list_with_correct_number_of_queries():
     df = pd.DataFrame(data={"col1": [1, 2], "col2": [3, 4]})
     result = generate_sql_list_for_dataframe(df, "test_table", "test_id")
-    expected_result = [
-        (
-            (
-                "INSERT INTO test_table (col1, col2) VALUES "
-                "(:col1, :col2) "
-                "on conflict (test_id) "
-                "do update set (col1, col2) = (excluded.col1, excluded.col2);"
-            ),
+    expected_result = (
+        "INSERT INTO test_table (col1, col2) VALUES "
+        "(:col1, :col2) "
+        "on conflict (test_id) "
+        "do update set (col1, col2) = (excluded.col1, excluded.col2);",
+        [
             {"col1": 1, "col2": 3},
-        ),
-        (
-            (
-                "INSERT INTO test_table (col1, col2) VALUES "
-                "(:col1, :col2) "
-                "on conflict (test_id) "
-                "do update set (col1, col2) = (excluded.col1, excluded.col2);"
-            ),
             {"col1": 2, "col2": 4},
-        ),
-    ]
+        ],
+    )
+
     assert result == expected_result

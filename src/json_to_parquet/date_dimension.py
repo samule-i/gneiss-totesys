@@ -1,10 +1,10 @@
 from datetime import datetime as dt
 from datetime import timedelta
-from utils.custom_log import logger
+from utils.custom_log import totesys_logger
 import math
 import pandas as pd
 
-log = logger(__name__)
+log = totesys_logger()
 
 
 def date_dimension(start_date: str = '2022-01-01',

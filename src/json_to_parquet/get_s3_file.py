@@ -1,8 +1,8 @@
 import boto3
 from botocore.exceptions import ClientError
 import json
-from utils.custom_log import logger
-log = logger(__name__)
+from utils.custom_log import totesys_logger
+log = totesys_logger()
 
 
 def json_event(event: dict) -> dict:

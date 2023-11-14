@@ -91,13 +91,12 @@ def test_get_logs_error_when_no_bucket(caplog):
     with pytest.raises(ClientError):
         parquet_S3_key("none_bucket", "none_key")
 
-    message_list = caplog.text.split("\n")
-    assert message_list[0][0:5] == "ERROR"
     expected_message = (
         "An error occurred (NoSuchBucket) when calling the GetObject "
         "operation: The specified bucket does not exist"
     )
-    assert caplog.records[0].message == expected_message
+    assert caplog.records[-1].levelname == "ERROR"
+    assert caplog.records[-1].message == expected_message
 
 
 @mock_s3
@@ -110,10 +109,9 @@ def test_get_logs_error_when_no_key(caplog):
     with pytest.raises(ClientError):
         parquet_S3_key("test", "none_key")
 
-    message_list = caplog.text.split("\n")
-    assert message_list[0][0:5] == "ERROR"
     expected_message = (
         "An error occurred (NoSuchKey) when calling the GetObject "
         "operation: The specified key does not exist."
-        )
-    assert caplog.records[0].message == expected_message
+    )
+    assert caplog.records[-1].levelname == "ERROR"
+    assert caplog.records[-1].message == expected_message

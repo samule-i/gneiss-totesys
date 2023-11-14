@@ -42,7 +42,7 @@ resource "aws_lambda_function" "json_to_parquet" {
   s3_key        = aws_s3_object.lambda_json_to_parquet_code.key
   handler       = "json_to_parquet.json_to_parquet.lambda_handler"
   runtime       = "python3.11"
-  timeout       = 60
+  timeout       = 600
   environment {
     variables = {
       "S3_DATA_ID"          = aws_s3_bucket.ingestion_bucket.id,
@@ -84,7 +84,7 @@ resource "aws_lambda_function" "parquet_to_OLAP" {
   s3_key        = aws_s3_object.lambda_parquet_to_OLAP_code.key
   handler       = "parquet_to_olap.parquet_to_olap.lambda_handler"
   runtime       = "python3.11"
-  timeout       = 60
+  timeout       = 600
   environment {
     variables = {
       "PARQUET_S3_DATA_ID"  = aws_s3_bucket.transformed_bucket.id,

@@ -1,8 +1,10 @@
 import boto3
 from botocore.exceptions import ClientError
+from utils.custom_log import totesys_logger
 import json
-import logging
 import os
+
+log = totesys_logger()
 
 
 def get_last_ingestion_timestamp():
@@ -18,11 +20,12 @@ def get_last_ingestion_timestamp():
             Key='timestamps.json')
         json_data = response['Body'].read().decode('utf-8')
         timestamp = json.loads(json_data)
+        log.info(f"Timestamp retrieved: {timestamp}")
         return timestamp['last_timestamp']
     except ClientError:
         return "1970-01-01 00:00:00"
     except Exception as e:
-        logging.error(f"Error: {str(e)}")
+        log.error(f"Error: {str(e)}")
         raise e
 
 
@@ -44,6 +47,7 @@ def update_last_ingestion_timestamp(new_timestamp):
             Key='timestamps.json',
             Body=updated_json_data
         )
+        log.info(f"Timestamp stored: {new_timestamp}")
     except Exception as e:
-        logging.error(f'{e}')
+        log.error(f'{e}')
         raise e
