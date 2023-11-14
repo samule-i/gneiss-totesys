@@ -52,9 +52,6 @@ def lambda_handler(event, _):
     json_body = json_event(event)
 
     in_key = event['Records'][0]['s3']['object']['key']
-    if in_key == 'timestamps.json':
-        log.info('Key is timestamps, not processing.')
-        return
     try:
         table_name = json_body['table_name']
     except KeyError:
