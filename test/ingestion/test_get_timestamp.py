@@ -22,7 +22,7 @@ def s3_boto():
 
 @mock_s3
 def test_valid_table_name(s3_boto):
-    key = 'timestamps.json'
+    key = 'timestamps.json.notrigger'
     data = '{"last_timestamp": "2023-11-05 12:00:00"}'
     location = {'LocationConstraint': 'eu-west-2'}
     s3_boto.create_bucket(
@@ -53,7 +53,7 @@ def test_returns_exception(mock_client):
 
 @mock_s3
 def test_update_timestamp(s3_boto):
-    key = 'timestamps.json'
+    key = 'timestamps.json.notrigger'
     initial_timestamp = '{"last_timestamp": "2023-11-05 12:00:00"}'
     updated_timestamp = '{"last_timestamp": "2023-11-05 13:00:00"}'
     location = {'LocationConstraint': 'eu-west-2'}
