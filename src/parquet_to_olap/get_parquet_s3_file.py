@@ -1,9 +1,9 @@
 from botocore.exceptions import ClientError
 import boto3
 import pandas as pd
-from utils.custom_log import logger
+from utils.custom_log import totesys_logger
 
-log = logger()
+log = totesys_logger()
 
 
 def parquet_event(event: dict):
@@ -30,8 +30,8 @@ def parquet_S3_key(bucket: str, key: str):
         df = pd.read_parquet("/tmp/df.parquet")
         log.info(f"parquet file loaded: {bucket}/{key}")
     except ClientError as e:
-        log.error(f"{e}")
         log.info(f"File: {bucket}/{key} is unavailable")
+        log.error(f"{e}")
         raise (e)
 
     return df

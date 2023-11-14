@@ -1,13 +1,13 @@
 from utils.db_credentials import get_credentials
 from utils.pg8000_conn import get_conn
-from utils.custom_log import logger
+from utils.custom_log import totesys_logger
 from parquet_to_olap.get_parquet_s3_file import parquet_event
 from parquet_to_olap.parquet_to_sql_transformation import (
     parquet_to_sql,
     olap_table_names,
 )
 
-log = logger()
+log = totesys_logger()
 
 
 def lambda_handler(event, context):

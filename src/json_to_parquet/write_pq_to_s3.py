@@ -1,6 +1,6 @@
-from utils.custom_log import logger
+from utils.custom_log import totesys_logger
 from awswrangler import s3
-log = logger(__name__)
+log = totesys_logger()
 
 
 def write_pq_to_s3(bucket: str, key: str, dataframe):

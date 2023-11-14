@@ -1,9 +1,11 @@
 import json
 import re
-import logging
 from decimal import Decimal
 import datetime
 from pg8000.native import identifier
+from utils.custom_log import totesys_logger
+
+log = totesys_logger()
 
 
 class CustomEncoder(json.JSONEncoder):
@@ -34,7 +36,7 @@ totesys_tables = [
     "transaction",
     "sales_order",
     "payment",
-    "purchase_order"
+    "purchase_order",
 ]
 
 
@@ -53,12 +55,10 @@ def validate_datetime_format(datetime_str):
 
 def rows_to_json(table_name, last_timestamp, conn):
     if not validate_datetime_format(last_timestamp):
-        raise ValueError(
-            "invalid last_timestamp format")
+        raise ValueError("invalid last_timestamp format")
 
     if table_name not in totesys_tables:
-        raise ValueError(
-            f"Table '{table_name}' is not a valid totesys table.")
+        raise ValueError(f"Table '{table_name}' is not a valid totesys table.")
 
     try:
         query = f"""SELECT * FROM {identifier(table_name)} WHERE
@@ -73,11 +73,13 @@ def rows_to_json(table_name, last_timestamp, conn):
             "table_name": table_name,
             "column_names": column_names,
             "record_count": record_count,
-            "data": rows
+            "data": rows,
         }
-
+        log.info(
+            f"JSON prepared for {table_name} with {record_count} records."
+        )
         json_data = json.dumps(result, indent=4, cls=CustomEncoder)
         return json_data
     except Exception as e:
-        logging.error(f"Error: {str(e)}")
+        log.error(f"Error: {str(e)}")
         return json.dumps({"error": f"Error: {str(e)}"}, indent=4)

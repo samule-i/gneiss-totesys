@@ -1,8 +1,8 @@
 import pandas as pd
 from pg8000.native import Connection, identifier
-from utils.custom_log import logger
+from utils.custom_log import totesys_logger
 
-log = logger()
+log = totesys_logger()
 
 olap_table_names = {
     "dim_counterparty": "counterparty_id",
@@ -42,7 +42,7 @@ def parquet_to_sql(dataframe, target_table, conn):
 
         for params in params_list:
             log.info(f"Executing query with values: {params}")
-            # conn.run(query_str, **params)
+            conn.run(query_str, **params)
 
         log.info(f"{len(params_list)} rows upserted for table {target_table}")
     except Exception as e:

@@ -2,6 +2,7 @@ import os
 from datetime import datetime as dt
 from utils.db_credentials import get_credentials
 from utils.pg8000_conn import get_conn
+from utils.custom_log import totesys_logger
 from ingestion.write_JSON import write_to_ingestion, write_lookup
 from ingestion.get_timestamp import (
     get_last_ingestion_timestamp as get_timestamp,
@@ -9,11 +10,9 @@ from ingestion.get_timestamp import (
 from ingestion.rows_to_json import (
     rows_to_json,
     totesys_tables)
-import logging
 import json
 
-logger = logging.getLogger('MyLogger')
-logger.setLevel(logging.INFO)
+log = totesys_logger()
 
 
 def lambda_handler(event, context):
@@ -25,18 +24,18 @@ def lambda_handler(event, context):
     credentials = get_credentials('db_credentials_oltp')
     prev_timestamp = get_timestamp()
     conn = get_conn(credentials)
-    logger.info(f'Processing files now: querying from {prev_timestamp} ⌚')
+    log.info(f'Processing files now: querying from {prev_timestamp} ⌚')
     for table in totesys_tables:
         formatted_ts = f'{prev_timestamp}.000'
         data = rows_to_json(table, formatted_ts, conn)
         s3_key = write_to_ingestion(data, bucket_name)
         write_lookup(json.loads(data), bucket_name, s3_key)
-        logger.info('Processing files now: written lookup')
-    logger.info('updating last seen timestamp...')
+        log.info('Processing files now: written lookup')
+    log.info('updating last seen timestamp...')
     update_last_ingestion_timestamp(new_timestamp)
-    logger.info('Closing db connection...')
+    log.info('Closing db connection...')
     conn.close()
-    logger.info('Done')
+    log.info('Done')
     return {
         'statusCode': 200
     }
