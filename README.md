@@ -1,32 +1,71 @@
 [![data-ingestion test & deploy](https://github.com/samule-i/gneiss-totesys/actions/workflows/test_deploy.yml/badge.svg)](https://github.com/samule-i/gneiss-totesys/actions/workflows/test_deploy.yml)
+[![Coverage Status](https://coveralls.io/repos/github/samule-i/gneiss-totesys/badge.svg)](https://coveralls.io/github/samule-i/gneiss-totesys)
+
+- [Technologies](#technologies)
+- [Methodologies](#methodologies)
+- [Setup guide](#setup)
+- [Deployment](#deployment)
+- [Pipeline diagram](#pipeline)
+
 
 # gneiss-totesys
-Gneiss-totesys generates a Data Warehouse for the company 'Terrific Totes'
 
-It does this by collecting data from their OLTP database and transforming the data into an easily queriable and analysable state on an OLAP database in accordance with a spec that they have provided.
+Gneiss-totesys generates a Data Warehouse by collecting data from an OLTP database and transforming the data into an easily queriable and analysable state on an OLAP database in accordance with a specification.
 
 This database provides business insights that are otherwise unavailable and can help inform future business decisions by ensuring that the data is useful and as up to date as possible with their current activity.
 
-TDD is implemented to ensure that this set of applications remains stable and performs to the customers wishes
-This set of applications are deployed to Amazon Web Services to provide reliability in uptime and provide a rapid support response from the developers if there is an unexpected change in state anywhere in the pipeline.
+## Technologies
+
+Python: python was used as it provides a set of tools that allow managing datasets safely and reliably, with a testing suite that prevents errors in the data we handle.
+
+TDD: pytest & coverage is implemented to ensure that this set of applications remains stable and performs to the customers wishes, with an explicit restriction that 90% coverage must be met for code to be accepted.
+
+Maintaining Standards:
+ - Bandit was used to prevent any security vulnerabilities from being introduced into our code as we developed it.
+ - Safety was used to assess dependencies for vulnerabilities and prevents us from introductin unsafe third party code.
+ - flake8 was used to maintain pep8 compliance for readable and maintainable code.
+
+Terraform: This set of applications are deployed to Amazon Web Services to provide reliability in uptime and provide a rapid support response from the developers if there is an unexpected change in state anywhere in the pipeline.
+
+PostgreSQL: Postgresql is used to collect and store data in a safe and reliable way, paramaterisation is used to prevent oversights or vulnerabilities that would ruin trust in the resulting data.
+
+Github Actions: A CI/CD workflow using github actions ensures that testing is up to date and that the development team is quickly aware of any issues as they happen.
+
+## Methodologies
+
+Thorough planning was a key consideration before beginning the project, the team took time to properly evaluate a course of action to complete the project, we relied on the [C4 model](https://c4model.com) to inform our planning and help break the project down into manageable problems to solve.
+
+Developed with an AGILE approach to working, taking rapid iterative steps to ensure that time and resources don't get wasted that keeps the team well informed about problems and solutions that are being used.
+
+Our work was organized through several methods.
+
+- Github was used for code review
+- Slack was used for video meetings, standups and discussion
+- Trello was used to prioritise and distribute work
+
+Daily stand-ups and pair programming was used extensively to keep team members better informed throughout the project and to encourage collaboration and thoroughness with produced work.
+
+Communication has been key throughout, a team effort has allowed us to explore solutions rapidly whilst providing feedback to the entire team and produced more maintainable and trusted code as a result.
+
+Consistently maintaining an effort to remain organised and on-track helped prevent us from creating duplicate work and prevented us from developing work that had no use or did not meet the needs of the spec.
 
 ## Setup
 
-#### Download the repository
+### Download the repository
 
 ```sh
 git clone https://github.com/samule-i/gneiss-totesys
 cd gneiss-totesys
 ```
 
-#### download requirements & setup environment
+### download requirements & setup environment
 
 ```sh
 apt install python3 python-is-python3
 make init
 ```
 
-#### Running standards tests and unit tests
+### Running standards tests and unit tests
 
 ```sh
 make standards && make unit-tests
@@ -106,7 +145,7 @@ Having valid AWS credentials & database credentials is necessary for deployment.
 
 ### deploying
 
-#### init is require for the first-run only:
+#### init is require for the first-run only
 
 ```sh
 terraform -chdir=terraform init
@@ -119,7 +158,7 @@ terraform -chdir=terraform plan -var-file=vars.tfvars
 terraform -chdir=terraform apply -var-file=vars.tfvars
 ```
 
-### forking this repository and using CI/CD deployment:
+### forking this repository and using CI/CD deployment
 
 To use github actions reliably in a fork, you must provide the variables that the provided workflow expects:
 

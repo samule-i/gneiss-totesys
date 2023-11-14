@@ -31,7 +31,8 @@ jobs:
               run: make init
             - name: unit-tests
               run: make unit-tests
-
+            - name: Coveralls
+              uses: coverallsapp/github-action@v2
     deploy:
       runs-on: ubuntu-latest
       needs: unit_tests
