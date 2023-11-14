@@ -7,7 +7,9 @@ from json_to_parquet.write_pq_to_s3 import write_pq_to_s3
 from utils.custom_log import logger
 from json_to_parquet.transformations import (
     transform_address, transform_design,
-    transform_sales_order)
+    transform_sales_order, transform_payment,
+    transform_purchase_order, transform_payment_type,
+    transform_transaction)
 from json_to_parquet.dim_counterparty import dim_counterparty
 from json_to_parquet.dim_staff import dim_staff
 
@@ -40,12 +42,12 @@ def lambda_handler(event, _):
         'currency': currency_transform,
         'department': fake_fn,
         'design': transform_design,
-        'payment': fake_fn,
-        'payment_type': fake_fn,
-        'purchase_order': fake_fn,
+        'payment': transform_payment,
+        'payment_type': transform_payment_type,
+        'purchase_order': transform_purchase_order,
         'sales_order': transform_sales_order,
         'staff': dim_staff,
-        'transaction': fake_fn
+        'transaction': transform_transaction
     }
 
     out_bucket: str = os.environ['PARQUET_S3_DATA_ID']

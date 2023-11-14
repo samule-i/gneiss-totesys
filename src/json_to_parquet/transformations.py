@@ -2,14 +2,22 @@ import pandas as pd
 import json
 import logging
 
+log = logging.getLogger('json to dataframe tranformation')
+log.setLevel(logging.INFO)
+handler = logging.StreamHandler()
+handler.setLevel(logging.INFO)
+log_fmt = logging.Formatter(
+    """%(levelname)s - %(message)s - %(name)s -
+    %(module)s/%(funcName)s()"""
+)
+handler.setFormatter(log_fmt)
+log.addHandler(handler)
 
 """
 Functions Included:
 transform_sales_order,
 transform_address,
 transform_design,
-transform_staff_and_department,
-transform_counterparty_and_address,
 transform_purchase_order,
 transform_payment,
 transform_transaction,
@@ -36,7 +44,7 @@ def transform_sales_order(sales_order_data: str | dict):
         table_data = sales_order_data
 
     if table_data["table_name"] != "sales_order":
-        logging.error("Invalid Table Name.")
+        log.error("Invalid Table Name.")
         raise ValueError("Invalid Table Name.")
     try:
         column_names = table_data["column_names"]
@@ -82,7 +90,7 @@ def transform_sales_order(sales_order_data: str | dict):
         return fact_sales_order
 
     except Exception as e:
-        logging.error(f"Error: {str(e)}")
+        log.error(f"Error: {str(e)}")
         raise e
 
 
@@ -93,7 +101,7 @@ def transform_address(address_data: str | dict):
         table_data = address_data
 
     if table_data["table_name"] != "address":
-        logging.error("Invalid Table Name.")
+        log.error("Invalid Table Name.")
         raise ValueError("Invalid Table Name.")
     try:
         column_names = table_data["column_names"]
@@ -117,7 +125,7 @@ def transform_address(address_data: str | dict):
 
         return dim_location
     except Exception as e:
-        logging.error(f"Error: {str(e)}")
+        log.error(f"Error: {str(e)}")
         raise e
 
 
@@ -128,7 +136,7 @@ def transform_design(design_data: str | dict):
         table_data = design_data
 
     if table_data["table_name"] != "design":
-        logging.error("Invalid Table Name.")
+        log.error("Invalid Table Name.")
         raise ValueError("Invalid Table Name.")
     try:
         column_names = table_data["column_names"]
@@ -145,145 +153,7 @@ def transform_design(design_data: str | dict):
         dim_design = dim_design[design_columns_to_keep]
         return dim_design
     except Exception as e:
-        logging.error(f"Error: {str(e)}")
-        raise e
-
-
-def transform_staff_and_department(staff_json, department_json):
-    """
-Transform JSON data for the 'staff' table along with related 'department' data.
-
-Parameters:
-- staff_json : JSON-formatted data for the 'staff' table.
-- department_json : JSON-formatted data for the 'department' table.
-
-Returns:
-- pd.DataFrame: Transformed data in a DataFrame for the 'dim_staff' table.
-"""
-    if isinstance(staff_json, str):
-        staff_dict = json.loads(staff_json)
-    else:
-        staff_dict = staff_json
-    if isinstance(department_json, str):
-        department_dict = json.loads(department_json)
-    else:
-        department_dict = department_json
-
-    if (
-        staff_dict["table_name"] != "staff"
-        or department_dict["table_name"] != "department"
-    ):
-        logging.error("Invalid Table Name.")
-        raise ValueError()
-    try:
-        staff_dict = json.loads(staff_json)
-        staff_data = staff_dict["data"]
-        staff_column_names = staff_dict["column_names"]
-        staff_df = pd.DataFrame(staff_data, columns=staff_column_names)
-
-        department_dict = json.loads(department_json)
-        department_data = department_dict["data"]
-        department_column_names = department_dict["column_names"]
-        department_df = pd.DataFrame(department_data,
-                                     columns=department_column_names)
-
-        result = pd.merge(
-            staff_df, department_df, how="inner",
-            on=["department_id", "department_id"]
-        )
-
-        columns_to_keep = [
-            "staff_id",
-            "first_name",
-            "last_name",
-            "department_name",
-            "location",
-            "email_address",
-        ]
-
-        dim_staff = result[columns_to_keep]
-
-        return dim_staff
-    except Exception as e:
-        logging.error(f"Error: {str(e)}")
-        raise e
-
-
-def transform_counterparty_and_address(counterparty_json, address_json):
-    """
-Transform JSON data for the 'counterparty' table with related 'address' data.
-
-Parameters:
-- counterparty_json: JSON-formatted data for the 'counterparty table.
-- address_json : JSON-formatted data for the 'address' table.
-
-Returns:
-- pd.DataFrame: data in a DataFrame for the 'dim_counterparty' table.
-"""
-    if isinstance(counterparty_json, str):
-        counterparty_dict = json.loads(counterparty_json)
-    else:
-        counterparty_dict = counterparty_json
-    if isinstance(address_json, str):
-        address_dict = json.loads(address_json)
-    else:
-        address_dict = address_json
-
-    if (
-        counterparty_dict["table_name"] != "counterparty"
-        or address_dict["table_name"] != "address"
-    ):
-        logging.error("Invalid Table Name.")
-        raise ValueError()
-    try:
-        counterparty_column_names = counterparty_dict["column_names"]
-        counterparty_data = counterparty_dict["data"]
-        counterparty_df = pd.DataFrame(
-            counterparty_data, columns=counterparty_column_names
-        )
-        address_column_names = address_dict["column_names"]
-        address_data = address_dict["data"]
-        address_df = pd.DataFrame(address_data, columns=address_column_names)
-
-        address_df.rename(columns={"address_id": "legal_address_id"},
-                          inplace=True)
-
-        result = pd.merge(
-            counterparty_df,
-            address_df,
-            how="inner",
-            on=["legal_address_id", "legal_address_id"],
-        )
-        result.rename(
-            columns={
-                "address_line_1": "counterparty_legal_address_line_1",
-                "address_line_2": "counterparty_legal_address_line_2",
-                "district": "counterparty_legal_district",
-                "city": "counterparty_legal_city",
-                "postal_code": "counterparty_legal_postal_code",
-                "country": "counterparty_legal_country",
-                "phone": "counterparty_legal_phone_number",
-            },
-            inplace=True,
-        )
-
-        columns_to_keep = [
-            "counterparty_id",
-            "counterparty_legal_name",
-            "counterparty_legal_address_line_1",
-            "counterparty_legal_address_line_2",
-            "counterparty_legal_district",
-            "counterparty_legal_city",
-            "counterparty_legal_postal_code",
-            "counterparty_legal_country",
-            "counterparty_legal_phone_number",
-        ]
-
-        dim_counterparty = result[columns_to_keep]
-
-        return dim_counterparty
-    except Exception as e:
-        logging.error(f"Error: {str(e)}")
+        log.error(f"Error: {str(e)}")
         raise e
 
 
@@ -293,7 +163,7 @@ def transform_purchase_order(purchase_order_data: str | dict):
     else:
         table_data = purchase_order_data
     if table_data["table_name"] != "purchase_order":
-        logging.error("Invalid Table Name.")
+        log.error("Invalid Table Name.")
         raise ValueError("Invalid Table Name.")
     try:
         column_names = table_data["column_names"]
@@ -336,17 +206,17 @@ def transform_purchase_order(purchase_order_data: str | dict):
 
         return fact_purchase_order
     except Exception as e:
-        logging.error(f"Error: {str(e)}")
+        log.error(f"Error: {str(e)}")
         raise e
 
 
-def transform_payment(payment_data):
+def transform_payment(payment_data: str | dict):
     if isinstance(payment_data, str):
         table_data = json.loads(payment_data)
     else:
         table_data = payment_data
     if table_data["table_name"] != "payment":
-        logging.error("Invalid Table Name.")
+        log.error("Invalid Table Name.")
         raise ValueError("Invalid Table Name.")
     try:
         column_names = table_data["column_names"]
@@ -386,18 +256,18 @@ def transform_payment(payment_data):
 
         return fact_payment
     except Exception as e:
-        logging.error(f"Error: {str(e)}")
+        log.error(f"Error: {str(e)}")
         raise e
 
 
-def transform_transaction(transaction_data):
+def transform_transaction(transaction_data: str | dict):
     if isinstance(transaction_data, str):
         table_data = json.loads(transaction_data)
     else:
         table_data = transaction_data
 
     if table_data["table_name"] != "transaction":
-        logging.error("Invalid Table Name.")
+        log.error("Invalid Table Name.")
         raise ValueError("Invalid Table Name.")
     try:
         column_names = table_data["column_names"]
@@ -414,7 +284,7 @@ def transform_transaction(transaction_data):
         dim_transaction = dim_transaction[columns_to_keep]
         return dim_transaction
     except Exception as e:
-        logging.error(f"Error: {str(e)}")
+        log.error(f"Error: {str(e)}")
         raise e
 
 
@@ -425,7 +295,7 @@ def transform_payment_type(payment_type_data):
         table_data = payment_type_data
 
     if table_data["table_name"] != "payment_type":
-        logging.error("Invalid Table Name.")
+        log.error("Invalid Table Name.")
         raise ValueError("Invalid Table Name.")
     try:
         column_names = table_data["column_names"]
@@ -440,5 +310,5 @@ def transform_payment_type(payment_type_data):
         dim_payment_type = dim_payment_type[columns_to_keep]
         return dim_payment_type
     except Exception as e:
-        logging.error(f"Error: {str(e)}")
+        log.error(f"Error: {str(e)}")
         raise e
