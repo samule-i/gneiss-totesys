@@ -1,19 +1,13 @@
-import logging
 from utils.db_credentials import get_credentials
 from utils.pg8000_conn import get_conn
+from utils.custom_log import logger
 from parquet_to_olap.get_parquet_s3_file import parquet_event
-from parquet_to_olap.parquet_to_sql_transformation import \
-    parquet_to_sql, olap_table_names
+from parquet_to_olap.parquet_to_sql_transformation import (
+    parquet_to_sql,
+    olap_table_names,
+)
 
-log = logging.getLogger('parquet_to_olap_lambda_handler')
-log.setLevel(logging.INFO)
-handler = logging.StreamHandler()
-handler.setLevel(logging.INFO)
-log_fmt = logging.Formatter(
-    '''%(levelname)s - %(message)s - %(name)s -
-    %(module)s/%(funcName)s()''')
-handler.setFormatter(log_fmt)
-log.addHandler(handler)
+log = logger()
 
 
 def lambda_handler(event, context):
@@ -25,24 +19,27 @@ def lambda_handler(event, context):
         event: AWS event
         context: Not necessary/optional
     """
+    log.info(f"event: {event}")
     df = parquet_event(event)
     credentials = get_credentials("db_credentials_olap")
     conn = get_conn(credentials)
 
-    event_key = event['Records'][0]["s3"]["object"]["key"]
-    forward_slash_index = event_key.find('/')
+    event_key = event["Records"][0]["s3"]["object"]["key"]
+    forward_slash_index = event_key.find("/")
     table_name = event_key[:forward_slash_index]
+    log.info(f"file: {event_key}")
     try:
         if table_name not in olap_table_names:
-            log.error(f'Table name not recognised in event {event}')
-            raise ValueError(f'Table name not recognised in event {event}')
+            log.error(f"Table name not recognised in event {event}")
+            raise ValueError(f"Table name not recognised in event {event}")
 
         parquet_to_sql(df, table_name, conn)
     except Exception as e:
-        log.error(f'{e}')
+        log.error(f"{e}")
         raise e
     finally:
+        log.info("Closing connection...")
         conn.close()
-    return {
-        'statusCode': 200
-    }
+
+    log.info(f"File processed successfully: {event_key}")
+    return {"statusCode": 200}
