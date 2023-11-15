@@ -232,7 +232,7 @@ def transform_payment(payment_data: str | dict):
         df["created_date"] = df["created_at"].dt.date
         df["created_time"] = df["created_at"].dt.time
         df["last_updated_date"] = df["last_updated"].dt.date
-        df["last_updated_time"] = df["last_updated"].dt.time
+        df["last_updated"] = df["last_updated"].dt.time
 
         df["payment_record_id"] = range(1, 1 + df.shape[0])
 
@@ -242,7 +242,7 @@ def transform_payment(payment_data: str | dict):
             "created_date",
             "created_time",
             "last_updated_date",
-            "last_updated_time",
+            "last_updated",
             "transaction_id",
             "counterparty_id",
             "payment_amount",
@@ -282,6 +282,11 @@ def transform_transaction(transaction_data: str | dict):
         ]
 
         dim_transaction = dim_transaction[columns_to_keep]
+        dim_transaction.fillna(0, inplace=True)
+        dim_transaction["purchase_order_id"] = dim_transaction[
+            'purchase_order_id'].astype(int)
+        dim_transaction["sales_order_id"] = dim_transaction[
+            'sales_order_id'].astype(int)
         return dim_transaction
     except Exception as e:
         log.error(f"Error: {str(e)}")

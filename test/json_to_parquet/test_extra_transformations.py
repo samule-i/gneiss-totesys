@@ -332,7 +332,7 @@ def test_transform_payment_returns_correct_columns_and_rows():
         "created_date",
         "created_time",
         "last_updated_date",
-        "last_updated_time",
+        "last_updated",
         "transaction_id",
         "counterparty_id",
         "payment_amount",
@@ -392,8 +392,8 @@ def test_transform_payment_returns_correct_columns_and_rows():
         'created_time'].astype(str)
     df_payment['last_updated_date'] = df_payment[
         'last_updated_date'].astype(str)
-    df_payment['last_updated_time'] = df_payment[
-        'last_updated_time'].astype(str)
+    df_payment['last_updated'] = df_payment[
+        'last_updated'].astype(str)
     df_payment['payment_date'] = df_payment[
         'payment_date'].astype(
         str)

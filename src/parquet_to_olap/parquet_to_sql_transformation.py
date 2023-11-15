@@ -72,9 +72,16 @@ def generate_sql_list_for_dataframe(df, table_name, target_pkey_column):
     update_columns = [
         column for column in column_names if column != target_pkey_column
     ]
-    update_columns_str = f"({', '.join(update_columns)})"
+
+    if len(update_columns) == 1:
+        update_columns_str = f"{', '.join(update_columns)}"
+    else:
+        update_columns_str = f"({', '.join(update_columns)})"
     excluded_columns = ["excluded." + column for column in update_columns]
-    excluded_str = f"({', '.join(excluded_columns)})"
+    if len(excluded_columns) == 1:
+        excluded_str = f"{', '.join(excluded_columns)}"
+    else:
+        excluded_str = f"({', '.join(excluded_columns)})"
     column_symbols = [":" + column for column in column_names]
 
     sql_start = f"INSERT INTO {identifier(table_name)} {column_str} VALUES "
