@@ -3,7 +3,8 @@ from datetime import datetime as dt
 from utils.db_credentials import get_credentials
 from utils.pg8000_conn import get_conn
 from utils.custom_log import totesys_logger
-from ingestion.write_JSON import write_to_ingestion, write_lookup, write_manifest
+from utils.manifest import write_manifest
+from ingestion.write_JSON import write_to_ingestion, write_lookup
 from ingestion.get_timestamp import (
     get_last_ingestion_timestamp as get_timestamp,
     update_last_ingestion_timestamp,

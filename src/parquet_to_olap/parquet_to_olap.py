@@ -1,4 +1,3 @@
-import os
 from utils.db_credentials import get_credentials
 from utils.pg8000_conn import get_conn
 from utils.custom_log import totesys_logger
@@ -27,7 +26,7 @@ def lambda_handler(event, context):
     bucket = event["Records"][0]["s3"]["bucket"]["name"]
     key = event["Records"][0]["s3"]["object"]["key"]
     manifest = read_json_file_from_bucket(bucket, key)
-    log.info(f"Processing manifest: {manifest}")
+    log.info(f"Processing input manifest: {manifest}")
 
     credentials = get_credentials("db_credentials_olap")
     conn = get_conn(credentials)

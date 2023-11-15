@@ -25,3 +25,4 @@ def write_pq_to_s3(bucket: str, key: str, dataframe):
     s3.put_object(Bucket=bucket, Key=key, Body=parquet_bytes)
 
     log.info(f"File stored: {path}")
+    return key

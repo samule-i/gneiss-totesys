@@ -1,5 +1,5 @@
 import json
-from ingestion.write_JSON import write_to_ingestion, write_manifest
+from ingestion.write_JSON import write_to_ingestion
 import boto3
 from moto import mock_s3
 import pytest
@@ -101,31 +101,3 @@ def test_no_file_created_when_there_is_no_new_data(patched_boto3):
     data_str = json.dumps(data_with_no_rows)
     write_to_ingestion(data_str, "bucket")
     patched_boto3.put_object.assert_not_called()
-
-
-@patch("ingestion.write_JSON.boto3.client")
-def test_write_manifest_save_json_file_to_ingestion_bucket(
-    patched_boto_client,
-):
-    test_manifest = {"files": ["file1", "file2", "file3"]}
-    fake_s3 = Mock()
-    patched_boto_client.return_value = fake_s3
-
-    write_manifest("bucket", test_manifest)
-
-    fake_s3.put_object.assert_called_once_with(
-        Bucket="bucket", Key="manifest.json", Body=json.dumps(test_manifest)
-    )
-
-
-@patch("ingestion.write_JSON.boto3.client")
-def test_write_manifest_does_nothing_if_no_files_in_input(
-    patched_boto_client,
-):
-    test_manifest = {"files": []}
-    fake_s3 = Mock()
-    patched_boto_client.return_value = fake_s3
-
-    write_manifest("bucket", test_manifest)
-
-    fake_s3.put_object.assert_not_called()

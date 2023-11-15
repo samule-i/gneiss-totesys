@@ -5,6 +5,7 @@ from json_to_parquet.dim_currency import currency_transform
 from json_to_parquet.date_dimension import date_dimension
 from json_to_parquet.write_pq_to_s3 import write_pq_to_s3
 from utils.custom_log import totesys_logger
+from utils.manifest import write_manifest
 from json_to_parquet.transformations import (
     transform_address,
     transform_design,
@@ -42,13 +43,31 @@ def fake_fn(data) -> pd.DataFrame:
 
 def lambda_handler(event, _):
     log.info(event)
-    manifest = json_event(event)
-    log.info(f"Processing manifest: {manifest}")
+    input_manifest = json_event(event)
+    log.info(f"Processing manifest: {input_manifest}")
 
-    for file_key in manifest["files"]:
-        process_file(file_key)
+    out_bucket = os.environ["PARQUET_S3_DATA_ID"]
+    date_dim_key = "dim_date/dim_date.parquet"
 
-    log.info(f"{len(manifest['files'])}files processed.")
+    output_manifest = {"files": []}
+
+    parquet_keys = bucket_list(out_bucket)
+    if date_dim_key not in parquet_keys:
+        log.info("Date parquet not found, creating...")
+        df = date_dimension()
+        output_file = write_pq_to_s3(out_bucket, date_dim_key, df)
+        output_manifest["files"].append(output_file)
+        log.info("Done")
+
+    for input_file in input_manifest["files"]:
+        output_file = process_file(input_file)
+
+        if output_file:
+            output_manifest["files"].append(output_file)
+
+    log.info(f"{len(input_manifest['files'])}files processed.")
+
+    write_manifest(out_bucket, output_manifest)
 
 
 def process_file(in_key):
@@ -77,14 +96,6 @@ def process_file(in_key):
 
     out_key = in_key.replace(table_name, out_table_lookup[table_name])
     log.info(f"Processing {table_name} to {out_bucket}/{out_key}")
-    date_dim_key = "dim_date/dim_date.parquet"
-
-    parquet_keys = bucket_list(out_bucket)
-    if date_dim_key not in parquet_keys:
-        log.info("Date parquet not found, creating...")
-        df = date_dimension()
-        write_pq_to_s3(out_bucket, date_dim_key, df)
-        log.info("Done")
 
     transformed_df: pd.DataFrame = function_dict[table_name](json_body)
     if not isinstance(transformed_df, pd.DataFrame):
@@ -94,4 +105,4 @@ transformed_df is not a DataFrame whilst processing {table_name}"""
         raise ValueError(logstring)
     if len(transformed_df):
         log.info(f"Writing output to {out_bucket}/{out_key}")
-        write_pq_to_s3(out_bucket, out_key, transformed_df)
+        return write_pq_to_s3(out_bucket, out_key, transformed_df)
