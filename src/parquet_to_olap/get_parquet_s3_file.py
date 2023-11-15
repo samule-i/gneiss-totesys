@@ -1,4 +1,5 @@
 from botocore.exceptions import ClientError
+import json
 import boto3
 import pandas as pd
 from utils.custom_log import totesys_logger
@@ -35,3 +36,23 @@ def parquet_S3_key(bucket: str, key: str):
         raise (e)
 
     return df
+
+
+def read_json_file_from_bucket(bucket: str, key: str) -> dict:
+    """Returns a json-like dict from an S3 bucket
+
+    bucket must exist & key must match a json file that exists.
+    """
+    key = key.replace("%3A", ":")
+    log.info(f"Loading JSON file: {bucket}/{key}")
+    try:
+        s3_client = boto3.client("s3")
+        response = s3_client.get_object(Bucket=bucket, Key=key)
+        bytes = response["Body"]
+    except ClientError as e:
+        log.error(f'{e.response["Error"]["Code"]}')
+        log.info(f"File: {bucket}/{key} is unavailable")
+        raise (e)
+    data = bytes.read().decode("utf-8")
+    json_data = json.loads(data)
+    return json_data

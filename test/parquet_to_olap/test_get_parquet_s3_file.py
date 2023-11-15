@@ -5,7 +5,11 @@ import pytest
 import awswrangler as wr
 import pandas as pd
 import json
-from parquet_to_olap.get_parquet_s3_file import parquet_S3_key, parquet_event
+from parquet_to_olap.get_parquet_s3_file import (
+    parquet_S3_key,
+    parquet_event,
+    read_json_file_from_bucket,
+)
 
 
 @pytest.fixture(scope="function")
@@ -115,3 +119,24 @@ def test_get_logs_error_when_no_key(caplog):
     )
     assert caplog.records[-1].levelname == "ERROR"
     assert caplog.records[-1].message == expected_message
+
+
+@mock_s3
+def test_read_json_file_returns_dict_with_correct_contents():
+    s3_client = boto3.client("s3")
+    s3_client.create_bucket(
+        Bucket="test_bucket",
+        CreateBucketConfiguration={"LocationConstraint": "eu-west-2"},
+    )
+    s3_client.put_object(
+        Bucket="test_bucket", Key="test_key", Body='{"a": "b"}'
+    )
+    result = read_json_file_from_bucket("test_bucket", "test_key")
+
+    assert result == {"a": "b"}
+
+
+@mock_s3
+def test_read_json_file_raises_client_error_if_file_unavailable():
+    with pytest.raises(ClientError):
+        result = read_json_file_from_bucket("test_bucket", "test_key")

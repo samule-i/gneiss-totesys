@@ -1,7 +1,11 @@
+import os
 from utils.db_credentials import get_credentials
 from utils.pg8000_conn import get_conn
 from utils.custom_log import totesys_logger
-from parquet_to_olap.get_parquet_s3_file import parquet_event
+from parquet_to_olap.get_parquet_s3_file import (
+    parquet_S3_key,
+    read_json_file_from_bucket,
+)
 from parquet_to_olap.parquet_to_sql_transformation import (
     parquet_to_sql,
     olap_table_names,
@@ -20,26 +24,36 @@ def lambda_handler(event, context):
         context: Not necessary/optional
     """
     log.info(f"event: {event}")
-    df = parquet_event(event)
+    bucket = event["Records"][0]["s3"]["bucket"]["name"]
+    key = event["Records"][0]["s3"]["object"]["key"]
+    manifest = read_json_file_from_bucket(bucket, key)
+    log.info(f"Processing manifest: {manifest}")
+
     credentials = get_credentials("db_credentials_olap")
     conn = get_conn(credentials)
 
-    event_key = event["Records"][0]["s3"]["object"]["key"]
-    forward_slash_index = event_key.find("/")
-    table_name = event_key[:forward_slash_index]
-    log.info(f"file: {event_key}")
+    for file_key in manifest["files"]:
+        process_file(conn, bucket, file_key)
+
+    log.info("Closing connection...")
+    conn.close()
+
+    return {"statusCode": 200}
+
+
+def process_file(conn, bucket, file_key):
+    df = parquet_S3_key(bucket, file_key)
+    forward_slash_index = file_key.find("/")
+    table_name = file_key[:forward_slash_index]
+    log.info(f"Loading file: {file_key}")
     try:
         if table_name not in olap_table_names:
-            log.error(f"Table name not recognised in event {event}")
-            raise ValueError(f"Table name not recognised in event {event}")
+            log.error(f"Table name not recognised: {table_name}")
+            raise ValueError(f"Table name not recognised: {table_name}")
 
         parquet_to_sql(df, table_name, conn)
     except Exception as e:
         log.error(f"{e}")
         raise e
-    finally:
-        log.info("Closing connection...")
-        conn.close()
 
-    log.info(f"File processed successfully: {event_key}")
-    return {"statusCode": 200}
+    log.info(f"File processed successfully: {file_key}")
