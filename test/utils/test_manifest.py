@@ -2,6 +2,7 @@ from utils.manifest import write_manifest
 from unittest.mock import patch, Mock
 import json
 
+
 @patch("ingestion.write_JSON.boto3.client")
 def test_write_manifest_save_json_file_to_ingestion_bucket(
     patched_boto_client,

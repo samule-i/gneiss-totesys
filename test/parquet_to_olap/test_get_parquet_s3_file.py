@@ -139,4 +139,4 @@ def test_read_json_file_returns_dict_with_correct_contents():
 @mock_s3
 def test_read_json_file_raises_client_error_if_file_unavailable():
     with pytest.raises(ClientError):
-        result = read_json_file_from_bucket("test_bucket", "test_key")
+        read_json_file_from_bucket("test_bucket", "test_key")

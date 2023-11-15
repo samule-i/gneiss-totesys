@@ -1,7 +1,4 @@
 from utils.custom_log import totesys_logger
-from awswrangler import s3
-from time import perf_counter
-import pandas as pd
 import boto3
 
 log = totesys_logger()

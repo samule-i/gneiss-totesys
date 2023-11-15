@@ -6,7 +6,7 @@ import pytest
 from botocore.exceptions import ClientError
 import logging
 from datetime import date as dt
-from unittest.mock import patch, Mock
+from unittest.mock import patch
 
 
 logger = logging.getLogger("MyLogger")

@@ -1,4 +1,3 @@
-import boto3
 import os
 from moto import mock_s3
 from unittest.mock import patch, Mock

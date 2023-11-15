@@ -66,4 +66,3 @@ def write_lookup(json_body: dict, bucket_name: str, json_key: str):
     )
 
     log.info(f"Wrote {count} entries")
-

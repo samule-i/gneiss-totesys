@@ -43,4 +43,3 @@ def lambda_handler(event, context):
     conn.close()
     log.info("Done")
     return {"statusCode": 200}
-
